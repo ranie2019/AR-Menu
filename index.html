@@ -7,7 +7,7 @@
 
   <!-- A-Frame + AR.js -->
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar-nft.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
 
   <style>
     body { margin: 0; overflow: hidden; }
@@ -22,22 +22,24 @@
     arjs="sourceType: webcam; debugUIEnabled: false;"
   >
 
-    <!-- Luz ambiente para iluminar o modelo -->
+    <!-- Luz ambiente -->
     <a-entity light="type: ambient; intensity: 1"></a-entity>
 
-    <!-- Luz direcional para dar profundidade -->
+    <!-- Luz direcional -->
     <a-entity light="type: directional; intensity: 0.8" position="0 1 0"></a-entity>
 
-    <!-- Modelo 3D -->
-    <a-entity
-      gltf-model="https://ar-menu-models.s3.us-east-1.amazonaws.com/ar-models/champagne.glb"
-      position="0 0 -1"   <!-- 1 metro de distância -->
-      scale="0.3 0.3 0.3" <!-- escala controlada para caber na tela -->
-      rotation="0 180 0"
-    ></a-entity>
+    <!-- MARCADOR HIRO -->
+    <a-marker preset="hiro">
+      <a-entity
+        gltf-model="https://ar-menu-models.s3.us-east-1.amazonaws.com/ar-models/champagne.glb"
+        scale="0.3 0.3 0.3"
+        position="0 0 0"
+        rotation="0 180 0"
+      ></a-entity>
+    </a-marker>
 
-    <!-- Câmera padrão -->
-    <a-entity camera position="0 1.6 0"></a-entity>
+    <!-- Câmera -->
+    <a-entity camera></a-entity>
 
   </a-scene>
 
