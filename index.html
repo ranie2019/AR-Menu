@@ -2,44 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AR Menu</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  
-  <!-- A-Frame + AR.js -->
-  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar-nft.js"></script>
-  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aframe/1.2.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/jeromeetienne/AR.js/aframe/build/aframe-ar.js"></script>
   <style>
     body { margin: 0; overflow: hidden; }
     a-scene { width: 100%; height: 100vh; }
   </style>
 </head>
 <body>
-  
-  <a-scene 
-    vr-mode-ui="enabled: false"
-    embedded
-    arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;"
-  >
+  <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;" xrweb="planeDetection: true;">
+    <!-- Define o objeto 3D -->
+    <a-entity 
+      gltf-model="https://ar-menu-models.s3.us-east-1.amazonaws.com/ar-models/champagne.glb" 
+      scale="0.5 0.5 0.5" 
+      position="0 0 0" 
+      rotation="0 180 0">
+    </a-entity>
 
-    <!-- Luz ambiente para o modelo 3D -->
-    <a-entity light="type: ambient; intensity: 1"></a-entity>
-
-    <!-- Luz direcional para dar volume -->
-    <a-entity light="type: directional; intensity: 0.6" position="0 1 0"></a-entity>
-
-    <!-- Modelo 3D posicionado a 2 metros da câmera -->
-    <a-entity
-      gltf-model="https://ar-menu-models.s3.us-east-1.amazonaws.com/ar-models/champagne.glb"
-      scale="0.5 0.5 0.5"
-      position="0 0 -2"
-      rotation="0 180 0"
-    ></a-entity>
-
-    <!-- Câmera manual -->
-    <a-entity camera position="0 1.6 0"></a-entity>
-
+    <!-- Câmera para o AR -->
+    <a-entity camera></a-entity>
   </a-scene>
-
 </body>
 </html>
