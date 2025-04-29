@@ -12,27 +12,26 @@
   <style>
     body { margin: 0; overflow: hidden; }
     a-scene { width: 100%; height: 100vh; }
-    #placeObject {
+    button {
       position: absolute;
       top: 20px;
       left: 20px;
       z-index: 999;
-      font-size: 18px;
       padding: 10px 20px;
-      background-color: #007bff;
+      font-size: 18px;
+      background: #007BFF;
       color: white;
       border: none;
       border-radius: 5px;
       cursor: pointer;
     }
-    #placeObject:hover {
-      background-color: #0056b3;
+    button:hover {
+      background: #0056b3;
     }
   </style>
 </head>
 <body>
   
-  <!-- Botão para reposicionar o modelo -->
   <button id="placeObject">Colocar Objeto</button>
 
   <a-scene 
@@ -47,13 +46,13 @@
     <!-- Luz direcional para dar volume -->
     <a-entity light="type: directional; intensity: 0.6" position="0 1 0"></a-entity>
 
-    <!-- Modelo 3D posicionado a 2 metros da câmera -->
+    <!-- Modelo 3D posicionado inicialmente a 2 metros -->
     <a-entity
+      id="model3D"
       gltf-model="https://ar-menu-models.s3.us-east-1.amazonaws.com/ar-models/champagne.glb"
       scale="0.5 0.5 0.5"
       position="0 0 -2"
       rotation="0 180 0"
-      id="3dObject"
     ></a-entity>
 
     <!-- Câmera manual -->
@@ -63,15 +62,11 @@
 
   <script>
     const button = document.getElementById('placeObject');
-    const model = document.getElementById('3dObject');
-
-    // Defina a distância inicial
-    let distance = -2;
+    const model = document.getElementById('model3D');
 
     button.addEventListener('click', () => {
-      // Muda a posição do modelo para a distância definida
-      distance = distance === -2 ? -1.5 : -2; // Alterna entre -2 e -1.5 metros
-      model.setAttribute('position', `0 0 ${distance}`);
+      // Move o objeto para 1.5 metros da câmera
+      model.setAttribute('position', '0 0 -1.5');
     });
   </script>
 
