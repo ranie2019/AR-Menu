@@ -1,84 +1,56 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AR Menu</title>
-  
-  <!-- A-Frame e AR.js -->
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/jeromeetienne/AR.js@master/aframe/build/aframe-ar.min.js"></script>
-  
+  <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar-nft.js"></script>
   <style>
-    body { margin: 0; overflow: hidden; font-family: sans-serif; }
-    #ui {
-      position: absolute;
-      bottom: 20px;
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      z-index: 2;
-    }
-    button {
-      padding: 12px 20px;
-      font-size: 16px;
-      background-color: #2196F3;
-      border: none;
-      color: white;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #0b7dda;
-    }
-    #info {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      background-color: rgba(0,0,0,0.6);
-      color: white;
-      padding: 10px;
-      border-radius: 5px;
-      z-index: 2;
-    }
+    body { margin: 0; overflow: hidden; }
+    a-scene { width: 100%; height: 100vh; }
   </style>
 </head>
-
 <body>
-  <div id="info">Aponte para o marcador Hiro para ver o prato em AR</div>
+  <a-scene
+    embedded
+    vr-mode-ui="enabled: false"
+    renderer="logarithmicDepthBuffer: true;"
+    arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;">
+    
+    <!-- Cria o solo para posicionar -->
+    <a-entity
+      id="ground"
+      geometry="primitive: plane; width: 100; height: 100;"
+      material="shader: flat; opacity: 0;"
+      position="0 0 0"
+      rotation="-90 0 0">
+    </a-entity>
 
-  <div id="ui">
-    <button onclick="trocarPrato()">Trocar Prato</button>
-  </div>
+    <!-- Seu modelo 3D -->
+    <a-entity
+      gltf-model="url(https://ar-menu-models.s3.us-east-1.amazonaws.com/ar-models/champagne.glb)"
+      scale="0.5 0.5 0.5"
+      position="0 0 0"
+      rotation="0 180 0"
+      visible="false"
+      id="model">
+    </a-entity>
 
-  <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
-    <a-marker preset="hiro">
-      <a-entity 
-        id="modelo-prato"
-        gltf-model="url(https://ar-menu-models.s3.us-east-1.amazonaws.com/ar-models/champagne.glb)"
-        scale="0.5 0.5 0.5"
-        position="0 0 0"
-        rotation="0 180 0">
-      </a-entity>
-    </a-marker>
-
-    <a-entity camera></a-entity>
+    <a-camera></a-camera>
   </a-scene>
 
   <script>
-    const modelos = [
-      "https://ar-menu-models.s3.us-east-1.amazonaws.com/ar-models/champagne.glb",
-      "https://ar-menu-models.s3.us-east-1.amazonaws.com/ar-models/pizza.glb",
-      "https://ar-menu-models.s3.us-east-1.amazonaws.com/ar-models/burger.glb"
-    ];
-
-    let indexAtual = 0;
-
-    function trocarPrato() {
-      indexAtual = (indexAtual + 1) % modelos.length;
-      const modelo = document.querySelector('#modelo-prato');
-      modelo.setAttribute('gltf-model', `url(${modelos[indexAtual]})`);
-    }
+    // Quando clicar no solo, posiciona o objeto lá
+    document.querySelector('#ground').addEventListener('click', function (event) {
+      const model = document.querySelector('#model');
+      model.setAttribute('position', {
+        x: event.detail.intersection.point.x,
+        y: event.detail.intersection.point.y,
+        z: event.detail.intersection.point.z
+      });
+      model.setAttribute('visible', true);
+    });
   </script>
 </body>
 </html>
