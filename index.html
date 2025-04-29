@@ -4,71 +4,42 @@
   <meta charset="UTF-8">
   <title>AR Menu</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  
+
   <!-- A-Frame + AR.js -->
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar-nft.js"></script>
-  
+
   <style>
     body { margin: 0; overflow: hidden; }
     a-scene { width: 100%; height: 100vh; }
-    button {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      z-index: 999;
-      padding: 10px 20px;
-      font-size: 18px;
-      background: #007BFF;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #0056b3;
-    }
   </style>
 </head>
 <body>
-  
-  <button id="placeObject">Colocar Objeto</button>
 
   <a-scene 
     vr-mode-ui="enabled: false"
     embedded
-    arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;"
+    arjs="sourceType: webcam; debugUIEnabled: false;"
   >
 
-    <!-- Luz ambiente para o modelo 3D -->
+    <!-- Luz ambiente para iluminar o modelo -->
     <a-entity light="type: ambient; intensity: 1"></a-entity>
 
-    <!-- Luz direcional para dar volume -->
-    <a-entity light="type: directional; intensity: 0.6" position="0 1 0"></a-entity>
+    <!-- Luz direcional para dar profundidade -->
+    <a-entity light="type: directional; intensity: 0.8" position="0 1 0"></a-entity>
 
-    <!-- Modelo 3D posicionado inicialmente a 2 metros -->
+    <!-- Modelo 3D -->
     <a-entity
-      id="model3D"
       gltf-model="https://ar-menu-models.s3.us-east-1.amazonaws.com/ar-models/champagne.glb"
-      scale="0.5 0.5 0.5"
-      position="0 0 -2"
+      position="0 0 -1"   <!-- 1 metro de distância -->
+      scale="0.3 0.3 0.3" <!-- escala controlada para caber na tela -->
       rotation="0 180 0"
     ></a-entity>
 
-    <!-- Câmera manual -->
+    <!-- Câmera padrão -->
     <a-entity camera position="0 1.6 0"></a-entity>
 
   </a-scene>
-
-  <script>
-    const button = document.getElementById('placeObject');
-    const model = document.getElementById('model3D');
-
-    button.addEventListener('click', () => {
-      // Move o objeto para 1.5 metros da câmera
-      model.setAttribute('position', '0 0 -1.5');
-    });
-  </script>
 
 </body>
 </html>
