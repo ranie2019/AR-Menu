@@ -16,10 +16,21 @@
   </head>
 
   <body>
-    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
-      
-      <!-- Marcador usando seu .patt hospedado -->
-      <a-marker type="pattern" url="https://SEU-LINK-AQUI/pattern.patt">
+    <a-scene 
+      embedded 
+      arjs="sourceType: webcam; debugUIEnabled: false;"
+      vr-mode-ui="enabled: false">
+
+      <!-- Marcador personalizado (.patt hospedado no GitHub) -->
+      <a-marker 
+        type="pattern" 
+        url="https://ranie2019.github.io/AR-Menu/pattern.patt"
+        smooth="true" 
+        smoothCount="10" 
+        smoothTolerance="0.01" 
+        smoothThreshold="5">
+
+        <!-- Modelo 3D do prato -->
         <a-entity 
           gltf-model="https://ar-menu-models.s3.us-east-1.amazonaws.com/ar-models/champagne.glb"
           scale="0.2 0.2 0.2"
@@ -28,8 +39,8 @@
         </a-entity>
       </a-marker>
 
+      <!-- Câmera da cena -->
       <a-entity camera></a-entity>
-
     </a-scene>
   </body>
 </html>
