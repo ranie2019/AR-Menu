@@ -19,7 +19,6 @@
       }
       #prevBtn { left: 10px; bottom: 10px; } /* Botão de navegação à esquerda */
       #nextBtn { right: 10px; bottom: 10px; } /* Botão de navegação à direita */
-      #arBtn { top: 10px; left: 10px; } /* Botão de AR no canto superior esquerdo */
       #loadingIndicator {
         position: absolute;
         top: 50%;
@@ -33,9 +32,6 @@
   </head>
 
   <body>
-    <!-- Botão de AR no canto superior esquerdo -->
-    <button id="arBtn" class="btn" onclick="activateAR()">AR</button>
-
     <!-- Botões de navegação -->
     <button id="prevBtn" class="btn" onclick="changeModel(-1)">◀️</button>
     <button id="nextBtn" class="btn" onclick="changeModel(1)">▶️</button>
@@ -91,11 +87,6 @@
       function changeModel(direction) {
         currentIndex = (currentIndex + direction + models.length) % models.length;
         loadModel(models[currentIndex]);
-      }
-
-      function activateAR() {
-        // Lógica para ativar o modo AR
-        alert('Modo AR ativado!');
       }
 
       // Carregar modelo inicial
