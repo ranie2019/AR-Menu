@@ -48,7 +48,7 @@
                 position="0 0 -3"
                 rotation="0 0 0"
                 scale="1 1 1"
-                animation="property: rotation; to: 0 360 0; loop: true; dur: 8000; easing: linear"
+                animation="property: rotation; to: 0 360 0; loop: true; dur: 16000; easing: linear"
                 gesture-handler>
       </a-entity>
 
@@ -75,8 +75,6 @@
         loadingIndicator.style.display = 'block';
         container.removeAttribute('gltf-model');
 
-        console.log(`Carregando o modelo: https://ar-menu-models.s3.amazonaws.com/ar-models/${name}.glb`);
-
         fetch(`https://ar-menu-models.s3.amazonaws.com/ar-models/${name}.glb`)
           .then(response => response.blob())
           .then(blob => {
@@ -101,14 +99,15 @@
       AFRAME.registerComponent('gesture-handler', {
         schema: { enabled: { default: true } },
         init: function () {
-          this.scaleFactor = 1;
+          this.initialScale = this.el.object3D.scale.clone();
           this.el.sceneEl.addEventListener('pinchmove', this.onPinchMove.bind(this));
         },
         onPinchMove: function (event) {
           if (!this.data.enabled) return;
-          this.scaleFactor *= event.detail.scale;
-          this.scaleFactor = Math.max(0.1, Math.min(this.scaleFactor, 5)); // Limita escala
-          this.el.object3D.scale.set(this.scaleFactor, this.scaleFactor, this.scaleFactor);
+          const scaleChange = event.detail.spreadChange / 200; // Ajusta sensibilidade
+          let newScale = this.el.object3D.scale.x + scaleChange;
+          newScale = Math.max(0.3, Math.min(newScale, 5)); // Limites
+          this.el.object3D.scale.set(newScale, newScale, newScale);
         }
       });
     </script>
