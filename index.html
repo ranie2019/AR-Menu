@@ -6,20 +6,32 @@
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
     <style>
-      body { margin: 0; overflow: hidden; }
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+
       .btn {
         position: absolute;
-        background: transparent;
+        font-size: 30px;
+        background: black;
+        color: white;
         border: none;
-        padding: 10px;
+        padding: 10px 20px;
         cursor: pointer;
         z-index: 999;
       }
-      .btn img {
-        height: 40px;
+
+      #prevBtn {
+        left: 10px;
+        bottom: 10px;
       }
-      #prevBtn { left: 10px; bottom: 10px; }
-      #nextBtn { right: 10px; bottom: 10px; }
+
+      #nextBtn {
+        right: 10px;
+        bottom: 10px;
+      }
+
       #loadingIndicator {
         position: absolute;
         top: 50%;
@@ -29,16 +41,12 @@
         color: white;
         z-index: 1000;
       }
-    </style>    
+    </style>
   </head>
 
   <body>
-    <button id="prevBtn" class="btn" onclick="changeModel(-1)">
-      <img src="https://cdn-icons-png.flaticon.com/512/271/271220.png" alt="Anterior" />
-    </button>
-    <button id="nextBtn" class="btn" onclick="changeModel(1)">
-      <img src="https://cdn-icons-png.flaticon.com/512/271/271228.png" alt="Próximo" />
-    </button>
+    <button id="prevBtn" class="btn" onclick="changeModel(-1)">◀️</button>
+    <button id="nextBtn" class="btn" onclick="changeModel(1)">▶️</button>
     <div id="loadingIndicator">Carregando...</div>
 
     <a-scene
@@ -76,6 +84,10 @@
         loadingIndicator.style.display = "block";
         container.removeAttribute("gltf-model");
 
+        console.log(
+          `Carregando o modelo: https://ar-menu-models.s3.amazonaws.com/ar-models/${name}.glb`
+        );
+
         fetch(
           `https://ar-menu-models.s3.amazonaws.com/ar-models/${name}.glb`
         )
@@ -99,15 +111,15 @@
 
       loadModel(models[currentIndex]);
 
-      // Rotação automática suave
+      // Rotação automática
       setInterval(() => {
         const model = document.querySelector("#modelContainer");
         const rotation = model.getAttribute("rotation");
-        rotation.y += 0.5;
+        rotation.y += 0.5; // Reduzido para rotação mais suave
         model.setAttribute("rotation", rotation);
       }, 30);
 
-      // Pinch-to-zoom
+      // Suporte a pinch-to-zoom
       let initialDistance = null;
       let initialScale = 1;
 
