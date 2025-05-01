@@ -1,36 +1,35 @@
 body {
-    margin: 0;
-    overflow: hidden;
-  }
-  
-  .btn {
-    position: absolute;
-    font-size: 30px;
-    background: black;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    z-index: 999;
-  }
-  
-  #prevBtn {
-    left: 10px;
-    bottom: 10px;
-  }
-  
-  #nextBtn {
-    right: 10px;
-    bottom: 10px;
-  }
-  
-  #loadingIndicator {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 30px;
-    color: white;
-    z-index: 1000;
-  }
-  
+  margin: 0;
+  overflow: hidden;
+}
+
+.btn {
+  position: absolute;
+  font-size: 30px;
+  background: black;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  z-index: 999;
+}
+
+#prevBtn {
+  left: 10px;
+  bottom: 10px;
+}
+
+#nextBtn {
+  right: 10px;
+  bottom: 10px;
+}
+
+#loadingIndicator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 30px;
+  color: white;
+  z-index: 1000;
+}
