@@ -7,18 +7,22 @@
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
   </head>
-
   <body>
-    <button id="prevBtn" class="btn" onclick="changeModel(-1)">&#9664;</button> <!-- ◀ -->
-    <button id="nextBtn" class="btn" onclick="changeModel(1)">&#9654;</button> <!-- ▶ -->
+    <!-- Botões de navegação -->
+    <button id="prevBtn" class="btn" onclick="changeModel(-1)">&#9664;</button>
+    <button id="nextBtn" class="btn" onclick="changeModel(1)">&#9654;</button>
+    
+    <!-- Indicador de carregamento -->
     <div id="loadingIndicator">Carregando...</div>
 
+    <!-- Cena AR -->
     <a-scene
       embedded
-      arjs="sourceType: webcam; debugUIEnabled: false;"
+      arjs="sourceType: webcam; debugUIEnabled: false; markerType: pattern; patternUrl: pattern.patt;"
       vr-mode-ui="enabled: false">
-
-      <a-marker type="pattern" url="ar-menu/pattern.patt">
+      
+      <!-- Marcador AR com modelo 3D -->
+      <a-marker type="pattern" url="pattern.patt">
         <a-entity
           id="modelContainer"
           position="0 0 0"
@@ -27,9 +31,101 @@
         </a-entity>
       </a-marker>
 
-      <a-camera-static />
+      <!-- Câmera -->
+      <a-entity camera></a-entity>
     </a-scene>
 
-    <script src="main.js"></script>
+    <script>
+      // Lista de modelos 3D
+      const models = [
+        "champagne",
+        "heineken",
+        "redbull",
+        "fizzydrink",
+        "chocolatecupcake",
+        "sundae",
+        "pizza",
+      ];
+
+      let currentIndex = 0;
+
+      // Função para carregar o modelo
+      function loadModel(name) {
+        const container = document.querySelector("#modelContainer");
+        const loadingIndicator = document.querySelector("#loadingIndicator");
+
+        loadingIndicator.style.display = "block"; // Exibe o indicador de carregamento
+        container.removeAttribute("gltf-model"); // Remove o modelo atual, se houver
+
+        // Faz o fetch do modelo GLTF a partir do S3
+        fetch(`https://ar-menu-models.s3.amazonaws.com/ar-models/${name}.glb`)
+          .then((response) => response.blob()) // Converte a resposta para Blob
+          .then((blob) => {
+            const url = URL.createObjectURL(blob); // Cria um URL para o Blob
+            container.setAttribute("gltf-model", url); // Carrega o modelo no contêiner
+            loadingIndicator.style.display = "none"; // Esconde o indicador de carregamento
+          })
+          .catch((error) => {
+            console.error("Erro ao carregar o modelo:", error);
+            loadingIndicator.innerText = "Erro ao carregar o modelo"; // Exibe erro, caso ocorra
+          });
+      }
+
+      // Função para trocar de modelo
+      function changeModel(direction) {
+        currentIndex = (currentIndex + direction + models.length) % models.length;
+        loadModel(models[currentIndex]);
+      }
+
+      // Adiciona ouvintes de evento para os botões de navegação
+      document.querySelector("#prevBtn").addEventListener("click", () => changeModel(-1));
+      document.querySelector("#nextBtn").addEventListener("click", () => changeModel(1));
+
+      loadModel(models[currentIndex]); // Carrega o modelo inicial
+
+      // Rotação automática do modelo
+      setInterval(() => {
+        const model = document.querySelector("#modelContainer");
+        if (model && model.object3D.visible) {
+          const rotation = model.getAttribute("rotation");
+          rotation.y += 0.5; // Gira o modelo ao longo do eixo Y
+          model.setAttribute("rotation", rotation);
+        }
+      }, 30);
+
+      // Zoom por gesto (pinch-to-zoom)
+      let initialDistance = null;
+      let initialScale = 1;
+
+      // Detecta o início do gesto de zoom
+      window.addEventListener("touchstart", (e) => {
+        if (e.touches.length === 2) {
+          const dx = e.touches[0].clientX - e.touches[1].clientX;
+          const dy = e.touches[0].clientY - e.touches[1].clientY;
+          initialDistance = Math.sqrt(dx * dx + dy * dy); // Distância inicial entre os dedos
+          const scale = document.querySelector("#modelContainer").getAttribute("scale");
+          initialScale = scale.x; // Captura o valor de escala inicial
+        }
+      });
+
+      // Detecta o movimento do gesto de zoom
+      window.addEventListener("touchmove", (e) => {
+        if (e.touches.length === 2 && initialDistance) {
+          const dx = e.touches[0].clientX - e.touches[1].clientX;
+          const dy = e.touches[0].clientY - e.touches[1].clientY;
+          const currentDistance = Math.sqrt(dx * dx + dy * dy); // Distância atual entre os dedos
+          const scaleFactor = currentDistance / initialDistance; // Fator de escala baseado na diferença
+          const newScale = Math.min(Math.max(initialScale * scaleFactor, 0.1), 10); // Limita a escala
+          document.querySelector("#modelContainer").setAttribute("scale", `${newScale} ${newScale} ${newScale}`);
+        }
+      });
+
+      // Detecta o fim do gesto de zoom
+      window.addEventListener("touchend", (e) => {
+        if (e.touches.length < 2) {
+          initialDistance = null; // Reseta o estado quando o gesto terminar
+        }
+      });
+    </script>
   </body>
 </html>
