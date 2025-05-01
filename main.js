@@ -44,7 +44,7 @@ document.querySelector("#nextBtn").addEventListener("click", () => changeModel(1
 // Inicializa com o primeiro modelo
 loadModel(models[currentIndex]);
 
-// Rotação automática
+// Rotação automática do modelo 3D
 setInterval(() => {
   const model = document.querySelector("#modelContainer");
   const rotation = model.getAttribute("rotation");
@@ -52,7 +52,7 @@ setInterval(() => {
   model.setAttribute("rotation", rotation);
 }, 30);
 
-// Pinch-to-zoom
+// Zoom com gesto de pinça
 let initialDistance = null;
 let initialScale = 1;
 

@@ -13,10 +13,9 @@
     <button id="nextBtn" class="btn" onclick="changeModel(1)">&#9654;</button> <!-- ▶ -->
     <div id="loadingIndicator">Carregando...</div>
 
-    <!-- A-Frame AR Scene -->
-    <a-scene 
+    <a-scene
       embedded
-      arjs="sourceType: webcam; debugUIEnabled: false; markerType: pattern;"
+      arjs="sourceType: webcam; debugUIEnabled: false; markerType: pattern; patternUrl: 'ar-menu/pattern.patt';"
       vr-mode-ui="enabled: false">
       
       <a-entity
