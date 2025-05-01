@@ -1,61 +1,32 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
   <head>
     <meta charset="utf-8" />
-    <title>Visualizador 3D</title>
+    <title>Visualizador 3D com Botões</title>
+    <link rel="stylesheet" href="style.css" />
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <style>
-      body {
-        margin: 0;
-        overflow: hidden;
-      }
-
-      .btn {
-        position: absolute;
-        font-size: 30px;
-        background: black;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        cursor: pointer;
-        z-index: 999;
-      }
-
-      #prevBtn {
-        left: 10px;
-        bottom: 10px;
-      }
-
-      #nextBtn {
-        right: 10px;
-        bottom: 10px;
-      }
-
-      #loadingIndicator {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 30px;
-        color: white;
-        z-index: 1000;
-      }
-    </style>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
   </head>
-
   <body>
-    <button id="prevBtn" class="btn" onclick="changeModel(-1)">◀️</button>
-    <button id="nextBtn" class="btn" onclick="changeModel(1)">▶️</button>
+    <button id="prevBtn" class="btn" onclick="changeModel(-1)">&#9664;</button>
+    <button id="nextBtn" class="btn" onclick="changeModel(1)">&#9654;</button>
     <div id="loadingIndicator">Carregando...</div>
 
-    <a-scene embedded vr-mode-ui="enabled: false">
-      <a-entity
-        id="modelContainer"
-        position="0 0 -3"
-        rotation="0 180 0"
-        scale="1 1 1"
-      ></a-entity>
-      <a-camera position="0 1.6 0"></a-camera>
+    <a-scene
+      embedded
+      arjs="sourceType: webcam; debugUIEnabled: false; markerType: pattern; patternUrl: pattern.patt;"
+      vr-mode-ui="enabled: false">
+      
+      <a-marker type="pattern" url="pattern.patt">
+        <a-entity
+          id="modelContainer"
+          position="0 0 0"
+          rotation="0 180 0"
+          scale="1 1 1">
+        </a-entity>
+      </a-marker>
+
+      <a-entity camera></a-entity>
     </a-scene>
 
     <script>
@@ -70,22 +41,23 @@
       ];
 
       let currentIndex = 0;
-      const container = document.querySelector("#modelContainer");
-      const loadingIndicator = document.querySelector("#loadingIndicator");
 
       function loadModel(name) {
+        const container = document.querySelector("#modelContainer");
+        const loadingIndicator = document.querySelector("#loadingIndicator");
+
         loadingIndicator.style.display = "block";
         container.removeAttribute("gltf-model");
 
         fetch(`https://ar-menu-models.s3.amazonaws.com/ar-models/${name}.glb`)
-          .then((res) => res.blob())
+          .then((response) => response.blob())
           .then((blob) => {
-            container.setAttribute("gltf-model", URL.createObjectURL(blob));
-            container.setAttribute("scale", "1 1 1");
+            const url = URL.createObjectURL(blob);
+            container.setAttribute("gltf-model", url);
             loadingIndicator.style.display = "none";
           })
-          .catch((err) => {
-            console.error("Erro ao carregar o modelo:", err);
+          .catch((error) => {
+            console.error("Erro ao carregar o modelo:", error);
             loadingIndicator.innerText = "Erro ao carregar o modelo";
           });
       }
@@ -95,14 +67,22 @@
         loadModel(models[currentIndex]);
       }
 
+      document.querySelector("#prevBtn").addEventListener("click", () => changeModel(-1));
+      document.querySelector("#nextBtn").addEventListener("click", () => changeModel(1));
+
       loadModel(models[currentIndex]);
 
+      // Rotação automática
       setInterval(() => {
-        const rotation = container.getAttribute("rotation");
-        rotation.y += 0.5;
-        container.setAttribute("rotation", rotation);
+        const model = document.querySelector("#modelContainer");
+        if (model && model.object3D.visible) {
+          const rotation = model.getAttribute("rotation");
+          rotation.y += 0.5;
+          model.setAttribute("rotation", rotation);
+        }
       }, 30);
 
+      // Zoom por gesto
       let initialDistance = null;
       let initialScale = 1;
 
@@ -111,7 +91,8 @@
           const dx = e.touches[0].clientX - e.touches[1].clientX;
           const dy = e.touches[0].clientY - e.touches[1].clientY;
           initialDistance = Math.sqrt(dx * dx + dy * dy);
-          initialScale = container.getAttribute("scale").x;
+          const scale = document.querySelector("#modelContainer").getAttribute("scale");
+          initialScale = scale.x;
         }
       });
 
@@ -120,13 +101,16 @@
           const dx = e.touches[0].clientX - e.touches[1].clientX;
           const dy = e.touches[0].clientY - e.touches[1].clientY;
           const currentDistance = Math.sqrt(dx * dx + dy * dy);
-          const scale = Math.min(Math.max(initialScale * (currentDistance / initialDistance), 0.1), 10);
-          container.setAttribute("scale", `${scale} ${scale} ${scale}`);
+          const scaleFactor = currentDistance / initialDistance;
+          const newScale = Math.min(Math.max(initialScale * scaleFactor, 0.1), 10);
+          document.querySelector("#modelContainer").setAttribute("scale", `${newScale} ${newScale} ${newScale}`);
         }
       });
 
       window.addEventListener("touchend", (e) => {
-        if (e.touches.length < 2) initialDistance = null;
+        if (e.touches.length < 2) {
+          initialDistance = null;
+        }
       });
     </script>
   </body>
