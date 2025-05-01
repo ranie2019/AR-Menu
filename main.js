@@ -9,40 +9,29 @@ const models = [
 ];
 
 let currentIndex = 0;
-const modelCache = {};  // Cache para os modelos carregados
 
-// Função para carregar o modelo
+// Função para carregar o modelo local
 function loadModel(name) {
   const container = document.querySelector("#modelContainer");
   const loadingIndicator = document.querySelector("#loadingIndicator");
 
   loadingIndicator.style.display = "block";
-  container.removeAttribute("gltf-model");  // Remover modelo anterior
 
-  if (modelCache[name]) {
-    // Se o modelo já foi carregado e está no cache, apenas usa ele
-    container.setAttribute("gltf-model", modelCache[name]);
+  const path = `3d/${name}.glb`;
+
+  container.setAttribute("gltf-model", path);
+
+  container.addEventListener("model-loaded", () => {
     loadingIndicator.style.display = "none";
-  } else {
-    console.log(`Carregando o modelo: https://ar-menu-models.s3.amazonaws.com/ar-models/${name}.glb`);
-    
-    // Carregar modelo do servidor
-    fetch(`https://ar-menu-models.s3.amazonaws.com/ar-models/${name}.glb`)
-      .then((response) => response.blob())
-      .then((blob) => {
-        const url = URL.createObjectURL(blob);
-        modelCache[name] = url;  // Armazenar o modelo no cache
-        container.setAttribute("gltf-model", url);
-        loadingIndicator.style.display = "none";
-      })
-      .catch((error) => {
-        console.error("Erro ao carregar o modelo:", error);
-        loadingIndicator.innerText = "Erro ao carregar o modelo";
-      });
-  }
+  }, { once: true });
+
+  container.addEventListener("model-error", (e) => {
+    console.error("Erro ao carregar o modelo:", e.detail);
+    loadingIndicator.innerText = "Erro ao carregar o modelo";
+  }, { once: true });
 }
 
-// Função para trocar de modelo
+// Troca de modelo
 function changeModel(direction) {
   currentIndex = (currentIndex + direction + models.length) % models.length;
   loadModel(models[currentIndex]);
@@ -51,7 +40,7 @@ function changeModel(direction) {
 // Inicializa o primeiro modelo
 loadModel(models[currentIndex]);
 
-// Rotação automática do modelo 3D
+// Rotação automática
 setInterval(() => {
   const model = document.querySelector("#modelContainer");
   const rotation = model.getAttribute("rotation");
@@ -59,7 +48,7 @@ setInterval(() => {
   model.setAttribute("rotation", rotation);
 }, 30);
 
-// Zoom com gesto de pinça otimizado
+// Zoom com gesto de pinça
 let initialDistance = null;
 let initialScale = 1;
 
