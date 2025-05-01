@@ -2,29 +2,52 @@
 <html lang="pt-BR">
   <head>
     <meta charset="utf-8" />
-    <title>Visualizador 3D com Botões</title>
-    <link rel="stylesheet" href="style.css" />
+    <title>Visualizador 3D com AR.js</title>
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+      #loadingIndicator {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 30px;
+        color: white;
+        z-index: 1000;
+      }
+    </style>
   </head>
 
   <body>
-    <button id="prevBtn" class="btn" onclick="changeModel(-1)">&#9664;</button> <!-- ◀ -->
-    <button id="nextBtn" class="btn" onclick="changeModel(1)">&#9654;</button> <!-- ▶ -->
     <div id="loadingIndicator">Carregando...</div>
 
     <a-scene
       embedded
-      arjs="sourceType: webcam; debugUIEnabled: false; markerType: pattern;"
+      arjs="sourceType: webcam; debugUIEnabled: false; markerType: pattern; markerUrl: #markerPattern"
       vr-mode-ui="enabled: false"
     >
+      <a-assets>
+        <!-- Referência ao arquivo de marcador .patt gerado -->
+        <a-asset-item id="markerPattern" src="path/to/your-marker.patt"></a-asset-item>
+
+        <!-- Modelo 3D, altere o link para o seu modelo no S3 ou local -->
+        <a-asset-item id="champagneModel" src="https://ar-menu-models.s3.amazonaws.com/ar-models/champagne.glb"></a-asset-item>
+      </a-assets>
+
+      <!-- Contêiner para o modelo 3D -->
       <a-entity
         id="modelContainer"
         position="0 0 -3"
         rotation="0 180 0"
         scale="1 1 1"
+        gltf-model="#champagneModel"
       ></a-entity>
 
+      <!-- Câmera para exibir o conteúdo AR -->
       <a-camera position="0 1.6 0"></a-camera>
     </a-scene>
 
