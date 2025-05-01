@@ -3,7 +3,7 @@ const models = [
   "heineken",
   "redbull",
   "fizzydrink",
-  "chocolatecupcake",
+  "cubo",
   "sundae",
   "pizza",
 ];
