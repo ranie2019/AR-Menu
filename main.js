@@ -18,11 +18,13 @@ function loadModel(name) {
   loadingIndicator.style.display = "block";
   container.removeAttribute("gltf-model");
 
+  const path = `./ar-menu/3d/${name}.glb`;
+
   if (modelCache[name]) {
     container.setAttribute("gltf-model", modelCache[name]);
     loadingIndicator.style.display = "none";
   } else {
-    fetch(`https://ar-menu-models.s3.amazonaws.com/ar-models/${name}.glb`)
+    fetch(path)
       .then((response) => response.blob())
       .then((blob) => {
         const url = URL.createObjectURL(blob);
@@ -42,7 +44,10 @@ function changeModel(direction) {
   loadModel(models[currentIndex]);
 }
 
-loadModel(models[currentIndex]);
+// Espera a cena carregar antes de carregar o modelo
+document.querySelector("a-scene").addEventListener("renderstart", () => {
+  loadModel(models[currentIndex]);
+});
 
 // Rotação automática
 setInterval(() => {
@@ -52,7 +57,7 @@ setInterval(() => {
   model.setAttribute("rotation", rotation);
 }, 30);
 
-// Zoom com gesto de pinça
+// Zoom com pinça
 let initialDistance = null;
 let initialScale = 1;
 

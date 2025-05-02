@@ -2,10 +2,9 @@
 <html lang="pt-BR">
   <head>
     <meta charset="utf-8" />
-    <title>Visualizador 3D Centralizado</title>
-    <link rel="stylesheet" href="style.css" />
+    <title>Visualizador 3D com Botões</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar-nft.min.js"></script>
     <style>
       body {
         margin: 0;
@@ -53,34 +52,18 @@
 
   <body>
     <button id="prevBtn" class="btn" onclick="changeModel(-1)">
-      <svg viewBox="0 0 24 24">
-        <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
-      </svg>
+      <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" /></svg>
     </button>
 
     <button id="nextBtn" class="btn" onclick="changeModel(1)">
-      <svg viewBox="0 0 24 24">
-        <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z" />
-      </svg>
+      <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z" /></svg>
     </button>
 
     <div id="loadingIndicator">Carregando...</div>
 
-    <a-scene
-      embedded
-      vr-mode-ui="enabled: false"
-      renderer="antialias: true; alpha: true"
-      arjs="sourceType: webcam; debugUIEnabled: false;"
-    >
-      <a-camera position="0 1.6 0">
-        <!-- Modelo sempre à frente da câmera -->
-        <a-entity
-          id="modelContainer"
-          position="0 0 -2"
-          rotation="0 180 0"
-          scale="1 1 1"
-        ></a-entity>
-      </a-camera>
+    <a-scene embedded vr-mode-ui="enabled: false">
+      <a-entity id="modelContainer" position="0 1.5 -3" rotation="0 180 0" scale="1 1 1"></a-entity>
+      <a-camera position="0 1.6 0"></a-camera>
     </a-scene>
 
     <script src="main.js"></script>
