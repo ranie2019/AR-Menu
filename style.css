@@ -1,34 +1,42 @@
-/* Indicador de carregamento com porcentagem */
-#loadingIndicator {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  background: rgba(0, 0, 0, 0.6);
-  color: white;
-  padding: 10px;
-  font-size: 16px;
-  border-radius: 8px;
-  z-index: 1000;
-  font-family: Arial, sans-serif;
+/* style.css */
+
+body {
+  margin: 0;
+  overflow: hidden;
+  font-family: sans-serif;
+  background-color: #000; /* Fundo escuro para AR */
 }
 
-/* Botões de navegação */
 .btn {
   position: absolute;
   font-size: 30px;
   background-color: #ffa726; /* Laranja suave */
-  color: white; /* Seta branca */
+  color: white; /* Texto branco (se usar texto no botão) */
   border: none;
-  border-radius: 12px; /* Bordas arredondadas */
+  border-radius: 12px;
   padding: 10px 20px;
   cursor: pointer;
   z-index: 999;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Sombra leve */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   transition: transform 0.1s ease, background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Garante que o SVG e o path da seta fiquem brancos */
+.btn svg {
+  width: 24px;
+  height: 24px;
+  fill: white;
+}
+
+.btn svg path {
+  fill: white;
 }
 
 .btn:hover {
-  background-color: #fb8c00; /* Laranja mais escuro no hover */
+  background-color: #fb8c00;
   transform: scale(1.05);
 }
 
@@ -40,4 +48,14 @@
 #nextBtn {
   right: 10px;
   bottom: 10px;
+}
+
+#loadingIndicator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 30px;
+  color: white;
+  z-index: 1000;
 }
