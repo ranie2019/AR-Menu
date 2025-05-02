@@ -11,48 +11,34 @@ const models = [
 let currentIndex = 0;
 const modelCache = {};
 
-// Carrega um modelo GLB e mostra progresso de carregamento
+// Função para carregar o modelo
 function loadModel(name) {
   const container = document.querySelector("#modelContainer");
   const loadingIndicator = document.querySelector("#loadingIndicator");
 
   loadingIndicator.style.display = "block";
-  loadingIndicator.innerText = "0%";
   container.removeAttribute("gltf-model");
 
   if (modelCache[name]) {
     container.setAttribute("gltf-model", modelCache[name]);
     loadingIndicator.style.display = "none";
   } else {
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", `./3d/${name}.glb`, true);
-    xhr.responseType = "blob";
-
-    xhr.onprogress = (event) => {
-      if (event.lengthComputable) {
-        const percent = Math.round((event.loaded / event.total) * 100);
-        loadingIndicator.innerText = `${percent}%`;
-      }
-    };
-
-    xhr.onload = () => {
-      const blob = xhr.response;
-      const url = URL.createObjectURL(blob);
-      modelCache[name] = url;
-      container.setAttribute("gltf-model", url);
-      loadingIndicator.style.display = "none";
-    };
-
-    xhr.onerror = () => {
-      console.error("Erro ao carregar o modelo.");
-      loadingIndicator.innerText = "Erro ao carregar o modelo";
-    };
-
-    xhr.send();
+    fetch(`./3d/${name}.glb`)  // Carregar modelo da pasta local "3d"
+      .then((response) => response.blob())
+      .then((blob) => {
+        const url = URL.createObjectURL(blob);
+        modelCache[name] = url;
+        container.setAttribute("gltf-model", url);
+        loadingIndicator.style.display = "none";
+      })
+      .catch((error) => {
+        console.error("Erro ao carregar o modelo:", error);
+        loadingIndicator.innerText = "Erro ao carregar o modelo";
+      });
   }
 }
 
-// Troca o modelo com base na direção (1 ou -1)
+// Função para trocar de modelo
 function changeModel(direction) {
   currentIndex = (currentIndex + direction + models.length) % models.length;
   loadModel(models[currentIndex]);
@@ -61,16 +47,15 @@ function changeModel(direction) {
 // Inicializa o primeiro modelo
 loadModel(models[currentIndex]);
 
-// Rotação automática suave
+// Rotação automática do modelo 3D
 setInterval(() => {
   const model = document.querySelector("#modelContainer");
-  if (!model) return;
   const rotation = model.getAttribute("rotation");
   rotation.y += 0.5;
   model.setAttribute("rotation", rotation);
 }, 30);
 
-// Zoom com gesto de pinça
+// Zoom com gesto de pinça otimizado
 let initialDistance = null;
 let initialScale = 1;
 
@@ -90,7 +75,6 @@ window.addEventListener("touchstart", (e) => {
   }
 });
 
-// Zoom com gesto
 window.addEventListener("touchmove", (e) => {
   if (e.touches.length === 2 && initialDistance) {
     const dx = e.touches[0].clientX - e.touches[1].clientX;
@@ -103,30 +87,4 @@ window.addEventListener("touchmove", (e) => {
 
 window.addEventListener("touchend", () => {
   initialDistance = null;
-});
-
-// Rotação vertical com arrastar dedo
-let startY = null;
-let initialRotationX = 0;
-
-window.addEventListener("touchstart", (e) => {
-  if (e.touches.length === 1) {
-    startY = e.touches[0].clientY;
-    const model = document.querySelector("#modelContainer");
-    initialRotationX = model.getAttribute("rotation").x;
-  }
-});
-
-window.addEventListener("touchmove", (e) => {
-  if (e.touches.length === 1 && startY !== null) {
-    const deltaY = e.touches[0].clientY - startY;
-    const model = document.querySelector("#modelContainer");
-    const newX = Math.min(Math.max(initialRotationX - deltaY * 0.2, -90), 90);
-    const rotation = model.getAttribute("rotation");
-    model.setAttribute("rotation", `${newX} ${rotation.y} ${rotation.z}`);
-  }
-});
-
-window.addEventListener("touchend", () => {
-  startY = null;
 });
