@@ -11,61 +11,28 @@
         margin: 0;
         overflow: hidden;
       }
-
-      .btn {
-        position: absolute;
-        background-color: #ffa726; /* laranja suave */
-        border: none;
-        padding: 12px;
-        cursor: pointer;
-        border-radius: 12px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        z-index: 999;
-      }
-
-      .btn svg {
-        fill: white;
-        width: 24px;
-        height: 24px;
-      }
-
-      #prevBtn {
-        left: 10px;
-        bottom: 10px;
-      }
-
-      #nextBtn {
-        right: 10px;
-        bottom: 10px;
-      }
-
-      #loadingIndicator {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 30px;
-        color: white;
-        z-index: 1000;
-      }
     </style>
   </head>
 
   <body>
+    <!-- Botão Anterior -->
     <button id="prevBtn" class="btn" onclick="changeModel(-1)">
       <svg viewBox="0 0 24 24">
         <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
       </svg>
     </button>
 
+    <!-- Botão Próximo -->
     <button id="nextBtn" class="btn" onclick="changeModel(1)">
       <svg viewBox="0 0 24 24">
         <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z" />
       </svg>
     </button>
 
-    <div id="loadingIndicator">Carregando...</div>
+    <!-- Indicador de carregamento -->
+    <div id="loadingIndicator">0%</div>
 
+    <!-- Cena AR com marcador -->
     <a-scene
       embedded
       arjs="sourceType: webcam; debugUIEnabled: false; markerType: pattern; patternUrl: 'ar-menu/pattern.patt';"
