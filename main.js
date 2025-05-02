@@ -11,6 +11,7 @@ const models = [
 let currentIndex = 0;
 const modelCache = {};
 
+// Função para carregar o modelo
 function loadModel(name) {
   const container = document.querySelector("#modelContainer");
   const loadingIndicator = document.querySelector("#loadingIndicator");
@@ -22,7 +23,7 @@ function loadModel(name) {
     container.setAttribute("gltf-model", modelCache[name]);
     loadingIndicator.style.display = "none";
   } else {
-    fetch(`3d/${name}.glb`)
+    fetch(`./3d/${name}.glb`)  // Carregar modelo da pasta local "3d"
       .then((response) => response.blob())
       .then((blob) => {
         const url = URL.createObjectURL(blob);
@@ -37,14 +38,16 @@ function loadModel(name) {
   }
 }
 
+// Função para trocar de modelo
 function changeModel(direction) {
   currentIndex = (currentIndex + direction + models.length) % models.length;
   loadModel(models[currentIndex]);
 }
 
+// Inicializa o primeiro modelo
 loadModel(models[currentIndex]);
 
-// Rotação automática
+// Rotação automática do modelo 3D
 setInterval(() => {
   const model = document.querySelector("#modelContainer");
   const rotation = model.getAttribute("rotation");
@@ -52,7 +55,7 @@ setInterval(() => {
   model.setAttribute("rotation", rotation);
 }, 30);
 
-// Zoom com gesto de pinça
+// Zoom com gesto de pinça otimizado
 let initialDistance = null;
 let initialScale = 1;
 
