@@ -11,7 +11,6 @@ const models = [
 let currentIndex = 0;
 const modelCache = {};
 
-// Carrega um modelo GLB e mostra progresso de carregamento
 function loadModel(name) {
   const container = document.querySelector("#modelContainer");
   const loadingIndicator = document.querySelector("#loadingIndicator");
@@ -52,16 +51,13 @@ function loadModel(name) {
   }
 }
 
-// Troca o modelo com base na direção (1 ou -1)
 function changeModel(direction) {
   currentIndex = (currentIndex + direction + models.length) % models.length;
   loadModel(models[currentIndex]);
 }
 
-// Inicializa o primeiro modelo
 loadModel(models[currentIndex]);
 
-// Rotação automática suave
 setInterval(() => {
   const model = document.querySelector("#modelContainer");
   if (!model) return;
@@ -70,7 +66,6 @@ setInterval(() => {
   model.setAttribute("rotation", rotation);
 }, 30);
 
-// Zoom com gesto de pinça
 let initialDistance = null;
 let initialScale = 1;
 
@@ -90,7 +85,6 @@ window.addEventListener("touchstart", (e) => {
   }
 });
 
-// Zoom com gesto
 window.addEventListener("touchmove", (e) => {
   if (e.touches.length === 2 && initialDistance) {
     const dx = e.touches[0].clientX - e.touches[1].clientX;
@@ -105,7 +99,6 @@ window.addEventListener("touchend", () => {
   initialDistance = null;
 });
 
-// Rotação vertical com arrastar dedo
 let startY = null;
 let initialRotationX = 0;
 
