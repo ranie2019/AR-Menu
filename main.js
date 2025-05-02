@@ -22,7 +22,7 @@ function loadModel(name) {
     container.setAttribute("gltf-model", modelCache[name]);
     loadingIndicator.style.display = "none";
   } else {
-    fetch(`https://ar-menu-models.s3.amazonaws.com/ar-models/${name}.glb`)
+    fetch(`3d/${name}.glb`)
       .then((response) => response.blob())
       .then((blob) => {
         const url = URL.createObjectURL(blob);
