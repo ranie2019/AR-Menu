@@ -83,6 +83,21 @@ window.addEventListener("touchmove", (e) => {
     const scaleFactor = currentDistance / initialDistance;
     updateScale(scaleFactor);
   }
+
+  // Adicionando rotação com o movimento vertical do dedo
+  if (e.touches.length === 1) {
+    const model = document.querySelector("#modelContainer");
+    const touch = e.touches[0];
+    
+    // Acompanhe o movimento vertical (y) do dedo
+    const rotation = model.getAttribute("rotation");
+    const touchDelta = touch.clientY - touch.previousClientY || 0; // Calcule a diferença no movimento vertical
+    rotation.x += touchDelta * 0.2;  // Ajuste a rotação no eixo X (vertical)
+    model.setAttribute("rotation", rotation);
+
+    // Armazenando a posição do toque anterior para o cálculo da diferença
+    touch.previousClientY = touch.clientY;
+  }
 });
 
 window.addEventListener("touchend", () => {

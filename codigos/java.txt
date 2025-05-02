@@ -3,13 +3,13 @@ const models = [
   "heineken",
   "redbull",
   "fizzydrink",
-  "chocolatecupcake",
+  "cubo",
   "sundae",
   "pizza",
 ];
 
 let currentIndex = 0;
-const modelCache = {};  // Cache para os modelos carregados
+const modelCache = {};
 
 // Função para carregar o modelo
 function loadModel(name) {
@@ -17,21 +17,17 @@ function loadModel(name) {
   const loadingIndicator = document.querySelector("#loadingIndicator");
 
   loadingIndicator.style.display = "block";
-  container.removeAttribute("gltf-model");  // Remover modelo anterior
+  container.removeAttribute("gltf-model");
 
   if (modelCache[name]) {
-    // Se o modelo já foi carregado e está no cache, apenas usa ele
     container.setAttribute("gltf-model", modelCache[name]);
     loadingIndicator.style.display = "none";
   } else {
-    console.log(`Carregando o modelo: https://ar-menu-models.s3.amazonaws.com/ar-models/${name}.glb`);
-    
-    // Carregar modelo do servidor
-    fetch(`https://ar-menu-models.s3.amazonaws.com/ar-models/${name}.glb`)
+    fetch(`./3d/${name}.glb`)  // Carregar modelo da pasta local "3d"
       .then((response) => response.blob())
       .then((blob) => {
         const url = URL.createObjectURL(blob);
-        modelCache[name] = url;  // Armazenar o modelo no cache
+        modelCache[name] = url;
         container.setAttribute("gltf-model", url);
         loadingIndicator.style.display = "none";
       })
