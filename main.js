@@ -11,7 +11,6 @@ const models = [
 let currentIndex = 0;
 const modelCache = {};
 
-// Função para carregar o modelo
 function loadModel(name) {
   const container = document.querySelector("#modelContainer");
   const loadingIndicator = document.querySelector("#loadingIndicator");
@@ -38,13 +37,11 @@ function loadModel(name) {
   }
 }
 
-// Função para trocar de modelo
 function changeModel(direction) {
   currentIndex = (currentIndex + direction + models.length) % models.length;
   loadModel(models[currentIndex]);
 }
 
-// Inicializa o primeiro modelo
 loadModel(models[currentIndex]);
 
 // Rotação automática do modelo 3D
@@ -88,14 +85,20 @@ window.addEventListener("touchmove", (e) => {
   if (e.touches.length === 1) {
     const model = document.querySelector("#modelContainer");
     const touch = e.touches[0];
-    
-    // Acompanhe o movimento vertical (y) do dedo
+
+    // Armazenando a posição anterior do toque para calcular a diferença de movimento vertical
+    if (!touch.previousClientY) {
+      touch.previousClientY = touch.clientY;
+    }
+
+    const touchDelta = touch.clientY - touch.previousClientY; // Diferença no movimento vertical
     const rotation = model.getAttribute("rotation");
-    const touchDelta = touch.clientY - touch.previousClientY || 0; // Calcule a diferença no movimento vertical
-    rotation.x += touchDelta * 0.2;  // Ajuste a rotação no eixo X (vertical)
+    
+    // Ajuste da rotação no eixo X (vertical)
+    rotation.x += touchDelta * 0.2;  // Ajuste o valor para controlar a velocidade da rotação no eixo X
     model.setAttribute("rotation", rotation);
 
-    // Armazenando a posição do toque anterior para o cálculo da diferença
+    // Atualizando a posição anterior do toque
     touch.previousClientY = touch.clientY;
   }
 });
