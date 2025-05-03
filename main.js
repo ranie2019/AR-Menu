@@ -19,7 +19,7 @@ function loadModel(name) {
 
   // Exibe o indicador de carregamento
   loadingIndicator.style.display = "block";
-  loadingIndicator.innerText = "0%";
+  loadingIndicator.innerText = "0%"; // Inicia com 0%
 
   // Remove modelo atual antes de carregar o novo
   container.removeAttribute("gltf-model");
@@ -32,7 +32,7 @@ function loadModel(name) {
   // Se o modelo já estiver no cache, usa direto
   if (modelCache[name]) {
     container.setAttribute("gltf-model", modelCache[name]);
-    loadingIndicator.style.display = "none";
+    loadingIndicator.style.display = "none"; // Esconde o indicador de carregamento
   } else {
     // Cria uma requisição para carregar o modelo .glb
     const xhr = new XMLHttpRequest();
@@ -43,7 +43,7 @@ function loadModel(name) {
     xhr.onprogress = (event) => {
       if (event.lengthComputable) {
         const percent = Math.round((event.loaded / event.total) * 100);
-        loadingIndicator.innerText = `${percent}%`;
+        loadingIndicator.innerText = `${percent}%`; // Atualiza o indicador
       }
     };
 
@@ -53,13 +53,13 @@ function loadModel(name) {
       const url = URL.createObjectURL(blob);
       modelCache[name] = url;
       container.setAttribute("gltf-model", url);
-      loadingIndicator.style.display = "none";
+      loadingIndicator.style.display = "none"; // Esconde o indicador de carregamento
     };
 
     // Se der erro no carregamento
     xhr.onerror = () => {
       console.error("Erro ao carregar o modelo.");
-      loadingIndicator.innerText = "Erro ao carregar o modelo";
+      loadingIndicator.innerText = "Erro ao carregar o modelo"; // Exibe erro
     };
 
     xhr.send(); // Envia a requisição
@@ -124,29 +124,3 @@ window.addEventListener("touchend", () => {
 
 // Rotação vertical (X) com movimento de um dedo
 let startY = null;
-let initialRotationX = 0;
-
-// Inicia rotação com um dedo
-window.addEventListener("touchstart", (e) => {
-  if (e.touches.length === 1) {
-    startY = e.touches[0].clientY;
-    const model = document.querySelector("#modelContainer");
-    initialRotationX = model.getAttribute("rotation").x;
-  }
-});
-
-// Move dedo para cima/baixo para rotacionar no eixo X
-window.addEventListener("touchmove", (e) => {
-  if (e.touches.length === 1 && startY !== null) {
-    const deltaY = e.touches[0].clientY - startY;
-    const model = document.querySelector("#modelContainer");
-    const rotation = model.getAttribute("rotation");
-    const newX = Math.min(Math.max(initialRotationX - deltaY * 0.2, -90), 90);
-    model.setAttribute("rotation", `${newX} ${rotation.y} ${rotation.z}`);
-  }
-});
-
-// Fim da rotação
-window.addEventListener("touchend", () => {
-  startY = null;
-});
