@@ -1,5 +1,3 @@
-// main.js
-
 // Lista de modelos disponíveis (os arquivos .glb devem estar na pasta "3d")
 const models = [
   "champagne",
@@ -67,5 +65,5 @@ import("./rotate-vertical.js").then((module) => {
   module.initVerticalRotate();
 });
 
-// Carrega o primeiro modelo
+// Carrega o primeiro modelo ao iniciar
 loadModel(currentModelIndex);
