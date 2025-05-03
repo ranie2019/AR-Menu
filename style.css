@@ -38,4 +38,3 @@
   fill: white; /* Cor do ícone */
   pointer-events: none; /* Ignora cliques diretamente no SVG (permite clicar no botão inteiro) */
 }
-
