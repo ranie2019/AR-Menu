@@ -23,8 +23,10 @@ window.addEventListener("DOMContentLoaded", async () => {
     await loadModel(models[0]);
   } catch (error) {
     console.error("Erro ao carregar o modelo:", error);
+    // Exibe uma mensagem de erro amigável ou um fallback
+    showLoading("Erro ao carregar o modelo. Tente novamente.");
   } finally {
-    // Oculta o indicador de carregamento
+    // Oculta o indicador de carregamento, independente do sucesso ou falha
     hideLoading();
   }
 
