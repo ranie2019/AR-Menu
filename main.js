@@ -161,3 +161,12 @@ window.addEventListener("touchmove", (e) => {
 window.addEventListener("touchend", () => {
   startY = null;
 });
+
+// Função para navegar entre os modelos com botões
+document.querySelector("#prevBtn").addEventListener("click", () => {
+  changeModel(-1);
+});
+
+document.querySelector("#nextBtn").addEventListener("click", () => {
+  changeModel(1);
+});

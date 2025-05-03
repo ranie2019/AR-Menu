@@ -11,6 +11,62 @@
         margin: 0;
         overflow: hidden;
       }
+
+      /* Estilo do botão */
+      .btn {
+        position: absolute;
+        font-size: 30px;
+        background-color: #ffa726;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 10px 10px;
+        cursor: pointer;
+        z-index: 999;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        transition: transform 0.1s ease, background-color 0.2s ease;
+      }
+
+      /* Efeito de hover no botão */
+      .btn:hover {
+        background-color: #fb8c00;
+        transform: scale(1.05);
+      }
+
+      /* Botão Anterior */
+      #prevBtn {
+        left: 10px;
+        bottom: 10px;
+      }
+
+      /* Botão Próximo */
+      #nextBtn {
+        right: 10px;
+        bottom: 10px;
+      }
+
+      /* Estilo das setas */
+      .btn svg {
+        width: 24px;
+        height: 24px;
+        fill: white;
+        pointer-events: none;
+      }
+
+      /* Indicador de carregamento */
+      #loadingIndicator {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 18px;
+        z-index: 1000;
+        display: none;
+      }
     </style>
   </head>
 
@@ -30,7 +86,7 @@
     </button>
 
     <!-- Indicador de carregamento -->
-    <div id="loadingIndicator">0%</div>
+    <div id="loadingIndicator">Carregando...</div>
 
     <!-- Cena AR com marcador -->
     <a-scene
