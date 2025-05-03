@@ -1,43 +1,40 @@
-/* Indicador de carregamento com porcentagem */
-#loadingIndicator {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  background: rgba(0, 0, 0, 0.6);
-  color: white;
-  padding: 10px;
-  font-size: 16px;
-  border-radius: 8px;
-  z-index: 1000;
-  font-family: Arial, sans-serif;
-}
-
-/* Botões de navegação */
+/* Estilo geral dos botões */
 .btn {
-  position: absolute;
-  font-size: 30px;
-  background-color: #ffa726; /* Laranja suave */
-  color: white; /* Seta branca */
-  border: none;
+  position: absolute; /* O botão será posicionado de forma absoluta */
+  font-size: 30px; /* Tamanho da fonte do texto (se houver texto dentro do botão) */
+  background-color: #ffa726; /* Cor de fundo do botão */
+  color: white; /* Cor do texto dentro do botão */
+  border: none; /* Remove a borda padrão do botão */
   border-radius: 12px; /* Bordas arredondadas */
-  padding: 10px 20px;
-  cursor: pointer;
-  z-index: 999;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Sombra leve */
-  transition: transform 0.1s ease, background-color 0.2s ease;
+  padding: 10px 10px; /* Espaço interno (vertical e horizontal) para deixar o botão maior */
+  cursor: pointer; /* O cursor muda para uma mãozinha ao passar sobre o botão */
+  z-index: 999; /* Coloca o botão acima de outros elementos (em relação à sobreposição) */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Adiciona uma sombra suave ao redor do botão */
+  transition: transform 0.1s ease, background-color 0.2s ease; /* Suaviza a transição quando o botão for pressionado ou o hover ocorrer */
 }
 
+/* Efeito de hover (quando o mouse passa sobre o botão) */
 .btn:hover {
-  background-color: #fb8c00; /* Laranja mais escuro no hover */
-  transform: scale(1.05);
+  background-color: #fb8c00; /* Muda a cor do fundo ao passar o mouse */
+  transform: scale(1.05); /* Aumenta um pouco o botão para efeito visual */
 }
 
+/* Estilo para o botão anterior (seta esquerda) */
 #prevBtn {
-  left: 10px;
-  bottom: 10px;
+  left: 10px; /* Posiciona o botão 10px da borda esquerda */
+  bottom: 10px; /* Posiciona o botão 10px da borda inferior */
 }
 
+/* Estilo para o botão próximo (seta direita) */
 #nextBtn {
-  right: 10px;
-  bottom: 10px;
+  right: 10px; /* Posiciona o botão 10px da borda direita */
+  bottom: 10px; /* Posiciona o botão 10px da borda inferior */
+}
+
+/* Estilo das setas dentro dos botões */
+.btn svg {
+  width: 24px; /* Define a largura da seta */
+  height: 24px; /* Define a altura da seta */
+  fill: white; /* Cor da seta */
+  pointer-events: none; /* Impede que o clique do mouse interfira com o SVG, deixando o botão capturar o clique */
 }
