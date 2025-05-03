@@ -19,7 +19,7 @@ function loadModel(name) {
 
   // Exibe o indicador de carregamento
   loadingIndicator.style.display = "block";
-  loadingIndicator.innerText = `Carregando ${name}...`; // Exibe o nome do modelo sendo carregado
+  loadingIndicator.innerText = "0%";
 
   // Remove modelo atual antes de carregar o novo
   container.removeAttribute("gltf-model");
@@ -32,7 +32,7 @@ function loadModel(name) {
   // Se o modelo já estiver no cache, usa direto
   if (modelCache[name]) {
     container.setAttribute("gltf-model", modelCache[name]);
-    loadingIndicator.style.display = "none"; // Esconde o indicador quando terminar de carregar
+    loadingIndicator.style.display = "none";
   } else {
     // Cria uma requisição para carregar o modelo .glb
     const xhr = new XMLHttpRequest();
@@ -43,7 +43,7 @@ function loadModel(name) {
     xhr.onprogress = (event) => {
       if (event.lengthComputable) {
         const percent = Math.round((event.loaded / event.total) * 100);
-        loadingIndicator.innerText = `Carregando ${name}... ${percent}%`; // Atualiza com a porcentagem
+        loadingIndicator.innerText = `${percent}%`;
       }
     };
 
@@ -53,7 +53,7 @@ function loadModel(name) {
       const url = URL.createObjectURL(blob);
       modelCache[name] = url;
       container.setAttribute("gltf-model", url);
-      loadingIndicator.style.display = "none"; // Esconde o indicador quando terminar de carregar
+      loadingIndicator.style.display = "none";
     };
 
     // Se der erro no carregamento
@@ -147,3 +147,6 @@ window.addEventListener("touchmove", (e) => {
 });
 
 // Fim da rotação
+window.addEventListener("touchend", () => {
+  startY = null;
+});
