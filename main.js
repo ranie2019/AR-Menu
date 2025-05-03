@@ -12,14 +12,23 @@ const models = [
 let currentIndex = 0; // Índice atual do modelo
 const modelCache = {}; // Cache para armazenar modelos já carregados
 
+// Função para mostrar o texto de carregamento
+function showLoading() {
+  document.getElementById('loadingText').style.display = 'flex';
+}
+
+// Função para esconder o texto de carregamento
+function hideLoading() {
+  document.getElementById('loadingText').style.display = 'none';
+}
+
 // Carrega um modelo 3D e exibe na cena
 function loadModel(name) {
   const container = document.querySelector("#modelContainer");
-  const loadingIndicator = document.querySelector("#loadingIndicator");
+  const loadingIndicator = document.querySelector("#loadingText");
 
   // Exibe o indicador de carregamento
-  loadingIndicator.style.display = "block";
-  loadingIndicator.innerText = `Carregando ${name}...`; // Exibe o nome do modelo sendo carregado
+  showLoading(); // Mostra o texto "Carregando"
 
   // Remove modelo atual antes de carregar o novo
   container.removeAttribute("gltf-model");
@@ -32,7 +41,7 @@ function loadModel(name) {
   // Se o modelo já estiver no cache, usa direto
   if (modelCache[name]) {
     container.setAttribute("gltf-model", modelCache[name]);
-    loadingIndicator.style.display = "none"; // Esconde o indicador quando terminar de carregar
+    hideLoading(); // Esconde o indicador quando terminar de carregar
   } else {
     // Cria uma requisição para carregar o modelo .glb
     const xhr = new XMLHttpRequest();
@@ -53,13 +62,14 @@ function loadModel(name) {
       const url = URL.createObjectURL(blob);
       modelCache[name] = url;
       container.setAttribute("gltf-model", url);
-      loadingIndicator.style.display = "none"; // Esconde o indicador quando terminar de carregar
+      hideLoading(); // Esconde o indicador quando terminar de carregar
     };
 
     // Se der erro no carregamento
     xhr.onerror = () => {
       console.error("Erro ao carregar o modelo.");
       loadingIndicator.innerText = "Erro ao carregar o modelo";
+      hideLoading(); // Esconde o indicador, mesmo em caso de erro
     };
 
     xhr.send(); // Envia a requisição
@@ -145,5 +155,3 @@ window.addEventListener("touchmove", (e) => {
     model.setAttribute("rotation", `${newX} ${rotation.y} ${rotation.z}`);
   }
 });
-
-// Fim da rotação
