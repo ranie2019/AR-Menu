@@ -24,7 +24,7 @@
   color: white; /* Cor do texto dentro do botão */
   border: none; /* Remove a borda padrão do botão */
   border-radius: 12px; /* Bordas arredondadas */
-  padding: 8px 16px; /* Espaço interno (vertical e horizontal) para deixar o botão menor */
+  padding: 8px 8px; /* Espaço interno (vertical e horizontal) para deixar o botão menor */
   cursor: pointer; /* O cursor muda para uma mãozinha ao passar sobre o botão */
   z-index: 999; /* Coloca o botão acima de outros elementos */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Adiciona uma sombra suave ao redor do botão */
