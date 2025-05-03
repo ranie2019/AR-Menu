@@ -1,22 +1,22 @@
 /* Estilo geral dos botões */
 .btn {
   position: absolute; /* O botão será posicionado de forma absoluta */
-  font-size: 20px; /* Reduzi o tamanho da fonte */
-  background-color: #ffa726; /* Cor de fundo laranja fixa */
+  font-size: 30px; /* Tamanho da fonte do texto (se houver texto dentro do botão) */
+  background-color: #ffa726; /* Cor de fundo do botão */
   color: white; /* Cor do texto dentro do botão */
   border: none; /* Remove a borda padrão do botão */
   border-radius: 12px; /* Bordas arredondadas */
-  padding: 8px 16px; /* Espaço interno (vertical e horizontal) para deixar o botão menor */
+  padding: 10px 10px; /* Espaço interno (vertical e horizontal) para deixar o botão maior */
   cursor: pointer; /* O cursor muda para uma mãozinha ao passar sobre o botão */
-  z-index: 999; /* Coloca o botão acima de outros elementos */
+  z-index: 999; /* Coloca o botão acima de outros elementos (em relação à sobreposição) */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Adiciona uma sombra suave ao redor do botão */
-  transition: transform 0.1s ease; /* Suaviza a transição quando o botão for pressionado */
+  transition: transform 0.1s ease, background-color 0.2s ease; /* Suaviza a transição quando o botão for pressionado ou o hover ocorrer */
 }
 
-/* Remove o efeito de hover para manter a cor laranja fixa */
+/* Efeito de hover (quando o mouse passa sobre o botão) */
 .btn:hover {
-  background-color: #ffa726; /* Cor de fundo laranja fixa (não muda no hover) */
-  transform: scale(1.05); /* O botão ainda aumenta um pouco quando pressionado */
+  background-color: #fb8c00; /* Muda a cor do fundo ao passar o mouse */
+  transform: scale(1.05); /* Aumenta um pouco o botão para efeito visual */
 }
 
 /* Estilo para o botão anterior (seta esquerda) */
@@ -33,8 +33,8 @@
 
 /* Estilo das setas dentro dos botões */
 .btn svg {
-  width: 20px; /* Tamanho menor das setas */
-  height: 20px; /* Tamanho menor das setas */
+  width: 24px; /* Define a largura da seta */
+  height: 24px; /* Define a altura da seta */
   fill: white; /* Cor da seta */
-  pointer-events: none; /* Impede que o clique do mouse interfira com o SVG */
+  pointer-events: none; /* Impede que o clique do mouse interfira com o SVG, deixando o botão capturar o clique */
 }

@@ -11,57 +11,6 @@
         margin: 0;
         overflow: hidden;
       }
-
-      /* Estilo do indicador de carregamento */
-      #loadingIndicator {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 24px;
-        color: white;
-        background: rgba(0, 0, 0, 0.7);
-        padding: 10px;
-        border-radius: 5px;
-        display: none; /* Inicialmente escondido */
-      }
-
-      /* Estilo dos botões ajustados para o centro superior */
-      .btn {
-        position: absolute;
-        top: 20px; /* Coloca os botões no topo da tela */
-        background: rgba(0, 0, 0, 0.5); /* Fundo semitransparente */
-        color: white;
-        border: none;
-        padding: 10px 20px; /* Ajuste para botões mais confortáveis */
-        border-radius: 5px;
-        cursor: pointer;
-        z-index: 10; /* Garante que os botões fiquem acima do conteúdo */
-      }
-
-      /* Botão anterior, posicionado à esquerda */
-      #prevBtn {
-        left: 10px; /* Posição do botão na esquerda */
-      }
-
-      /* Botão próximo, posicionado à direita */
-      #nextBtn {
-        right: 10px; /* Posição do botão na direita */
-      }
-
-      /* Estilo do QR Code, se necessário */
-      #qrCode {
-        width: 100px;
-        height: 100px;
-      }
-
-      /* Estilo para as setas dentro dos botões */
-      .btn svg {
-        width: 24px;
-        height: 24px;
-        fill: white; /* Cor das setas */
-        pointer-events: none; /* Impede interação com o SVG */
-      }
     </style>
   </head>
 
@@ -80,8 +29,8 @@
       </svg>
     </button>
 
-    <!-- Indicador de Carregamento -->
-    <div id="loadingIndicator">Carregando...</div>
+    <!-- Indicador de carregamento -->
+    <div id="loadingIndicator">0%</div>
 
     <!-- Cena AR com marcador -->
     <a-scene
@@ -99,7 +48,6 @@
       <a-camera position="0 1.6 0"></a-camera>
     </a-scene>
 
-    <!-- Referência ao arquivo main.js para a lógica -->
     <script src="main.js"></script>
   </body>
 </html>
