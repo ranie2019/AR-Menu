@@ -25,6 +25,7 @@
         display: none;
       }
 
+      /* Botões ajustados para o centro superior */
       .btn {
         position: absolute;
         top: 20px;
@@ -34,14 +35,21 @@
         padding: 10px;
         border-radius: 5px;
         cursor: pointer;
+        z-index: 10; /* Garantir que os botões ficam acima do conteúdo */
       }
 
       #prevBtn {
-        left: 20px;
+        left: 10px; /* Posição mais próxima da borda esquerda */
       }
 
       #nextBtn {
-        right: 20px;
+        right: 10px; /* Posição mais próxima da borda direita */
+      }
+
+      /* Ajuste no visual do QR Code, se necessário */
+      #qrCode {
+        width: 100px;
+        height: 100px;
       }
     </style>
   </head>
