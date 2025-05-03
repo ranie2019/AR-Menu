@@ -18,7 +18,8 @@ export function initPinchZoom() {
 
       // Captura escala atual do modelo
       const scale = document.querySelector("#modelContainer").getAttribute("scale");
-      initialScale = scale.x;
+      const scaleValues = scale.split(" ").map(Number); // Transforma a string "x y z" em um array de números
+      initialScale = scaleValues[0]; // Usamos o valor de escala no eixo X (pode ser o mesmo para Y e Z)
     }
   });
 
@@ -32,9 +33,9 @@ export function initPinchZoom() {
       const scaleFactor = currentDistance / initialDistance;
       const newScale = Math.min(Math.max(initialScale * scaleFactor, 0.1), 10);
 
-      document
-        .querySelector("#modelContainer")
-        .setAttribute("scale", `${newScale} ${newScale} ${newScale}`);
+      // Aplica a nova escala no modelo
+      const model = document.querySelector("#modelContainer");
+      model.setAttribute("scale", `${newScale} ${newScale} ${newScale}`);
     }
   });
 
