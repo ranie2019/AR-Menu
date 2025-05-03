@@ -1,10 +1,14 @@
 // main.js
 
-// Lista de modelos 3D hospedados no S3
+// Lista de modelos disponíveis (os arquivos .glb devem estar na pasta "3d")
 const models = [
-  "https://SEU_BUCKET.s3.amazonaws.com/modelo1.glb",
-  "https://SEU_BUCKET.s3.amazonaws.com/modelo2.glb",
-  "https://SEU_BUCKET.s3.amazonaws.com/modelo3.glb"
+  "champagne",
+  "heineken",
+  "redbull",
+  "fizzydrink",
+  "cubo",
+  "sundae",
+  "pizza"
 ];
 
 let currentModelIndex = 0;
@@ -18,9 +22,11 @@ function loadModel(index) {
     modelContainer.removeChild(modelContainer.firstChild);
   }
 
+  const modelPath = `3d/${models[index]}.glb`;
+
   // Cria nova entidade glTF
   const model = document.createElement("a-entity");
-  model.setAttribute("gltf-model", models[index]);
+  model.setAttribute("gltf-model", modelPath);
   model.setAttribute("rotation", "0 180 0");
   model.setAttribute("position", "0 0 0");
   model.setAttribute("scale", "1 1 1");
@@ -29,18 +35,17 @@ function loadModel(index) {
   loadingIndicator.style.display = "block";
   loadingIndicator.textContent = "0%";
 
-  // Evento de carregamento para atualizar o progresso
+  // Atualiza progresso
   model.addEventListener("model-progress", (evt) => {
     const percent = Math.floor((evt.detail.loaded / evt.detail.total) * 100);
     loadingIndicator.textContent = `${percent}%`;
   });
 
-  // Quando o modelo terminar de carregar
+  // Quando terminar de carregar
   model.addEventListener("model-loaded", () => {
     loadingIndicator.style.display = "none";
   });
 
-  // Adiciona o novo modelo à cena
   modelContainer.appendChild(model);
 }
 
@@ -57,13 +62,10 @@ window.changeModel = function (direction) {
   loadModel(currentModelIndex);
 };
 
-// Inicializa a rotação vertical
-import("./verticalRotate.js").then((module) => {
+// Inicializa rotação vertical com um dedo
+import("./rotate-vertical.js").then((module) => {
   module.initVerticalRotate();
 });
 
-// ⚠️ Caso você tenha criado um pinchZoom.js, adicione a linha abaixo:
-// import("./pinchZoom.js").then((module) => module.initPinchZoom());
-
-// Carrega o modelo inicial
+// Carrega o primeiro modelo
 loadModel(currentModelIndex);
