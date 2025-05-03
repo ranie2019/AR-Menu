@@ -1,41 +1,69 @@
-// Importa a lista de modelos e a função para carregar modelos
-import { models, loadModel } from './modelManager.js';
+// main.js
 
-// Importa as funções para mostrar e ocultar o indicador de carregamento
-import { showLoading, hideLoading } from './loadingIndicator.js';
+// Lista de modelos 3D hospedados no S3
+const models = [
+  "https://SEU_BUCKET.s3.amazonaws.com/modelo1.glb",
+  "https://SEU_BUCKET.s3.amazonaws.com/modelo2.glb",
+  "https://SEU_BUCKET.s3.amazonaws.com/modelo3.glb"
+];
 
-// Importa a função que inicia a rotação automática do modelo
-import { startAutoRotate } from './autoRotate.js';
+let currentModelIndex = 0;
+const modelContainer = document.querySelector("#modelContainer");
+const loadingIndicator = document.getElementById("loadingIndicator");
 
-// Importa a função que inicializa o gesto de pinça para zoom
-import { initPinchZoom } from './pinchZoom.js';
-
-// Importa a função que inicializa a rotação vertical com movimento do dedo
-import { initVerticalRotate } from './verticalRotate.js';
-
-// Quando o conteúdo da página estiver totalmente carregado
-window.addEventListener("DOMContentLoaded", async () => {
-  // Mostra o indicador de carregamento com mensagem personalizada
-  showLoading("Carregando modelo...");
-
-  try {
-    // Aguarda o carregamento do primeiro modelo da lista
-    await loadModel(models[0]);
-  } catch (error) {
-    console.error("Erro ao carregar o modelo:", error);
-    // Exibe uma mensagem de erro amigável ou um fallback
-    showLoading("Erro ao carregar o modelo. Tente novamente.");
-  } finally {
-    // Oculta o indicador de carregamento, independente do sucesso ou falha
-    hideLoading();
+// Carrega o modelo GLB no modelContainer
+function loadModel(index) {
+  // Remove qualquer modelo anterior
+  while (modelContainer.firstChild) {
+    modelContainer.removeChild(modelContainer.firstChild);
   }
 
-  // Inicia a rotação automática no eixo Y
-  startAutoRotate();
+  // Cria nova entidade glTF
+  const model = document.createElement("a-entity");
+  model.setAttribute("gltf-model", models[index]);
+  model.setAttribute("rotation", "0 180 0");
+  model.setAttribute("position", "0 0 0");
+  model.setAttribute("scale", "1 1 1");
 
-  // Ativa o controle de zoom com gesto de pinça
-  initPinchZoom();
+  // Exibe indicador de carregamento
+  loadingIndicator.style.display = "block";
+  loadingIndicator.textContent = "0%";
 
-  // Ativa a rotação vertical com movimento de um dedo
-  initVerticalRotate();
+  // Evento de carregamento para atualizar o progresso
+  model.addEventListener("model-progress", (evt) => {
+    const percent = Math.floor((evt.detail.loaded / evt.detail.total) * 100);
+    loadingIndicator.textContent = `${percent}%`;
+  });
+
+  // Quando o modelo terminar de carregar
+  model.addEventListener("model-loaded", () => {
+    loadingIndicator.style.display = "none";
+  });
+
+  // Adiciona o novo modelo à cena
+  modelContainer.appendChild(model);
+}
+
+// Troca de modelo (próximo ou anterior)
+window.changeModel = function (direction) {
+  currentModelIndex += direction;
+
+  if (currentModelIndex < 0) {
+    currentModelIndex = models.length - 1;
+  } else if (currentModelIndex >= models.length) {
+    currentModelIndex = 0;
+  }
+
+  loadModel(currentModelIndex);
+};
+
+// Inicializa a rotação vertical
+import("./verticalRotate.js").then((module) => {
+  module.initVerticalRotate();
 });
+
+// ⚠️ Caso você tenha criado um pinchZoom.js, adicione a linha abaixo:
+// import("./pinchZoom.js").then((module) => module.initPinchZoom());
+
+// Carrega o modelo inicial
+loadModel(currentModelIndex);
