@@ -30,17 +30,16 @@ function loadModel(name) {
   newModel.setAttribute("gltf-model", `url(./3d/${name}.glb)`); // Caminho para o modelo .glb
 
   // Exibe o indicador de carregamento
-  loadingIndicator.innerText = "Carregando...";
-  loadingIndicator.style.display = "block";
+  loadingIndicator.style.display = "block"; // Mostra o indicador de carregamento
 
   // Quando o modelo for carregado com sucesso, esconde o indicador de carregamento
   newModel.addEventListener("model-loaded", () => {
-    loadingIndicator.style.display = "none";
+    loadingIndicator.style.display = "none"; // Esconde o indicador
   });
 
   // Caso ocorra um erro no carregamento
   newModel.addEventListener("model-error", () => {
-    loadingIndicator.innerText = "Erro ao carregar";
+    loadingIndicator.innerText = "Erro ao carregar"; // Mensagem de erro
   });
 
   // Adiciona o novo modelo na cena
