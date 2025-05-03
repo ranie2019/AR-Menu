@@ -17,7 +17,7 @@ function loadModel(name) {
   const container = document.querySelector("#modelContainer");
   const loadingIndicator = document.querySelector("#loadingIndicator");
 
-  // Exibe o indicador de carregamento
+  // Exibe o indicador de carregamento (sem alterar visual do botão)
   loadingIndicator.style.display = "block";
   loadingIndicator.innerText = "0%";
 
