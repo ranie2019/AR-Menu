@@ -1,75 +1,41 @@
 /* Estilo geral dos botões */
 .btn {
-  position: absolute;
-  font-size: 30px;
-  background-color: #ffa726;
-  color: white;
-  border: none;
-  border-radius: 12px;
-  padding: 10px 10px;
-  cursor: pointer;
-  z-index: 999;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-  transition: transform 0.1s ease, background-color 0.2s ease;
+  position: absolute; /* Permite posicionamento livre na tela */
+  font-size: 30px; /* Tamanho da fonte do texto ou ícone dentro do botão */
+  background-color: #ffa726; /* Cor de fundo laranja padrão */
+  color: white; /* Cor do texto (ou ícone SVG) */
+  border: none; /* Remove qualquer borda padrão */
+  border-radius: 12px; /* Bordas arredondadas */
+  padding: 10px 10px; /* Espaçamento interno (vertical e horizontal) */
+  cursor: pointer; /* Cursor vira uma mãozinha ao passar por cima */
+  z-index: 999; /* Garante que o botão fique acima de outros elementos */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Sombra sutil para profundidade */
+  transition: transform 0.1s ease, background-color 0.2s ease; /* Animações suaves para hover */
 }
 
-/* Efeito de hover */
+/* Efeito visual ao passar o mouse por cima do botão */
 .btn:hover {
-  background-color: #fb8c00;
-  transform: scale(1.05);
+  background-color: #fb8c00; /* Cor mais escura para dar feedback visual */
+  transform: scale(1.05); /* Aumenta ligeiramente o botão */
 }
 
-/* Botão Anterior */
+/* Botão "Anterior" - posicionado no canto inferior esquerdo */
 #prevBtn {
-  left: 10px;
-  bottom: 10px;
+  left: 10px; /* Distância da borda esquerda da tela */
+  bottom: 10px; /* Distância da borda inferior da tela */
 }
 
-/* Botão Próximo */
+/* Botão "Próximo" - posicionado no canto inferior direito */
 #nextBtn {
-  right: 10px;
-  bottom: 10px;
+  right: 10px; /* Distância da borda direita da tela */
+  bottom: 10px; /* Distância da borda inferior da tela */
 }
 
-/* Estilo das setas */
+/* Estilo dos ícones SVG dentro dos botões */
 .btn svg {
-  width: 24px;
-  height: 24px;
-  fill: white;
-  pointer-events: none;
-}
-
-/* Indicador de carregamento */
-#loadingIndicator {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: rgba(0, 0, 0, 0.7);
-  color: white;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 18px;
-  z-index: 1000;
-  display: none;
-}
-
-/* Barra de progresso adicional (se desejar) */
-#progressBarContainer {
-  position: absolute;
-  top: 60%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80%;
-  height: 10px;
-  background-color: rgba(0, 0, 0, 0.2);
-  border-radius: 5px;
-}
-
-#progressBar {
-  height: 100%;
-  background-color: #ffa726;
-  width: 0%;
-  border-radius: 5px;
+  width: 24px; /* Largura do ícone */
+  height: 24px; /* Altura do ícone */
+  fill: white; /* Cor do ícone */
+  pointer-events: none; /* Ignora cliques diretamente no SVG (permite clicar no botão inteiro) */
 }
 

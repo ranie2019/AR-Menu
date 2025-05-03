@@ -3,97 +3,50 @@
   <head>
     <meta charset="utf-8" />
     <title>Visualizador 3D com Botões</title>
+
+    <!-- Importa o CSS personalizado -->
     <link rel="stylesheet" href="style.css" />
+
+    <!-- Biblioteca A-Frame para criação de experiências WebXR -->
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+
+    <!-- AR.js para suportar realidade aumentada com marcadores em A-Frame -->
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
+
+    <!-- Estilo direto para remover margens e esconder a rolagem -->
     <style>
       body {
         margin: 0;
         overflow: hidden;
       }
-
-      /* Estilo do botão */
-      .btn {
-        position: absolute;
-        font-size: 30px;
-        background-color: #ffa726;
-        color: white;
-        border: none;
-        border-radius: 12px;
-        padding: 10px 10px;
-        cursor: pointer;
-        z-index: 999;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-        transition: transform 0.1s ease, background-color 0.2s ease;
-      }
-
-      /* Efeito de hover no botão */
-      .btn:hover {
-        background-color: #fb8c00;
-        transform: scale(1.05);
-      }
-
-      /* Botão Anterior */
-      #prevBtn {
-        left: 10px;
-        bottom: 10px;
-      }
-
-      /* Botão Próximo */
-      #nextBtn {
-        right: 10px;
-        bottom: 10px;
-      }
-
-      /* Estilo das setas */
-      .btn svg {
-        width: 24px;
-        height: 24px;
-        fill: white;
-        pointer-events: none;
-      }
-
-      /* Indicador de carregamento */
-      #loadingIndicator {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background-color: rgba(0, 0, 0, 0.7);
-        color: white;
-        padding: 8px 16px;
-        border-radius: 8px;
-        font-size: 18px;
-        z-index: 1000;
-        display: none;
-      }
     </style>
   </head>
 
   <body>
-    <!-- Botão Anterior -->
+    <!-- Botão para voltar ao modelo anterior -->
     <button id="prevBtn" class="btn" onclick="changeModel(-1)">
       <svg viewBox="0 0 24 24">
         <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
       </svg>
     </button>
 
-    <!-- Botão Próximo -->
+    <!-- Botão para avançar ao próximo modelo -->
     <button id="nextBtn" class="btn" onclick="changeModel(1)">
       <svg viewBox="0 0 24 24">
         <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z" />
       </svg>
     </button>
 
-    <!-- Indicador de carregamento -->
-    <div id="loadingIndicator">Carregando...</div>
+    <!-- Indicador visual do carregamento do modelo 3D -->
+    <div id="loadingIndicator">0%</div>
 
-    <!-- Cena AR com marcador -->
+    <!-- Cena A-Frame com suporte a AR.js, baseada em marcador (.patt) -->
     <a-scene
       embedded
       arjs="sourceType: webcam; debugUIEnabled: false; markerType: pattern; patternUrl: 'ar-menu/pattern.patt';"
       vr-mode-ui="enabled: false"
     >
+      <!-- Contêiner onde os modelos 3D serão carregados dinamicamente -->
       <a-entity
         id="modelContainer"
         position="0 0 -3"
@@ -101,9 +54,11 @@
         scale="1 1 1"
       ></a-entity>
 
+      <!-- Câmera da cena AR, posicionada na altura média de um humano (1.6m) -->
       <a-camera position="0 1.6 0"></a-camera>
     </a-scene>
 
+    <!-- Script principal com a lógica de carregamento e interação dos modelos -->
     <script src="main.js"></script>
   </body>
 </html>
