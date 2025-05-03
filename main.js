@@ -16,6 +16,7 @@ const modelCache = {}; // Cache para armazenar modelos já carregados
 function loadModel(name) {
   const container = document.querySelector("#modelContainer");
   const loadingIndicator = document.querySelector("#loadingIndicator");
+  const progressBar = document.querySelector("#progressBar");
 
   // Exibe o indicador de carregamento (sem alterar visual do botão)
   loadingIndicator.style.display = "block";
@@ -28,6 +29,9 @@ function loadModel(name) {
   container.setAttribute("position", "0 -0.5 -3"); // posição um pouco mais baixa
   container.setAttribute("rotation", "0 180 0");
   container.setAttribute("scale", "1 1 1");
+
+  // Inicializa a porcentagem de carregamento como 0
+  let loadedPercentage = 0;
 
   // Se o modelo já estiver no cache, usa direto
   if (modelCache[name]) {
@@ -42,8 +46,15 @@ function loadModel(name) {
     // Atualiza a porcentagem de carregamento durante o download
     xhr.onprogress = (event) => {
       if (event.lengthComputable) {
+        // Calcula o percentual em relação ao total
         const percent = Math.round((event.loaded / event.total) * 100);
-        loadingIndicator.innerText = `${percent}%`; // Atualiza a porcentagem
+        
+        // Incrementa 1% de cada vez até alcançar o 100%
+        if (percent > loadedPercentage) {
+          loadedPercentage = Math.min(percent, loadedPercentage + 1); // Não ultrapassa 100%
+          loadingIndicator.innerText = `${loadedPercentage}%`; // Atualiza a porcentagem
+          progressBar.style.width = `${loadedPercentage}%`; // Atualiza a barra de progresso
+        }
       }
     };
 
