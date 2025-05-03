@@ -11,6 +11,38 @@
         margin: 0;
         overflow: hidden;
       }
+
+      #loadingIndicator {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 24px;
+        color: white;
+        background: rgba(0, 0, 0, 0.7);
+        padding: 10px;
+        border-radius: 5px;
+        display: none;
+      }
+
+      .btn {
+        position: absolute;
+        top: 20px;
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      #prevBtn {
+        left: 20px;
+      }
+
+      #nextBtn {
+        right: 20px;
+      }
     </style>
   </head>
 
@@ -30,7 +62,7 @@
     </button>
 
     <!-- Indicador de carregamento -->
-    <div id="loadingIndicator">0%</div>
+    <div id="loadingIndicator">Carregando...</div>
 
     <!-- Cena AR com marcador -->
     <a-scene
