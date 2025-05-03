@@ -17,15 +17,15 @@ function loadModel(name) {
   const container = document.querySelector("#modelContainer");
   const loadingIndicator = document.querySelector("#loadingIndicator");
 
-  // Exibe o indicador de carregamento
+  // Exibe o indicador de carregamento com o nome do modelo
   loadingIndicator.style.display = "block";
-  loadingIndicator.innerText = "0%";
+  loadingIndicator.innerText = `Carregando ${name}... 0%`;
 
   // Remove modelo atual antes de carregar o novo
   container.removeAttribute("gltf-model");
 
-  // Redefine posição, rotação e escala do modelo sempre que carregar um novo
-  container.setAttribute("position", "0 -0.5 -3"); // posição um pouco mais baixa
+  // Redefine posição, rotação e escala do modelo
+  container.setAttribute("position", "0 -0.5 -3");
   container.setAttribute("rotation", "0 180 0");
   container.setAttribute("scale", "1 1 1");
 
@@ -43,7 +43,7 @@ function loadModel(name) {
     xhr.onprogress = (event) => {
       if (event.lengthComputable) {
         const percent = Math.round((event.loaded / event.total) * 100);
-        loadingIndicator.innerText = `${percent}%`;
+        loadingIndicator.innerText = `Carregando ${name}... ${percent}%`;
       }
     };
 
@@ -59,7 +59,7 @@ function loadModel(name) {
     // Se der erro no carregamento
     xhr.onerror = () => {
       console.error("Erro ao carregar o modelo.");
-      loadingIndicator.innerText = "Erro ao carregar o modelo";
+      loadingIndicator.innerText = `Erro ao carregar o modelo ${name}`;
     };
 
     xhr.send(); // Envia a requisição
