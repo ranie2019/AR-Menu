@@ -10,6 +10,16 @@ const models = [
 
 let currentIndex = 0;
 const modelCache = {};
+const initialPosition = { x: 0, y: -0.3, z: -3 };
+const initialRotation = { x: 0, y: 180, z: 0 };
+const initialScaleValue = 1;
+
+function resetTransform() {
+  const container = document.querySelector("#modelContainer");
+  container.setAttribute("position", `${initialPosition.x} ${initialPosition.y} ${initialPosition.z}`);
+  container.setAttribute("rotation", `${initialRotation.x} ${initialRotation.y} ${initialRotation.z}`);
+  container.setAttribute("scale", `${initialScaleValue} ${initialScaleValue} ${initialScaleValue}`);
+}
 
 function loadModel(name) {
   const container = document.querySelector("#modelContainer");
@@ -18,6 +28,7 @@ function loadModel(name) {
   loadingIndicator.style.display = "block";
   loadingIndicator.innerText = "0%";
   container.removeAttribute("gltf-model");
+  resetTransform();
 
   if (modelCache[name]) {
     container.setAttribute("gltf-model", modelCache[name]);
