@@ -1,129 +1,152 @@
+// Lista de modelos disponíveis
 const models = [
-  "champagne",  // Modelo 1
-  "heineken",   // Modelo 2
-  "redbull",    // Modelo 3
-  "fizzydrink", // Modelo 4
-  "cubo",       // Modelo 5
-  "sundae",     // Modelo 6
-  "pizza",      // Modelo 7
+  "champagne",
+  "heineken",
+  "redbull",
+  "fizzydrink",
+  "cubo",
+  "sundae",
+  "pizza",
 ];
 
-let currentIndex = 0;  // Índice do modelo atual
+let currentIndex = 0; // Índice atual do modelo
+const modelCache = {}; // Cache para armazenar modelos já carregados
 
-// Função para carregar o modelo
+// Carrega um modelo 3D e exibe na cena
 function loadModel(name) {
   const container = document.querySelector("#modelContainer");
   const loadingIndicator = document.querySelector("#loadingIndicator");
 
-  // Remove qualquer modelo anterior da cena
-  while (container.firstChild) {
-    container.removeChild(container.firstChild);
-  }
+  // Exibe o indicador de carregamento
+  loadingIndicator.style.display = "block";
+  loadingIndicator.innerText = "0%";
 
-  // Atualiza posição, rotação e escala do container do modelo
-  container.setAttribute("position", "0 -0.5 -3");
+  // Remove modelo atual antes de carregar o novo
+  container.removeAttribute("gltf-model");
+
+  // Redefine posição, rotação e escala do modelo sempre que carregar um novo
+  container.setAttribute("position", "0 -0.5 -3"); // posição um pouco mais baixa
   container.setAttribute("rotation", "0 180 0");
   container.setAttribute("scale", "1 1 1");
 
-  // Cria um novo modelo 3D
-  const newModel = document.createElement("a-entity");
-  newModel.setAttribute("gltf-model", `url(./3d/${name}.glb)`); // Caminho para o modelo .glb
+  // Se o modelo já estiver no cache, usa direto
+  if (modelCache[name]) {
+    container.setAttribute("gltf-model", modelCache[name]);
+    loadingIndicator.style.display = "none";
+  } else {
+    // Cria uma requisição para carregar o modelo .glb
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", `./3d/${name}.glb`, true);
+    xhr.responseType = "blob";
 
-  // Exibe o indicador de carregamento
-  loadingIndicator.style.display = "block"; // Mostra o indicador de carregamento
+    // Atualiza a porcentagem de carregamento durante o download
+    xhr.onprogress = (event) => {
+      if (event.lengthComputable) {
+        const percent = Math.round((event.loaded / event.total) * 100);
+        loadingIndicator.innerText = `${percent}%`;
+      }
+    };
 
-  // Quando o modelo for carregado com sucesso, esconde o indicador de carregamento
-  newModel.addEventListener("model-loaded", () => {
-    loadingIndicator.style.display = "none"; // Esconde o indicador
-  });
+    // Quando o download termina, exibe o modelo
+    xhr.onload = () => {
+      const blob = xhr.response;
+      const url = URL.createObjectURL(blob);
+      modelCache[name] = url;
+      container.setAttribute("gltf-model", url);
+      loadingIndicator.style.display = "none";
+    };
 
-  // Caso ocorra um erro no carregamento
-  newModel.addEventListener("model-error", () => {
-    loadingIndicator.innerText = "Erro ao carregar"; // Mensagem de erro
-  });
+    // Se der erro no carregamento
+    xhr.onerror = () => {
+      console.error("Erro ao carregar o modelo.");
+      loadingIndicator.innerText = "Erro ao carregar o modelo";
+    };
 
-  // Adiciona o novo modelo na cena
-  container.appendChild(newModel);
+    xhr.send(); // Envia a requisição
+  }
 }
 
-// Função para alternar entre os modelos (anterior ou próximo)
+// Muda o modelo com base na direção (-1 para anterior, +1 para próximo)
 function changeModel(direction) {
-  // Atualiza o índice do modelo
   currentIndex = (currentIndex + direction + models.length) % models.length;
-  loadModel(models[currentIndex]); // Carrega o modelo baseado no índice
+  loadModel(models[currentIndex]);
 }
 
-// Carrega o primeiro modelo ao inicializar
+// Carrega o primeiro modelo assim que a página abre
 loadModel(models[currentIndex]);
 
-// Rotação automática do modelo (movendo suavemente o modelo)
+// Rotaciona o modelo automaticamente no eixo Y
 setInterval(() => {
-  const container = document.querySelector("#modelContainer");
-  const rotation = container.getAttribute("rotation");
-  rotation.y += 0.5; // Incrementa a rotação no eixo Y
-  container.setAttribute("rotation", rotation); // Aplica a rotação
+  const model = document.querySelector("#modelContainer");
+  if (!model) return;
+  const rotation = model.getAttribute("rotation");
+  rotation.y += 0.5;
+  model.setAttribute("rotation", rotation);
 }, 30);
 
-// Zoom com dois dedos
+// Escala com gesto de pinça
 let initialDistance = null;
 let initialScale = 1;
 
-// Detecta o início do toque (dois dedos)
+// Atualiza escala do modelo com base no fator de escala
+function updateScale(scaleFactor) {
+  const model = document.querySelector("#modelContainer");
+  const newScale = Math.min(Math.max(initialScale * scaleFactor, 0.1), 10);
+  model.setAttribute("scale", `${newScale} ${newScale} ${newScale}`);
+}
+
+// Quando dois dedos tocam a tela, captura distância inicial
 window.addEventListener("touchstart", (e) => {
   if (e.touches.length === 2) {
-    // Calcula a distância inicial entre os dedos
     const dx = e.touches[0].clientX - e.touches[1].clientX;
     const dy = e.touches[0].clientY - e.touches[1].clientY;
-    initialDistance = Math.sqrt(dx * dx + dy * dy); // Distância entre os dedos
+    initialDistance = Math.sqrt(dx * dx + dy * dy);
     const scale = document.querySelector("#modelContainer").getAttribute("scale");
-    initialScale = scale.x; // Escala inicial
+    initialScale = scale.x;
   }
 });
 
-// Detecta o movimento dos dedos (zoom)
+// Move os dedos para aplicar zoom
 window.addEventListener("touchmove", (e) => {
   if (e.touches.length === 2 && initialDistance) {
-    // Calcula a nova distância entre os dedos
     const dx = e.touches[0].clientX - e.touches[1].clientX;
     const dy = e.touches[0].clientY - e.touches[1].clientY;
     const currentDistance = Math.sqrt(dx * dx + dy * dy);
-    const scaleFactor = currentDistance / initialDistance; // Fator de escala baseado na distância
-    const newScale = Math.min(Math.max(initialScale * scaleFactor, 0.1), 10); // Limita a escala de 0.1 a 10
-    const container = document.querySelector("#modelContainer");
-    container.setAttribute("scale", `${newScale} ${newScale} ${newScale}`); // Aplica o zoom
+    const scaleFactor = currentDistance / initialDistance;
+    updateScale(scaleFactor);
   }
 });
 
-// Reseta o estado inicial do zoom
+// Quando o toque termina, reseta a distância
 window.addEventListener("touchend", () => {
   initialDistance = null;
 });
 
-// Rotação vertical com um dedo
+// Rotação vertical (X) com movimento de um dedo
 let startY = null;
 let initialRotationX = 0;
 
-// Detecta o início do toque (um dedo)
+// Inicia rotação com um dedo
 window.addEventListener("touchstart", (e) => {
   if (e.touches.length === 1) {
-    startY = e.touches[0].clientY; // Armazena a posição inicial
-    const container = document.querySelector("#modelContainer");
-    initialRotationX = container.getAttribute("rotation").x; // Armazena a rotação inicial no eixo X
+    startY = e.touches[0].clientY;
+    const model = document.querySelector("#modelContainer");
+    initialRotationX = model.getAttribute("rotation").x;
   }
 });
 
-// Detecta o movimento vertical do dedo (rotação)
+// Move dedo para cima/baixo para rotacionar no eixo X
 window.addEventListener("touchmove", (e) => {
   if (e.touches.length === 1 && startY !== null) {
-    const deltaY = e.touches[0].clientY - startY; // Movimentação do dedo
-    const container = document.querySelector("#modelContainer");
-    const rotation = container.getAttribute("rotation");
-    const newX = Math.min(Math.max(initialRotationX - deltaY * 0.2, -90), 90); // Limita a rotação no eixo X
-    container.setAttribute("rotation", `${newX} ${rotation.y} ${rotation.z}`); // Aplica a rotação
+    const deltaY = e.touches[0].clientY - startY;
+    const model = document.querySelector("#modelContainer");
+    const rotation = model.getAttribute("rotation");
+    const newX = Math.min(Math.max(initialRotationX - deltaY * 0.2, -90), 90);
+    model.setAttribute("rotation", `${newX} ${rotation.y} ${rotation.z}`);
   }
 });
 
-// Reseta o estado de rotação ao finalizar o toque
+// Fim da rotação
 window.addEventListener("touchend", () => {
   startY = null;
 });
