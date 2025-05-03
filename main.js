@@ -19,7 +19,7 @@ function loadModel(name) {
 
   // Exibe o indicador de carregamento (sem alterar visual do botão)
   loadingIndicator.style.display = "block";
-  loadingIndicator.innerText = "0%";
+  loadingIndicator.innerText = "0%";  // Inicia com 0%
 
   // Remove modelo atual antes de carregar o novo
   container.removeAttribute("gltf-model");
@@ -32,7 +32,7 @@ function loadModel(name) {
   // Se o modelo já estiver no cache, usa direto
   if (modelCache[name]) {
     container.setAttribute("gltf-model", modelCache[name]);
-    loadingIndicator.style.display = "none";
+    loadingIndicator.style.display = "none"; // Esconde o indicador de carregamento
   } else {
     // Cria uma requisição para carregar o modelo .glb
     const xhr = new XMLHttpRequest();
@@ -43,7 +43,7 @@ function loadModel(name) {
     xhr.onprogress = (event) => {
       if (event.lengthComputable) {
         const percent = Math.round((event.loaded / event.total) * 100);
-        loadingIndicator.innerText = `${percent}%`;
+        loadingIndicator.innerText = `${percent}%`; // Atualiza a porcentagem
       }
     };
 
@@ -53,7 +53,7 @@ function loadModel(name) {
       const url = URL.createObjectURL(blob);
       modelCache[name] = url;
       container.setAttribute("gltf-model", url);
-      loadingIndicator.style.display = "none";
+      loadingIndicator.style.display = "none"; // Esconde o indicador de carregamento após o carregamento
     };
 
     // Se der erro no carregamento
