@@ -17,37 +17,28 @@ function loadModel(name) {
   const container = document.querySelector("#modelContainer");
   const loadingIndicator = document.querySelector("#loadingIndicator");
 
-  // Exibe o indicador de carregamento (sem alterar visual do botão)
+  // Mostra a mensagem de carregamento
   loadingIndicator.style.display = "block";
-  loadingIndicator.innerText = "0%";
+  loadingIndicator.innerText = "Carregando...";
 
   // Remove modelo atual antes de carregar o novo
   container.removeAttribute("gltf-model");
 
-  // Redefine posição, rotação e escala do modelo sempre que carregar um novo
-  container.setAttribute("position", "0 -0.5 -3"); // posição um pouco mais baixa
+  // Redefine posição, rotação e escala do modelo
+  container.setAttribute("position", "0 -0.5 -3");
   container.setAttribute("rotation", "0 180 0");
   container.setAttribute("scale", "1 1 1");
 
-  // Se o modelo já estiver no cache, usa direto
+  // Se o modelo já estiver no cache
   if (modelCache[name]) {
     container.setAttribute("gltf-model", modelCache[name]);
     loadingIndicator.style.display = "none";
   } else {
-    // Cria uma requisição para carregar o modelo .glb
     const xhr = new XMLHttpRequest();
     xhr.open("GET", `./3d/${name}.glb`, true);
     xhr.responseType = "blob";
 
-    // Atualiza a porcentagem de carregamento durante o download
-    xhr.onprogress = (event) => {
-      if (event.lengthComputable) {
-        const percent = Math.round((event.loaded / event.total) * 100);
-        loadingIndicator.innerText = `${percent}%`;
-      }
-    };
-
-    // Quando o download termina, exibe o modelo
+    // Quando terminar de carregar
     xhr.onload = () => {
       const blob = xhr.response;
       const url = URL.createObjectURL(blob);
@@ -56,13 +47,13 @@ function loadModel(name) {
       loadingIndicator.style.display = "none";
     };
 
-    // Se der erro no carregamento
+    // Se der erro
     xhr.onerror = () => {
       console.error("Erro ao carregar o modelo.");
       loadingIndicator.innerText = "Erro ao carregar o modelo";
     };
 
-    xhr.send(); // Envia a requisição
+    xhr.send();
   }
 }
 
@@ -72,10 +63,10 @@ function changeModel(direction) {
   loadModel(models[currentIndex]);
 }
 
-// Carrega o primeiro modelo assim que a página abre
+// Carrega o primeiro modelo ao iniciar
 loadModel(models[currentIndex]);
 
-// Rotaciona o modelo automaticamente no eixo Y
+// Rotação automática no eixo Y
 setInterval(() => {
   const model = document.querySelector("#modelContainer");
   if (!model) return;
@@ -88,14 +79,12 @@ setInterval(() => {
 let initialDistance = null;
 let initialScale = 1;
 
-// Atualiza escala do modelo com base no fator de escala
 function updateScale(scaleFactor) {
   const model = document.querySelector("#modelContainer");
   const newScale = Math.min(Math.max(initialScale * scaleFactor, 0.1), 10);
   model.setAttribute("scale", `${newScale} ${newScale} ${newScale}`);
 }
 
-// Quando dois dedos tocam a tela, captura distância inicial
 window.addEventListener("touchstart", (e) => {
   if (e.touches.length === 2) {
     const dx = e.touches[0].clientX - e.touches[1].clientX;
@@ -106,7 +95,6 @@ window.addEventListener("touchstart", (e) => {
   }
 });
 
-// Move os dedos para aplicar zoom
 window.addEventListener("touchmove", (e) => {
   if (e.touches.length === 2 && initialDistance) {
     const dx = e.touches[0].clientX - e.touches[1].clientX;
@@ -117,16 +105,14 @@ window.addEventListener("touchmove", (e) => {
   }
 });
 
-// Quando o toque termina, reseta a distância
 window.addEventListener("touchend", () => {
   initialDistance = null;
 });
 
-// Rotação vertical (X) com movimento de um dedo
+// Rotação vertical (X) com um dedo
 let startY = null;
 let initialRotationX = 0;
 
-// Inicia rotação com um dedo
 window.addEventListener("touchstart", (e) => {
   if (e.touches.length === 1) {
     startY = e.touches[0].clientY;
@@ -135,7 +121,6 @@ window.addEventListener("touchstart", (e) => {
   }
 });
 
-// Move dedo para cima/baixo para rotacionar no eixo X
 window.addEventListener("touchmove", (e) => {
   if (e.touches.length === 1 && startY !== null) {
     const deltaY = e.touches[0].clientY - startY;
@@ -146,7 +131,6 @@ window.addEventListener("touchmove", (e) => {
   }
 });
 
-// Fim da rotação
 window.addEventListener("touchend", () => {
   startY = null;
 });
