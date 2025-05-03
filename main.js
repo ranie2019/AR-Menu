@@ -45,16 +45,6 @@ function loadModel(index) {
   });
 
   modelContainer.appendChild(model);
-
-  // Inicializa o zoom com pinça (após carregar o modelo)
-  import("./rotate-vertical.js").then((module) => {
-    module.initPinchZoom();
-  });
-
-  // Inicializa rotação vertical com um dedo (após carregar o modelo)
-  import("./rotate-vertical.js").then((module) => {
-    module.initVerticalRotate();
-  });
 }
 
 // Troca de modelo (próximo ou anterior)
@@ -69,6 +59,12 @@ window.changeModel = function (direction) {
 
   loadModel(currentModelIndex);
 };
+
+// Chama a função para inicializar o zoom e rotação ao carregar o script
+import("./rotate-vertical.js").then((module) => {
+  module.initVerticalRotate(); // Chama a rotação vertical
+  module.initPinchZoom(); // Chama o zoom com pinça
+});
 
 // Carrega o primeiro modelo ao iniciar
 loadModel(currentModelIndex);

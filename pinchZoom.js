@@ -44,3 +44,38 @@ export function initPinchZoom() {
     initialDistance = null;
   });
 }
+
+/**
+ * Inicializa o gesto de rotação vertical com um dedo
+ * Aplica rotação ao modelo com id "modelContainer"
+ */
+export function initVerticalRotate() {
+  let startX = null;
+  let currentRotation = 0;
+
+  // Ao tocar na tela
+  window.addEventListener("touchstart", (e) => {
+    if (e.touches.length === 1) {
+      startX = e.touches[0].clientX;
+    }
+  });
+
+  // Ao mover o dedo
+  window.addEventListener("touchmove", (e) => {
+    if (e.touches.length === 1 && startX !== null) {
+      const dx = e.touches[0].clientX - startX;
+      currentRotation += dx * 0.1; // A multiplicação controla a velocidade da rotação
+
+      // Aplica rotação ao modelo
+      const model = document.querySelector("#modelContainer");
+      model.setAttribute("rotation", `0 ${currentRotation} 0`);
+
+      startX = e.touches[0].clientX; // Atualiza o valor de startX para o novo ponto
+    }
+  });
+
+  // Ao soltar o dedo
+  window.addEventListener("touchend", () => {
+    startX = null;
+  });
+}
