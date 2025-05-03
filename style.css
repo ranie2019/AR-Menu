@@ -13,43 +13,28 @@
   transition: transform 0.1s ease, background-color 0.2s ease;
 }
 
-/* Efeito de hover */
+/* Efeito hover */
 .btn:hover {
   background-color: #fb8c00;
   transform: scale(1.05);
 }
 
-/* Botão Anterior */
+/* Botão "Anterior" */
 #prevBtn {
   left: 10px;
   bottom: 10px;
 }
 
-/* Botão Próximo */
+/* Botão "Próximo" */
 #nextBtn {
   right: 10px;
   bottom: 10px;
 }
 
-/* Estilo das setas */
+/* Ícones SVG nos botões */
 .btn svg {
   width: 24px;
   height: 24px;
   fill: white;
   pointer-events: none;
-}
-
-/* Indicador de carregamento */
-#loadingIndicator {
-  position: absolute;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: rgba(0, 0, 0, 0.7);
-  color: white;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 18px;
-  z-index: 1000;
-  display: none;
 }
