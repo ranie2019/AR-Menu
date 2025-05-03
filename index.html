@@ -29,7 +29,7 @@
       </svg>
     </button>
 
-    <!-- Indicador de carregamento -->
+    <!-- Indicador de carregamento (HTML fixo) -->
     <div id="loadingIndicator">0%</div>
 
     <!-- Cena AR com marcador -->
@@ -38,11 +38,20 @@
       arjs="sourceType: webcam; debugUIEnabled: false; markerType: pattern; patternUrl: 'ar-menu/pattern.patt';"
       vr-mode-ui="enabled: false"
     >
+      <!-- Container do modelo -->
       <a-entity
         id="modelContainer"
-        position="0 0 -3"
+        position="0 -0.5 -3"
         rotation="0 180 0"
         scale="1 1 1"
+      ></a-entity>
+
+      <!-- Texto de carregamento flutuante -->
+      <a-entity
+        id="loadingText"
+        text="value: Carregando... 0%; align: center; width: 2"
+        position="0 1.5 -2"
+        visible="false"
       ></a-entity>
 
       <a-camera position="0 1.6 0"></a-camera>
