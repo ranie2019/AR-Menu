@@ -11,35 +11,6 @@
         margin: 0;
         overflow: hidden;
       }
-
-      #loadingIndicator {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        color: white;
-        font-size: 20px;
-        z-index: 1000;
-      }
-
-      .btn {
-        position: absolute;
-        top: 50%;
-        z-index: 100;
-        background-color: rgba(0, 0, 0, 0.5);
-        border: none;
-        padding: 15px;
-        cursor: pointer;
-        border-radius: 50%;
-        transform: translateY(-50%);
-      }
-
-      #prevBtn {
-        left: 10px;
-      }
-
-      #nextBtn {
-        right: 10px;
-      }
     </style>
   </head>
 
@@ -64,7 +35,7 @@
     <!-- Cena AR com marcador -->
     <a-scene
       embedded
-      arjs="sourceType: webcam; debugUIEnabled: false; markerType: pattern; patternUrl: ar-menu/pattern.patt;"
+      arjs="sourceType: webcam; debugUIEnabled: false; markerType: pattern; patternUrl: 'ar-menu/pattern.patt';"
       vr-mode-ui="enabled: false"
     >
       <a-entity
