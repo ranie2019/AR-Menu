@@ -7,6 +7,10 @@ const models = [
   "cubo",
   "sundae",
   "pizza",
+  "Chocolate_Quente",
+  "absolut_vodka_1l",
+  "JACK_DANIELS",
+  "champagne_Lorem",
 ];
 
 let currentIndex = 0; // Índice atual do modelo

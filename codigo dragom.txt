@@ -1,0 +1,5 @@
+gltf-pipeline -i Chocolate_Quente.glb -o Chocolate_Quente-draco.glb -d
+
+
+
+cd "$HOME\Desktop"
