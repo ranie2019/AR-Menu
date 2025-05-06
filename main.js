@@ -1,96 +1,81 @@
-// Referências aos elementos do DOM
+// Caminhos dos modelos por categoria
+const models = {
+  inicio: ['objetos3d/inicio/inicio.glb'],
+  bebidas: [
+    'objetos3d/bebidas/absolut_vodka_1l.glb',
+    'objetos3d/bebidas/champagne_Lorem.glb',
+    'objetos3d/bebidas/champagne.glb',
+    'objetos3d/bebidas/fizzydrink.glb',
+    'objetos3d/bebidas/heineken.glb',
+    'objetos3d/bebidas/JACK_DANIELS.glb',
+    'objetos3d/bebidas/redbull.glb'
+  ],
+  pizzas: [
+    'objetos3d/pizzas/pizza.glb',
+    'objetos3d/pizzas/cubo.glb'
+  ],
+  sobremesas: [
+    'objetos3d/sobremesas/Chocolate_Quente.glb',
+    'objetos3d/sobremesas/sundae.glb'
+  ]
+};
+
+let currentCategory = 'inicio';
+let currentIndex = 0;
+
+// Referência ao container do modelo na cena A-Frame
 const modelContainer = document.getElementById('modelContainer');
 const loadingIndicator = document.getElementById('loadingIndicator');
 
-// Variáveis de controle
-let currentModelIndex = 0;
-let currentCategory = 'inicio'; // Categoria inicial
-let modelList = ['inicio.glb']; // Lista de modelos da categoria atual
+// Função para carregar o modelo atual
+function loadModel() {
+  const url = models[currentCategory][currentIndex];
 
-// Caminho base para os modelos
-const BASE_PATH = '3d';
+  // Mostra o indicador de carregamento
+  loadingIndicator.style.display = 'block';
 
-// Exibe ou oculta o indicador de carregamento
-function showLoading(show) {
-  loadingIndicator.style.display = show ? 'block' : 'none';
-}
-
-// Carrega um modelo GLB dentro do container
-function loadModel(filename) {
-  showLoading(true);
-
-  // Define o caminho completo para o modelo
-  const fullPath = currentCategory === 'inicio'
-    ? `${BASE_PATH}/${filename}` // modelo padrão fora de subpastas
-    : `${BASE_PATH}/${currentCategory}/${filename}`;
-
-  // Remove qualquer modelo anterior
+  // Remove modelo anterior (se existir)
   while (modelContainer.firstChild) {
     modelContainer.removeChild(modelContainer.firstChild);
   }
 
-  // Cria novo elemento <a-entity> com o modelo 3D
-  const model = document.createElement('a-entity');
-  model.setAttribute('gltf-model', fullPath);
-  model.setAttribute('animation-mixer', '');
-  model.setAttribute('position', '0 0 0');
-  model.setAttribute('rotation', '0 180 0');
-  model.setAttribute('scale', '1 1 1');
+  // Cria uma nova entidade com o modelo GLB
+  const newModel = document.createElement('a-entity');
+  newModel.setAttribute('gltf-model', url);
+  newModel.setAttribute('position', '0 0 0');
+  newModel.setAttribute('scale', '1 1 1');
+  newModel.setAttribute('rotation', '0 180 0');
 
-  // Esconde o "Carregando..." quando o modelo estiver pronto
-  model.addEventListener('model-loaded', () => {
-    showLoading(false);
+  // Espera o carregamento para esconder o indicador
+  newModel.addEventListener('model-loaded', () => {
+    loadingIndicator.style.display = 'none';
   });
 
-  modelContainer.appendChild(model);
+  // Adiciona o modelo à cena
+  modelContainer.appendChild(newModel);
 }
 
-// Troca de modelo: -1 = anterior, 1 = próximo
-function changeModel(direction) {
-  if (modelList.length <= 1) return; // Evita erro se só há 1 modelo
-
-  currentModelIndex += direction;
-
-  // Garantir que o índice fique dentro dos limites da lista
-  if (currentModelIndex < 0) currentModelIndex = modelList.length - 1;
-  if (currentModelIndex >= modelList.length) currentModelIndex = 0;
-
-  // Carrega o modelo novo
-  loadModel(modelList[currentModelIndex]);
-}
-
-// Alterna a exibição do menu de categorias
-function toggleMenu() {
-  const menu = document.getElementById('categoryButtons');
-  menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
-}
-
-// Seleciona uma categoria (bebidas, pizzas, etc.) e carrega o primeiro modelo dela
+// Alternar categoria (ao clicar no botão "Menu")
 function selectCategory(category) {
   currentCategory = category;
-  currentModelIndex = 0;
-
-  // Modelos disponíveis por categoria (adicione os nomes reais dos seus arquivos aqui)
-  const modelsByCategory = {
-    bebidas: ['coca.glb', 'suco.glb'],
-    pizzas: ['marguerita.glb', 'calabresa.glb'],
-    sobremesas: ['bolo.glb', 'sorvete.glb']
-  };
-
-  // Atualiza a lista de modelos com base na categoria
-  modelList = modelsByCategory[category] || [];
-
-  if (modelList.length === 0) {
-    alert('Nenhum modelo encontrado para esta categoria.');
-    return;
-  }
-
-  toggleMenu(); // Fecha o menu de categorias
-  loadModel(modelList[0]); // Carrega o primeiro modelo da nova categoria
+  currentIndex = 0;
+  loadModel();
 }
 
-// Ao carregar a página, mostra o modelo padrão "inicio.glb"
-window.addEventListener('load', () => {
-  currentCategory = 'inicio';
-  loadModel('inicio.glb');
+// Navegação entre os modelos da categoria
+function changeModel(step) {
+  const categoryModels = models[currentCategory];
+  currentIndex = (currentIndex + step + categoryModels.length) % categoryModels.length;
+  loadModel();
+}
+
+// Alternar visibilidade dos botões de categoria
+function toggleMenu() {
+  const buttons = document.getElementById('categoryButtons');
+  buttons.style.display = buttons.style.display === 'none' ? 'flex' : 'none';
+}
+
+// Carrega o modelo inicial ao carregar a página
+window.addEventListener('DOMContentLoaded', () => {
+  loadModel();
 });
