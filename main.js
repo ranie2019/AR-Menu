@@ -1,4 +1,3 @@
-// Lista de modelos disponíveis
 const models = [
   "champagne",
   "heineken",
@@ -10,30 +9,24 @@ const models = [
   "Chocolate_Quente",
   "absolut_vodka_1l",
   "JACK_DANIELS",
-  "champagne_Lorem",
+  "champagne_Lorem"
 ];
 
-let currentIndex = 0; // Índice atual do modelo
-const modelCache = {}; // Cache para armazenar modelos já carregados
+let currentIndex = 0;
+const modelCache = {};
 
-// Carrega um modelo 3D e exibe na cena
 function loadModel(name) {
   const container = document.querySelector("#modelContainer");
   const loadingIndicator = document.querySelector("#loadingIndicator");
 
-  // Mostra a mensagem de carregamento
   loadingIndicator.style.display = "block";
   loadingIndicator.innerText = "Carregando...";
 
-  // Remove modelo atual antes de carregar o novo
   container.removeAttribute("gltf-model");
-
-  // Redefine posição, rotação e escala do modelo
   container.setAttribute("position", "0 -0.5 -3");
   container.setAttribute("rotation", "0 180 0");
   container.setAttribute("scale", "1 1 1");
 
-  // Se o modelo já estiver no cache
   if (modelCache[name]) {
     container.setAttribute("gltf-model", modelCache[name]);
     loadingIndicator.style.display = "none";
@@ -42,16 +35,13 @@ function loadModel(name) {
     xhr.open("GET", `./3d/${name}.glb`, true);
     xhr.responseType = "blob";
 
-    // Quando terminar de carregar
     xhr.onload = () => {
-      const blob = xhr.response;
-      const url = URL.createObjectURL(blob);
+      const url = URL.createObjectURL(xhr.response);
       modelCache[name] = url;
       container.setAttribute("gltf-model", url);
       loadingIndicator.style.display = "none";
     };
 
-    // Se der erro
     xhr.onerror = () => {
       console.error("Erro ao carregar o modelo.");
       loadingIndicator.innerText = "Erro ao carregar o modelo";
@@ -61,80 +51,77 @@ function loadModel(name) {
   }
 }
 
-// Muda o modelo com base na direção (-1 para anterior, +1 para próximo)
 function changeModel(direction) {
   currentIndex = (currentIndex + direction + models.length) % models.length;
   loadModel(models[currentIndex]);
 }
 
-// Carrega o primeiro modelo ao iniciar
 loadModel(models[currentIndex]);
 
-// Rotação automática no eixo Y
+// Rotação automática
 setInterval(() => {
   const model = document.querySelector("#modelContainer");
   if (!model) return;
   const rotation = model.getAttribute("rotation");
-  rotation.y += 0.5;
-  model.setAttribute("rotation", rotation);
+  model.setAttribute("rotation", {
+    x: rotation.x,
+    y: rotation.y + 0.5,
+    z: rotation.z
+  });
 }, 30);
 
 // Escala com gesto de pinça
-let initialDistance = null;
-let initialScale = 1;
+let pinchStartDist = null;
+let pinchStartScale = 1;
 
-function updateScale(scaleFactor) {
-  const model = document.querySelector("#modelContainer");
-  const newScale = Math.min(Math.max(initialScale * scaleFactor, 0.1), 10);
-  model.setAttribute("scale", `${newScale} ${newScale} ${newScale}`);
+function getDistance(touches) {
+  const dx = touches[0].clientX - touches[1].clientX;
+  const dy = touches[0].clientY - touches[1].clientY;
+  return Math.sqrt(dx * dx + dy * dy);
 }
 
 window.addEventListener("touchstart", (e) => {
   if (e.touches.length === 2) {
-    const dx = e.touches[0].clientX - e.touches[1].clientX;
-    const dy = e.touches[0].clientY - e.touches[1].clientY;
-    initialDistance = Math.sqrt(dx * dx + dy * dy);
+    pinchStartDist = getDistance(e.touches);
     const scale = document.querySelector("#modelContainer").getAttribute("scale");
-    initialScale = scale.x;
+    pinchStartScale = scale.x;
   }
 });
 
 window.addEventListener("touchmove", (e) => {
-  if (e.touches.length === 2 && initialDistance) {
-    const dx = e.touches[0].clientX - e.touches[1].clientX;
-    const dy = e.touches[0].clientY - e.touches[1].clientY;
-    const currentDistance = Math.sqrt(dx * dx + dy * dy);
-    const scaleFactor = currentDistance / initialDistance;
-    updateScale(scaleFactor);
+  if (e.touches.length === 2 && pinchStartDist) {
+    const newDist = getDistance(e.touches);
+    const scaleFactor = newDist / pinchStartDist;
+    const newScale = Math.min(Math.max(pinchStartScale * scaleFactor, 0.1), 10);
+    document.querySelector("#modelContainer").setAttribute("scale", `${newScale} ${newScale} ${newScale}`);
   }
 });
 
 window.addEventListener("touchend", () => {
-  initialDistance = null;
+  pinchStartDist = null;
 });
 
-// Rotação vertical (X) com um dedo
-let startY = null;
-let initialRotationX = 0;
+// Rotação vertical com 1 dedo
+let rotateStartY = null;
+let rotateStartX = 0;
 
 window.addEventListener("touchstart", (e) => {
   if (e.touches.length === 1) {
-    startY = e.touches[0].clientY;
-    const model = document.querySelector("#modelContainer");
-    initialRotationX = model.getAttribute("rotation").x;
+    rotateStartY = e.touches[0].clientY;
+    rotateStartX = document.querySelector("#modelContainer").getAttribute("rotation").x;
   }
 });
 
 window.addEventListener("touchmove", (e) => {
-  if (e.touches.length === 1 && startY !== null) {
-    const deltaY = e.touches[0].clientY - startY;
+  if (e.touches.length === 1 && rotateStartY !== null) {
+    const deltaY = e.touches[0].clientY - rotateStartY;
     const model = document.querySelector("#modelContainer");
     const rotation = model.getAttribute("rotation");
-    const newX = Math.min(Math.max(initialRotationX - deltaY * 0.2, -90), 90);
+    const newX = Math.min(Math.max(rotateStartX - deltaY * 0.2, -90), 90);
     model.setAttribute("rotation", `${newX} ${rotation.y} ${rotation.z}`);
   }
 });
 
 window.addEventListener("touchend", () => {
-  startY = null;
+  rotateStartY = null;
 });

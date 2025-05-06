@@ -1,40 +1,43 @@
 /* Estilo geral dos botões */
 .btn {
   position: absolute;
-  font-size: 30px;
+  font-size: 28px;
   background-color: #ffa726;
   color: white;
   border: none;
   border-radius: 12px;
-  padding: 10px 10px;
+  padding: 12px 16px;
   cursor: pointer;
   z-index: 999;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-  transition: transform 0.1s ease, background-color 0.2s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+  transition: transform 0.15s ease, background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Efeito de hover */
 .btn:hover {
   background-color: #fb8c00;
-  transform: scale(1.05);
+  transform: scale(1.08);
 }
 
 /* Botão Anterior */
 #prevBtn {
-  left: 10px;
-  bottom: 10px;
+  left: 16px;
+  bottom: 16px;
 }
 
 /* Botão Próximo */
 #nextBtn {
-  right: 10px;
-  bottom: 10px;
+  right: 16px;
+  bottom: 16px;
 }
 
-/* Estilo das setas */
+/* Estilo das setas SVG */
 .btn svg {
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   fill: white;
   pointer-events: none;
 }
@@ -45,13 +48,14 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: rgba(0, 0, 0, 0.7);
-  color: white;
-  padding: 12px 24px;
-  border-radius: 10px;
-  font-size: 20px;
+  background-color: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-size: 18px;
   font-weight: bold;
   z-index: 10000;
   display: none;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
-
