@@ -4,17 +4,22 @@
     <meta charset="utf-8" />
     <title>Visualizador 3D com Botões</title>
     <link rel="stylesheet" href="style.css" />
-    <!-- Bibliotecas do A-Frame e AR.js -->
+
+    <!-- A-Frame + AR.js -->
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
+
+    <!-- Controle por gestos (zoom/rotação) -->
+    <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@master/examples/showcase/tracked-ar/assets/gesture-detector.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@6.1.1/dist/aframe-extras.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@6.1.1/dist/aframe-extras.controls.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@master/examples/showcase/tracked-ar/assets/gesture-controls.js"></script>
   </head>
 
   <body>
-    <!-- Container do botão Menu e das categorias -->
+    <!-- Menu de Categorias -->
     <div id="menuContainer">
-      <!-- Botão principal "Menu" -->
       <button id="menuBtn" class="btn" onclick="toggleMenu()">Menu</button>
-      <!-- Botões de categoria: aparecem/desaparecem ao clicar em Menu -->
       <div id="categoryButtons">
         <button class="category-btn" onclick="selectCategory('bebidas')">Bebidas</button>
         <button class="category-btn" onclick="selectCategory('pizzas')">Pizzas</button>
@@ -22,21 +27,20 @@
       </div>
     </div>
 
-    <!-- Botão de troca para o modelo anterior -->
+    <!-- Botões de Navegação -->
     <button id="prevBtn" class="btn" onclick="changeModel(-1)">
       <svg viewBox="0 0 24 24">
         <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
       </svg>
     </button>
 
-    <!-- Botão de troca para o próximo modelo -->
     <button id="nextBtn" class="btn" onclick="changeModel(1)">
       <svg viewBox="0 0 24 24">
         <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z" />
       </svg>
     </button>
 
-    <!-- Indicador de carregamento -->
+    <!-- Indicador de Carregamento -->
     <div id="loadingIndicator">Carregando...</div>
 
     <!-- Cena AR com marcador -->
@@ -45,15 +49,16 @@
       arjs="sourceType: webcam; debugUIEnabled: false; markerType: pattern; patternUrl: 'ar-menu/pattern.patt';"
       vr-mode-ui="enabled: false"
     >
-      <!-- Container do modelo 3D -->
+      <!-- Container com gesture-detector -->
       <a-entity
         id="modelContainer"
+        gesture-detector
         position="0 0 -3"
         rotation="0 180 0"
         scale="1 1 1"
       ></a-entity>
 
-      <!-- Câmera da cena -->
+      <!-- Câmera -->
       <a-camera position="0 1.6 0"></a-camera>
     </a-scene>
 

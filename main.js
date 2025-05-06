@@ -25,59 +25,56 @@ const models = {
 let currentCategory = 'inicio';
 let currentIndex = 0;
 
-// Referência ao container do modelo na cena A-Frame
 const modelContainer = document.getElementById('modelContainer');
 const loadingIndicator = document.getElementById('loadingIndicator');
 
 // Função para carregar o modelo atual
 function loadModel() {
   const url = models[currentCategory][currentIndex];
-
-  // Mostra o indicador de carregamento
   loadingIndicator.style.display = 'block';
 
-  // Remove modelo anterior (se existir)
+  // Remove modelo anterior
   while (modelContainer.firstChild) {
     modelContainer.removeChild(modelContainer.firstChild);
   }
 
-  // Cria uma nova entidade com o modelo GLB
+  // Cria nova entidade com o modelo e controles de gesto
   const newModel = document.createElement('a-entity');
   newModel.setAttribute('gltf-model', url);
   newModel.setAttribute('position', '0 0 0');
   newModel.setAttribute('scale', '1 1 1');
   newModel.setAttribute('rotation', '0 180 0');
+  newModel.setAttribute('gesture-controls', 'minScale: 0.5; maxScale: 2');
 
-  // Espera o carregamento para esconder o indicador
+  // Esconde indicador após carregamento
   newModel.addEventListener('model-loaded', () => {
     loadingIndicator.style.display = 'none';
   });
 
-  // Adiciona o modelo à cena
   modelContainer.appendChild(newModel);
 }
 
-// Alternar categoria (ao clicar no botão "Menu")
+// Alternar categoria
 function selectCategory(category) {
   currentCategory = category;
   currentIndex = 0;
   loadModel();
 }
 
-// Navegação entre os modelos da categoria
+// Alternar modelo
 function changeModel(step) {
   const categoryModels = models[currentCategory];
   currentIndex = (currentIndex + step + categoryModels.length) % categoryModels.length;
   loadModel();
 }
 
-// Alternar visibilidade dos botões de categoria
+// Alternar menu
 function toggleMenu() {
   const buttons = document.getElementById('categoryButtons');
   buttons.style.display = buttons.style.display === 'none' ? 'flex' : 'none';
 }
 
-// Carrega o modelo inicial ao carregar a página
+// Carrega modelo inicial
 window.addEventListener('DOMContentLoaded', () => {
   loadModel();
 });
