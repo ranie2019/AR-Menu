@@ -1,127 +1,89 @@
-const models = [
-  "champagne",
-  "heineken",
-  "redbull",
-  "fizzydrink",
-  "cubo",
-  "sundae",
-  "pizza",
-  "Chocolate_Quente",
-  "absolut_vodka_1l",
-  "JACK_DANIELS",
-  "champagne_Lorem"
-];
+let categorias = {
+  bebidas: [
+    'modelos/bebidas/absolut_vodka_1l.glb',
+    'modelos/bebidas/champagne_Lorem.glb',
+    'modelos/bebidas/champagne.glb',
+    'modelos/bebidas/fizzydrink.glb',
+    'modelos/bebidas/heineken.glb',
+    'modelos/bebidas/JACK_DANIELS.glb',
+    'modelos/bebidas/redbull.glb'
+  ],
+  pizzas: [
+    'modelos/pizzas/pizza.glb',
+    'modelos/pizzas/cubo.glb'
+  ],
+  sobremesas: [
+    'modelos/sobremesas/Chocolate_Quente.glb',
+    'modelos/sobremesas/sundae.glb'
+  ]
+};
 
-let currentIndex = 0;
-const modelCache = {};
+// Junta todos os modelos numa lista geral
+let todosModelos = [];
+for (const cat in categorias) todosModelos = todosModelos.concat(categorias[cat]);
 
-function loadModel(name) {
-  const container = document.querySelector("#modelContainer");
-  const loadingIndicator = document.querySelector("#loadingIndicator");
+let indexAtual = 0;
+let modelosAtivos = [...todosModelos];
+let menuAberto = false;
+let categoriaSelecionada = null;
 
-  loadingIndicator.style.display = "block";
-  loadingIndicator.innerText = "Carregando...";
+const container = document.getElementById('modelContainer');
+const loadingIndicator = document.getElementById('loadingIndicator');
 
-  container.removeAttribute("gltf-model");
-  container.setAttribute("position", "0 -0.5 -3");
-  container.setAttribute("rotation", "0 180 0");
-  container.setAttribute("scale", "1 1 1");
+// Carrega o modelo atual
+function carregarModelo(url) {
+  loadingIndicator.style.display = 'block';
 
-  if (modelCache[name]) {
-    container.setAttribute("gltf-model", modelCache[name]);
-    loadingIndicator.style.display = "none";
-  } else {
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", `./3d/${name}.glb`, true);
-    xhr.responseType = "blob";
-
-    xhr.onload = () => {
-      const url = URL.createObjectURL(xhr.response);
-      modelCache[name] = url;
-      container.setAttribute("gltf-model", url);
-      loadingIndicator.style.display = "none";
-    };
-
-    xhr.onerror = () => {
-      console.error("Erro ao carregar o modelo.");
-      loadingIndicator.innerText = "Erro ao carregar o modelo";
-    };
-
-    xhr.send();
+  // Remove modelo antigo
+  while (container.firstChild) {
+    container.removeChild(container.firstChild);
   }
-}
 
-function changeModel(direction) {
-  currentIndex = (currentIndex + direction + models.length) % models.length;
-  loadModel(models[currentIndex]);
-}
+  const modelo = document.createElement('a-entity');
+  modelo.setAttribute('gltf-model', url);
+  modelo.setAttribute('scale', '1 1 1');
+  modelo.setAttribute('position', '0 0 0');
 
-loadModel(models[currentIndex]);
-
-// Rotação automática
-setInterval(() => {
-  const model = document.querySelector("#modelContainer");
-  if (!model) return;
-  const rotation = model.getAttribute("rotation");
-  model.setAttribute("rotation", {
-    x: rotation.x,
-    y: rotation.y + 0.5,
-    z: rotation.z
+  modelo.addEventListener('model-loaded', () => {
+    loadingIndicator.style.display = 'none';
   });
-}, 30);
 
-// Escala com gesto de pinça
-let pinchStartDist = null;
-let pinchStartScale = 1;
-
-function getDistance(touches) {
-  const dx = touches[0].clientX - touches[1].clientX;
-  const dy = touches[0].clientY - touches[1].clientY;
-  return Math.sqrt(dx * dx + dy * dy);
+  container.appendChild(modelo);
 }
 
-window.addEventListener("touchstart", (e) => {
-  if (e.touches.length === 2) {
-    pinchStartDist = getDistance(e.touches);
-    const scale = document.querySelector("#modelContainer").getAttribute("scale");
-    pinchStartScale = scale.x;
+// Troca o modelo na direção (anterior ou próxima)
+function changeModel(direcao) {
+  if (modelosAtivos.length === 0) return;
+  indexAtual = (indexAtual + direcao + modelosAtivos.length) % modelosAtivos.length;
+  carregarModelo(modelosAtivos[indexAtual]);
+}
+
+// Alterna visibilidade dos botões de categoria
+function toggleMenu() {
+  menuAberto = !menuAberto;
+
+  const botoesCategoria = document.getElementById('categoryButtons');
+  botoesCategoria.style.display = menuAberto ? 'flex' : 'none';
+
+  if (!menuAberto) {
+    modelosAtivos = [...todosModelos];
+    categoriaSelecionada = null;
+    indexAtual = 0;
+    carregarModelo(modelosAtivos[indexAtual]);
   }
-});
+}
 
-window.addEventListener("touchmove", (e) => {
-  if (e.touches.length === 2 && pinchStartDist) {
-    const newDist = getDistance(e.touches);
-    const scaleFactor = newDist / pinchStartDist;
-    const newScale = Math.min(Math.max(pinchStartScale * scaleFactor, 0.1), 10);
-    document.querySelector("#modelContainer").setAttribute("scale", `${newScale} ${newScale} ${newScale}`);
-  }
-});
+// Ativa apenas a categoria selecionada
+function selectCategory(categoria) {
+  if (!categorias[categoria]) return;
 
-window.addEventListener("touchend", () => {
-  pinchStartDist = null;
-});
+  categoriaSelecionada = categoria;
+  modelosAtivos = [...categorias[categoria]];
+  indexAtual = 0;
+  carregarModelo(modelosAtivos[indexAtual]);
+}
 
-// Rotação vertical com 1 dedo
-let rotateStartY = null;
-let rotateStartX = 0;
-
-window.addEventListener("touchstart", (e) => {
-  if (e.touches.length === 1) {
-    rotateStartY = e.touches[0].clientY;
-    rotateStartX = document.querySelector("#modelContainer").getAttribute("rotation").x;
-  }
-});
-
-window.addEventListener("touchmove", (e) => {
-  if (e.touches.length === 1 && rotateStartY !== null) {
-    const deltaY = e.touches[0].clientY - rotateStartY;
-    const model = document.querySelector("#modelContainer");
-    const rotation = model.getAttribute("rotation");
-    const newX = Math.min(Math.max(rotateStartX - deltaY * 0.2, -90), 90);
-    model.setAttribute("rotation", `${newX} ${rotation.y} ${rotation.z}`);
-  }
-});
-
-window.addEventListener("touchend", () => {
-  rotateStartY = null;
+// Carrega modelo inicial
+document.addEventListener('DOMContentLoaded', () => {
+  carregarModelo(modelosAtivos[0]);
 });

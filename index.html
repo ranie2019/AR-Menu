@@ -11,74 +11,26 @@
         margin: 0;
         overflow: hidden;
       }
-
-      /* Estilo do container do menu */
-      #menuContainer {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        z-index: 10000;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      #menuToggle {
-        background-color: rgba(200, 200, 200, 0.7);
-        color: black;
-        border: none;
-        border-radius: 8px;
-        padding: 8px 12px;
-        font-size: 16px;
-        cursor: pointer;
-      }
-
-      #categoryButtons {
-        margin-top: 8px;
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-      }
-
-      .category-btn {
-        background-color: rgba(200, 200, 200, 0.7);
-        color: black;
-        border: none;
-        border-radius: 6px;
-        padding: 6px 10px;
-        font-size: 14px;
-        cursor: pointer;
-      }
-
-      .category-btn:hover {
-        background-color: rgba(150, 150, 150, 0.9);
-      }
-
-      .hidden {
-        display: none;
-      }
     </style>
   </head>
 
   <body>
-    <!-- Botão de Menu e Categorias -->
-    <div id="menuContainer">
-      <button id="menuToggle">☰ Menu</button>
-      <div id="categoryButtons" class="hidden">
-        <button class="category-btn" onclick="setCategory('bebidas')">Bebidas</button>
-        <button class="category-btn" onclick="setCategory('sobremesas')">Sobremesas</button>
-        <button class="category-btn" onclick="setCategory('pratos')">Pratos Principais</button>
-      </div>
+    <!-- Botão de menu superior -->
+    <button id="menuBtn" class="btn-top" onclick="toggleMenu()">Menu</button>
+
+    <!-- Botões de categoria (inicialmente ocultos) -->
+    <div id="categoryButtons">
+      <button class="category-btn" onclick="selectCategory('pizzas')">Pizzas</button>
+      <button class="category-btn" onclick="selectCategory('bebidas')">Bebidas</button>
+      <button class="category-btn" onclick="selectCategory('sobremesas')">Sobremesas</button>
     </div>
 
-    <!-- Botão Anterior -->
+    <!-- Botões de navegação -->
     <button id="prevBtn" class="btn" onclick="changeModel(-1)">
       <svg viewBox="0 0 24 24">
         <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
       </svg>
     </button>
-
-    <!-- Botão Próximo -->
     <button id="nextBtn" class="btn" onclick="changeModel(1)">
       <svg viewBox="0 0 24 24">
         <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z" />
@@ -88,53 +40,17 @@
     <!-- Indicador de carregamento -->
     <div id="loadingIndicator">Carregando...</div>
 
-    <!-- Cena AR com marcador -->
+    <!-- Cena AR -->
     <a-scene
       embedded
       arjs="sourceType: webcam; debugUIEnabled: false; markerType: pattern; patternUrl: 'ar-menu/pattern.patt';"
       vr-mode-ui="enabled: false"
     >
-      <a-entity
-        id="modelContainer"
-        position="0 0 -3"
-        rotation="0 180 0"
-        scale="1 1 1"
-      ></a-entity>
-
+      <a-entity id="modelContainer" position="0 0 -3" rotation="0 180 0" scale="1 1 1"></a-entity>
       <a-camera position="0 1.6 0"></a-camera>
     </a-scene>
 
     <!-- Script principal -->
     <script src="main.js"></script>
-
-    <!-- Script do menu -->
-    <script>
-      const menuToggle = document.getElementById("menuToggle");
-      const categoryButtons = document.getElementById("categoryButtons");
-      let menuOpen = false;
-
-      menuToggle.addEventListener("click", () => {
-        menuOpen = !menuOpen;
-        categoryButtons.classList.toggle("hidden", !menuOpen);
-      });
-
-      function setCategory(category) {
-        console.log("Categoria selecionada:", category);
-        models = getModelsByCategory(category);
-        currentIndex = 0;
-        loadModel(models[currentIndex]);
-        categoryButtons.classList.add("hidden");
-        menuOpen = false;
-      }
-
-      function getModelsByCategory(category) {
-        const categorias = {
-          bebidas: ["heineken", "champagne", "redbull"],
-          sobremesas: ["sundae", "Chocolate_Quente"],
-          pratos: ["pizza"],
-        };
-        return categorias[category] || [];
-      }
-    </script>
   </body>
 </html>
