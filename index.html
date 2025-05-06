@@ -27,6 +27,19 @@
       </div>
     </div>
 
+    <script>
+      AFRAME.registerComponent('auto-rotate', {
+        schema: {
+          speed: { type: 'number', default: 0.5 } // graus por frame
+        },
+        tick: function (time, deltaTime) {
+          const rotation = this.el.getAttribute('rotation');
+          rotation.y += this.data.speed * (deltaTime / 16.67); // normalizado para ~60fps
+          this.el.setAttribute('rotation', rotation);
+        }
+      });
+    </script>
+
     <!-- Botões de Navegação -->
     <button id="prevBtn" class="btn" onclick="changeModel(-1)">
       <svg viewBox="0 0 24 24">

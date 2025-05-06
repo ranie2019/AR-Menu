@@ -46,6 +46,9 @@ function loadModel() {
   newModel.setAttribute('rotation', '0 180 0');
   newModel.setAttribute('gesture-controls', 'minScale: 0.5; maxScale: 2');
 
+  // Adiciona rotação automática
+  newModel.setAttribute('auto-rotate', 'speed: 0.3'); // rotação devagar no eixo Y
+
   // Esconde indicador após carregamento
   newModel.addEventListener('model-loaded', () => {
     loadingIndicator.style.display = 'none';
