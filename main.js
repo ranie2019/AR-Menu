@@ -1,6 +1,6 @@
 // Caminhos dos modelos por categoria
 const models = {
-  inicio: ['objetos3d/inicio/inicio.glb'],
+  inicio: ['objetos3d/inicio/cubo.glb'],
   bebidas: [
     'objetos3d/bebidas/absolut_vodka_1l.glb',
     'objetos3d/bebidas/champagne_Lorem.glb',
@@ -12,11 +12,13 @@ const models = {
   ],
   pizzas: [
     'objetos3d/pizzas/pizza.glb',
+    'objetos3d/pizzas/caneca.glb',
     'objetos3d/pizzas/cubo.glb'
   ],
   sobremesas: [
     'objetos3d/sobremesas/Chocolate_Quente.glb',
-    'objetos3d/sobremesas/sundae.glb'
+    'objetos3d/sobremesas/sundae.glb',
+    'objetos3d/pizzas/cubo.glb'
   ]
 };
 
