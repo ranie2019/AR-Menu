@@ -1,89 +1,94 @@
-let categorias = {
+// Mapas com os modelos de cada categoria
+const categorias = {
   bebidas: [
-    'modelos/bebidas/absolut_vodka_1l.glb',
-    'modelos/bebidas/champagne_Lorem.glb',
-    'modelos/bebidas/champagne.glb',
-    'modelos/bebidas/fizzydrink.glb',
-    'modelos/bebidas/heineken.glb',
-    'modelos/bebidas/JACK_DANIELS.glb',
-    'modelos/bebidas/redbull.glb'
+    'models/bebidas/absolut_vodka_1l.glb',
+    'models/bebidas/champagne_Lorem.glb',
+    'models/bebidas/champagne.glb',
+    'models/bebidas/fizzydrink.glb',
+    'models/bebidas/heineken.glb',
+    'models/bebidas/JACK_DANIELS.glb',
+    'models/bebidas/redbull.glb'
   ],
   pizzas: [
-    'modelos/pizzas/pizza.glb',
-    'modelos/pizzas/cubo.glb'
+    'models/pizzas/pizza.glb',
+    'models/pizzas/cubo.glb'
   ],
   sobremesas: [
-    'modelos/sobremesas/Chocolate_Quente.glb',
-    'modelos/sobremesas/sundae.glb'
+    'models/sobremesas/Chocolate_Quente.glb',
+    'models/sobremesas/sundae.glb'
   ]
 };
 
-// Junta todos os modelos numa lista geral
-let todosModelos = [];
-for (const cat in categorias) todosModelos = todosModelos.concat(categorias[cat]);
+let modelosAtivos = [];              // Lista de modelos atualmente visíveis
+let indexAtual = 0;                 // Índice do modelo atual
+let categoriaSelecionada = null;    // Categoria ativa, se houver
+let menuAtivo = false;              // Estado do menu (aberto/fechado)
 
-let indexAtual = 0;
-let modelosAtivos = [...todosModelos];
-let menuAberto = false;
-let categoriaSelecionada = null;
+// Função para carregar um modelo na cena
+function carregarModelo(modeloPath) {
+  const container = document.getElementById('modelContainer');
+  const loading = document.getElementById('loadingIndicator');
 
-const container = document.getElementById('modelContainer');
-const loadingIndicator = document.getElementById('loadingIndicator');
+  // Mostra o indicador de carregamento
+  loading.style.display = 'block';
 
-// Carrega o modelo atual
-function carregarModelo(url) {
-  loadingIndicator.style.display = 'block';
-
-  // Remove modelo antigo
+  // Remove modelos anteriores
   while (container.firstChild) {
     container.removeChild(container.firstChild);
   }
 
-  const modelo = document.createElement('a-entity');
-  modelo.setAttribute('gltf-model', url);
-  modelo.setAttribute('scale', '1 1 1');
-  modelo.setAttribute('position', '0 0 0');
+  // Cria nova entidade GLTF
+  const modelEntity = document.createElement('a-entity');
+  modelEntity.setAttribute('gltf-model', modeloPath);
+  modelEntity.setAttribute('scale', '1 1 1');
 
-  modelo.addEventListener('model-loaded', () => {
-    loadingIndicator.style.display = 'none';
+  // Ao carregar, esconde o indicador
+  modelEntity.addEventListener('model-loaded', () => {
+    loading.style.display = 'none';
   });
 
-  container.appendChild(modelo);
-}
-
-// Troca o modelo na direção (anterior ou próxima)
-function changeModel(direcao) {
-  if (modelosAtivos.length === 0) return;
-  indexAtual = (indexAtual + direcao + modelosAtivos.length) % modelosAtivos.length;
-  carregarModelo(modelosAtivos[indexAtual]);
+  container.appendChild(modelEntity);
 }
 
 // Alterna visibilidade dos botões de categoria
 function toggleMenu() {
-  menuAberto = !menuAberto;
+  menuAtivo = !menuAtivo;
+  document.getElementById('categoryButtons').style.display = menuAtivo ? 'flex' : 'none';
 
-  const botoesCategoria = document.getElementById('categoryButtons');
-  botoesCategoria.style.display = menuAberto ? 'flex' : 'none';
-
-  if (!menuAberto) {
-    modelosAtivos = [...todosModelos];
-    categoriaSelecionada = null;
+  if (!menuAtivo) {
+    // Se o menu foi fechado, volta para rotação de todos os modelos
+    modelosAtivos = [
+      ...categorias.bebidas,
+      ...categorias.pizzas,
+      ...categorias.sobremesas
+    ];
     indexAtual = 0;
-    carregarModelo(modelosAtivos[indexAtual]);
+    categoriaSelecionada = null;
+    carregarModelo(modelosAtivos[0]);
   }
 }
 
-// Ativa apenas a categoria selecionada
+// Troca de modelo com base no botão (1: próximo, -1: anterior)
+function changeModel(direction) {
+  if (modelosAtivos.length === 0) return;
+
+  indexAtual += direction;
+
+  if (indexAtual < 0) {
+    indexAtual = modelosAtivos.length - 1;
+  } else if (indexAtual >= modelosAtivos.length) {
+    indexAtual = 0;
+  }
+
+  carregarModelo(modelosAtivos[indexAtual]);
+}
+
+// Seleciona uma categoria (ex: bebidas)
 function selectCategory(categoria) {
   if (!categorias[categoria]) return;
 
   categoriaSelecionada = categoria;
   modelosAtivos = [...categorias[categoria]];
   indexAtual = 0;
-  carregarModelo(modelosAtivos[indexAtual]);
-}
-
-// Carrega modelo inicial
-document.addEventListener('DOMContentLoaded', () => {
   carregarModelo(modelosAtivos[0]);
-});
+}

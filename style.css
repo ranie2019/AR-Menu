@@ -1,4 +1,10 @@
-/* Botões de navegação */
+/* Remove margens e esconde rolagem */
+body {
+  margin: 0;
+  overflow: hidden;
+}
+
+/* Botões de troca (próximo/anterior) */
 .btn {
   position: absolute;
   font-size: 30px;
@@ -6,7 +12,7 @@
   color: white;
   border: none;
   border-radius: 12px;
-  padding: 10px 10px;
+  padding: 10px;
   cursor: pointer;
   z-index: 999;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
@@ -18,16 +24,19 @@
   transform: scale(1.05);
 }
 
+/* Botão Anterior: canto inferior esquerdo */
 #prevBtn {
   left: 10px;
   bottom: 10px;
 }
 
+/* Botão Próximo: canto inferior direito */
 #nextBtn {
   right: 10px;
   bottom: 10px;
 }
 
+/* Ícones SVG dentro dos botões */
 .btn svg {
   width: 24px;
   height: 24px;
@@ -35,7 +44,7 @@
   pointer-events: none;
 }
 
-/* Indicador de carregamento */
+/* Indicador de carregamento centralizado */
 #loadingIndicator {
   position: fixed;
   top: 50%;
@@ -51,40 +60,37 @@
   display: none;
 }
 
-/* Botão de menu superior */
-.btn-top {
+/* Container do botão Menu e categorias */
+#menuContainer {
   position: absolute;
   top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 20px;
-  background-color: rgba(200, 200, 200, 0.8);
-  color: black;
-  padding: 8px 16px;
-  border-radius: 8px;
+  left: 10px;
   z-index: 1000;
-  border: none;
-  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
-/* Botões de categoria */
+/* Botões de categoria: escondidos por padrão */
 #categoryButtons {
-  position: absolute;
-  bottom: 60px;
-  left: 50%;
-  transform: translateX(-50%);
   display: none;
-  gap: 10px;
-  z-index: 1000;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
 }
 
+/* Estilo dos botões de categoria */
 .category-btn {
-  font-size: 16px;
-  background-color: rgba(128, 128, 128, 0.6);
+  background-color: rgba(200, 200, 200, 0.8);
   color: black;
   border: none;
   border-radius: 8px;
   padding: 6px 12px;
+  font-size: 14px;
   cursor: pointer;
-  margin: 0 4px;
+  transition: background-color 0.2s ease;
+}
+
+.category-btn:hover {
+  background-color: rgba(180, 180, 180, 0.9);
 }
