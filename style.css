@@ -75,8 +75,10 @@ body {
 #categoryButtons {
   display: none;
   flex-direction: column;
-  gap: 8px;
-  margin-top: 8px;
+  gap: 4px;
+  margin-top: 4px;
+  position: relative;  /* Garante que fique embaixo do botão Menu */
+  z-index: 999;        /* Garante que fique acima visualmente */
 }
 
 /* Estilo dos botões de categoria */
