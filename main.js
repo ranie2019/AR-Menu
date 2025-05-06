@@ -44,6 +44,8 @@ function loadModel() {
   newModel.setAttribute('position', '0 0 0');
   newModel.setAttribute('scale', '1 1 1');
   newModel.setAttribute('rotation', '0 180 0');
+  
+  // Adiciona o controle de gesto (pinça) para zoom
   newModel.setAttribute('gesture-controls', 'minScale: 0.5; maxScale: 2');
 
   // Adiciona rotação automática
