@@ -84,7 +84,7 @@ body {
 /* ---------------- BOTÕES DE CATEGORIA ---------------- */
 #categoryButtons {
   position: absolute;
-  top: 200px; /* distância abaixo do botão Menu */
+  top: 160px; /* distância abaixo do botão Menu */
   left: 10px;
   z-index: 999;
   display: none;
