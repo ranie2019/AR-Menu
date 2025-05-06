@@ -71,6 +71,7 @@ body {
   align-items: flex-start;
 }
 
+
 /* Botões de categoria: escondidos por padrão */
 #categoryButtons {
   display: none;
