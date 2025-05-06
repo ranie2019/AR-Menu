@@ -1,94 +1,96 @@
-// Mapas com os modelos de cada categoria
-const categorias = {
-  bebidas: [
-    'models/bebidas/absolut_vodka_1l.glb',
-    'models/bebidas/champagne_Lorem.glb',
-    'models/bebidas/champagne.glb',
-    'models/bebidas/fizzydrink.glb',
-    'models/bebidas/heineken.glb',
-    'models/bebidas/JACK_DANIELS.glb',
-    'models/bebidas/redbull.glb'
-  ],
-  pizzas: [
-    'models/pizzas/pizza.glb',
-    'models/pizzas/cubo.glb'
-  ],
-  sobremesas: [
-    'models/sobremesas/Chocolate_Quente.glb',
-    'models/sobremesas/sundae.glb'
-  ]
-};
+// Referências aos elementos do DOM
+const modelContainer = document.getElementById('modelContainer');
+const loadingIndicator = document.getElementById('loadingIndicator');
 
-let modelosAtivos = [];              // Lista de modelos atualmente visíveis
-let indexAtual = 0;                 // Índice do modelo atual
-let categoriaSelecionada = null;    // Categoria ativa, se houver
-let menuAtivo = false;              // Estado do menu (aberto/fechado)
+// Variáveis de controle
+let currentModelIndex = 0;
+let currentCategory = 'inicio'; // Categoria inicial
+let modelList = ['inicio.glb']; // Lista de modelos da categoria atual
 
-// Função para carregar um modelo na cena
-function carregarModelo(modeloPath) {
-  const container = document.getElementById('modelContainer');
-  const loading = document.getElementById('loadingIndicator');
+// Caminho base para os modelos
+const BASE_PATH = '3d';
 
-  // Mostra o indicador de carregamento
-  loading.style.display = 'block';
+// Exibe ou oculta o indicador de carregamento
+function showLoading(show) {
+  loadingIndicator.style.display = show ? 'block' : 'none';
+}
 
-  // Remove modelos anteriores
-  while (container.firstChild) {
-    container.removeChild(container.firstChild);
+// Carrega um modelo GLB dentro do container
+function loadModel(filename) {
+  showLoading(true);
+
+  // Define o caminho completo para o modelo
+  const fullPath = currentCategory === 'inicio'
+    ? `${BASE_PATH}/${filename}` // modelo padrão fora de subpastas
+    : `${BASE_PATH}/${currentCategory}/${filename}`;
+
+  // Remove qualquer modelo anterior
+  while (modelContainer.firstChild) {
+    modelContainer.removeChild(modelContainer.firstChild);
   }
 
-  // Cria nova entidade GLTF
-  const modelEntity = document.createElement('a-entity');
-  modelEntity.setAttribute('gltf-model', modeloPath);
-  modelEntity.setAttribute('scale', '1 1 1');
+  // Cria novo elemento <a-entity> com o modelo 3D
+  const model = document.createElement('a-entity');
+  model.setAttribute('gltf-model', fullPath);
+  model.setAttribute('animation-mixer', '');
+  model.setAttribute('position', '0 0 0');
+  model.setAttribute('rotation', '0 180 0');
+  model.setAttribute('scale', '1 1 1');
 
-  // Ao carregar, esconde o indicador
-  modelEntity.addEventListener('model-loaded', () => {
-    loading.style.display = 'none';
+  // Esconde o "Carregando..." quando o modelo estiver pronto
+  model.addEventListener('model-loaded', () => {
+    showLoading(false);
   });
 
-  container.appendChild(modelEntity);
+  modelContainer.appendChild(model);
 }
 
-// Alterna visibilidade dos botões de categoria
-function toggleMenu() {
-  menuAtivo = !menuAtivo;
-  document.getElementById('categoryButtons').style.display = menuAtivo ? 'flex' : 'none';
-
-  if (!menuAtivo) {
-    // Se o menu foi fechado, volta para rotação de todos os modelos
-    modelosAtivos = [
-      ...categorias.bebidas,
-      ...categorias.pizzas,
-      ...categorias.sobremesas
-    ];
-    indexAtual = 0;
-    categoriaSelecionada = null;
-    carregarModelo(modelosAtivos[0]);
-  }
-}
-
-// Troca de modelo com base no botão (1: próximo, -1: anterior)
+// Troca de modelo: -1 = anterior, 1 = próximo
 function changeModel(direction) {
-  if (modelosAtivos.length === 0) return;
+  if (modelList.length <= 1) return; // Evita erro se só há 1 modelo
 
-  indexAtual += direction;
+  currentModelIndex += direction;
 
-  if (indexAtual < 0) {
-    indexAtual = modelosAtivos.length - 1;
-  } else if (indexAtual >= modelosAtivos.length) {
-    indexAtual = 0;
+  // Garantir que o índice fique dentro dos limites da lista
+  if (currentModelIndex < 0) currentModelIndex = modelList.length - 1;
+  if (currentModelIndex >= modelList.length) currentModelIndex = 0;
+
+  // Carrega o modelo novo
+  loadModel(modelList[currentModelIndex]);
+}
+
+// Alterna a exibição do menu de categorias
+function toggleMenu() {
+  const menu = document.getElementById('categoryButtons');
+  menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+}
+
+// Seleciona uma categoria (bebidas, pizzas, etc.) e carrega o primeiro modelo dela
+function selectCategory(category) {
+  currentCategory = category;
+  currentModelIndex = 0;
+
+  // Modelos disponíveis por categoria (adicione os nomes reais dos seus arquivos aqui)
+  const modelsByCategory = {
+    bebidas: ['coca.glb', 'suco.glb'],
+    pizzas: ['marguerita.glb', 'calabresa.glb'],
+    sobremesas: ['bolo.glb', 'sorvete.glb']
+  };
+
+  // Atualiza a lista de modelos com base na categoria
+  modelList = modelsByCategory[category] || [];
+
+  if (modelList.length === 0) {
+    alert('Nenhum modelo encontrado para esta categoria.');
+    return;
   }
 
-  carregarModelo(modelosAtivos[indexAtual]);
+  toggleMenu(); // Fecha o menu de categorias
+  loadModel(modelList[0]); // Carrega o primeiro modelo da nova categoria
 }
 
-// Seleciona uma categoria (ex: bebidas)
-function selectCategory(categoria) {
-  if (!categorias[categoria]) return;
-
-  categoriaSelecionada = categoria;
-  modelosAtivos = [...categorias[categoria]];
-  indexAtual = 0;
-  carregarModelo(modelosAtivos[0]);
-}
+// Ao carregar a página, mostra o modelo padrão "inicio.glb"
+window.addEventListener('load', () => {
+  currentCategory = 'inicio';
+  loadModel('inicio.glb');
+});
