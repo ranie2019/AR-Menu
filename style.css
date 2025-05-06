@@ -77,9 +77,7 @@ body {
   display: none;
   flex-direction: column;
   gap: 4px;
-  margin-top: 4px;
-  position: relative;  /* Garante que fique embaixo do botão Menu */
-  z-index: 999;        /* Garante que fique acima visualmente */
+  margin-top: 6px; /* Espaçamento entre o botão Menu e os de categoria */
 }
 
 /* Estilo dos botões de categoria */
