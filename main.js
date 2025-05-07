@@ -38,15 +38,20 @@ function loadModel() {
     modelContainer.removeChild(modelContainer.firstChild);
   }
 
-  // Cria nova entidade com o modelo
+  // Cria nova entidade com o modelo e controles de gesto
   const newModel = document.createElement('a-entity');
   newModel.setAttribute('gltf-model', url);
   newModel.setAttribute('position', '0 0 0');
   newModel.setAttribute('scale', '1 1 1');
   newModel.setAttribute('rotation', '0 180 0');
+  
+  // Adiciona o controle de gesto (pinça) para zoom
   newModel.setAttribute('gesture-controls', 'minScale: 0.5; maxScale: 2');
-  newModel.setAttribute('auto-rotate', 'speed: 0.3');
 
+  // Adiciona rotação automática
+  newModel.setAttribute('auto-rotate', 'speed: 0.3'); // rotação devagar no eixo Y
+
+  // Esconde indicador após carregamento
   newModel.addEventListener('model-loaded', () => {
     loadingIndicator.style.display = 'none';
   });

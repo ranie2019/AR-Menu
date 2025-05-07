@@ -1,34 +1,85 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
   <head>
-    <meta charset="UTF-8" />
-    <title>Visualizador 3D</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@6.1.1/dist/aframe-extras.min.js"></script>
+    <meta charset="utf-8" />
+    <title>Visualizador 3D com Botões</title>
     <link rel="stylesheet" href="style.css" />
+
+    <!-- A-Frame principal -->
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+
+    <!-- AR.js para AR marker-based -->
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
+
+    <!-- Suporte a gestos para zoom/pinça e rotação manual -->
+    <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@master/examples/showcase/tracked-ar/assets/gesture-detector.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@6.1.1/dist/aframe-extras.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@6.1.1/dist/aframe-extras.controls.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@master/examples/showcase/tracked-ar/assets/gesture-controls.js"></script>
   </head>
+
   <body>
-    <div id="loadingIndicator">Carregando modelo...</div>
-
-    <div id="categoryButtons">
-      <button onclick="selectCategory('inicio')">Início</button>
-      <button onclick="selectCategory('bebidas')">Bebidas</button>
-      <button onclick="selectCategory('pizzas')">Pizzas</button>
-      <button onclick="selectCategory('sobremesas')">Sobremesas</button>
+    <!-- Menu de Categorias -->
+    <div id="menuContainer">
+      <button id="menuBtn" class="btn" onclick="toggleMenu()">Menu</button>
+      <div id="categoryButtons">
+        <button class="category-btn" onclick="selectCategory('bebidas')">Bebidas</button>
+        <button class="category-btn" onclick="selectCategory('pizzas')">Pizzas</button>
+        <button class="category-btn" onclick="selectCategory('sobremesas')">Sobremesas</button>
+      </div>
     </div>
 
-    <div id="controls">
-      <button onclick="changeModel(-1)">◀</button>
-      <button onclick="toggleMenu()">☰</button>
-      <button onclick="changeModel(1)">▶</button>
-    </div>
+    <!-- Componente para rotação automática dos modelos -->
+    <script>
+      AFRAME.registerComponent('auto-rotate', {
+        schema: {
+          speed: { type: 'number', default: 0.5 } // graus por frame (~60fps)
+        },
+        tick: function (time, deltaTime) {
+          const rotation = this.el.getAttribute('rotation');
+          rotation.y += this.data.speed * (deltaTime / 16.67); // ajuste de velocidade
+          this.el.setAttribute('rotation', rotation);
+        }
+      });
+    </script>
 
-    <a-scene embedded>
-      <a-entity id="modelContainer"></a-entity>
-      <a-camera position="0 1.6 3"></a-camera>
+    <!-- Botões de navegação entre modelos -->
+    <button id="prevBtn" class="btn" onclick="changeModel(-1)">
+      <svg viewBox="0 0 24 24">
+        <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+      </svg>
+    </button>
+
+    <button id="nextBtn" class="btn" onclick="changeModel(1)">
+      <svg viewBox="0 0 24 24">
+        <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z" />
+      </svg>
+    </button>
+
+    <!-- Indicador de carregamento do modelo -->
+    <div id="loadingIndicator">Carregando...</div>
+
+    <!-- Cena principal do AR.js com marcador -->
+    <a-scene
+      embedded
+      arjs="sourceType: webcam; debugUIEnabled: false; markerType: pattern; patternUrl: 'ar-menu/pattern.patt';"
+      vr-mode-ui="enabled: false"
+    >
+      <!-- Container onde os modelos são adicionados dinamicamente -->
+      <!-- 'gesture-detector' permite detectar toques para zoom -->
+      <a-entity
+        id="modelContainer"
+        gesture-detector
+        position="0 0 -3"
+        rotation="0 180 0"
+        scale="1 1 1"
+      ></a-entity>
+
+      <!-- Câmera padrão AR.js -->
+      <a-camera position="0 1.6 0"></a-camera>
     </a-scene>
 
-    <script src="script.js"></script>
+    <!-- Script principal com lógica de carregamento e navegação -->
+    <script src="main.js"></script>
   </body>
 </html>
