@@ -14,8 +14,6 @@
     <!-- Suporte a gestos para zoom/pinça e rotação manual -->
     <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@master/examples/showcase/tracked-ar/assets/gesture-detector.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@6.1.1/dist/aframe-extras.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@6.1.1/dist/aframe-extras.controls.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@master/examples/showcase/tracked-ar/assets/gesture-controls.js"></script>
   </head>
 
   <body>
@@ -28,20 +26,6 @@
         <button class="category-btn" onclick="selectCategory('sobremesas')">Sobremesas</button>
       </div>
     </div>
-
-    <!-- Componente para rotação automática dos modelos -->
-    <script>
-      AFRAME.registerComponent('auto-rotate', {
-        schema: {
-          speed: { type: 'number', default: 0.5 } // graus por frame (~60fps)
-        },
-        tick: function (time, deltaTime) {
-          const rotation = this.el.getAttribute('rotation');
-          rotation.y += this.data.speed * (deltaTime / 16.67); // ajuste de velocidade
-          this.el.setAttribute('rotation', rotation);
-        }
-      });
-    </script>
 
     <!-- Botões de navegação entre modelos -->
     <button id="prevBtn" class="btn" onclick="changeModel(-1)">
@@ -62,18 +46,20 @@
     <!-- Cena principal do AR.js com marcador -->
     <a-scene
       embedded
-      arjs="sourceType: webcam; debugUIEnabled: false; markerType: pattern; patternUrl: 'ar-menu/pattern.patt';"
+      arjs="sourceType: webcam; debugUIEnabled: false;"
       vr-mode-ui="enabled: false"
     >
-      <!-- Container onde os modelos são adicionados dinamicamente -->
-      <!-- 'gesture-detector' permite detectar toques para zoom -->
-      <a-entity
-        id="modelContainer"
-        gesture-detector
-        position="0 0 -3"
-        rotation="0 180 0"
-        scale="1 1 1"
-      ></a-entity>
+      <!-- Definição do marcador com o tipo e URL do padrão -->
+      <a-marker type="pattern" url="ar-menu/pattern.patt">
+        <!-- Container onde os modelos são adicionados dinamicamente -->
+        <a-entity
+          id="modelContainer"
+          gesture-detector
+          position="0 0 -3"
+          rotation="0 180 0"
+          scale="1 1 1"
+        ></a-entity>
+      </a-marker>
 
       <!-- Câmera padrão AR.js -->
       <a-camera position="0 1.6 0"></a-camera>
