@@ -107,34 +107,3 @@ body {
 .category-btn:hover {
   background-color: rgba(180, 180, 180, 0.9);
 }
-
-/* ---------------- BOTÕES DE ZOOM ---------------- */
-.zoom-btn {
-  position: absolute;
-  bottom: 20px;
-  font-size: 24px;
-  background-color: #ff5722;
-  color: white;
-  border: none;
-  border-radius: 12px;
-  padding: 12px;
-  cursor: pointer;
-  z-index: 999;
-  transition: transform 0.1s ease, background-color 0.2s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-}
-
-.zoom-btn:hover {
-  background-color: #e64a19;
-  transform: scale(1.1);
-}
-
-/* Botão de Zoom In: canto inferior esquerdo */
-#zoomIn {
-  left: 10px;
-}
-
-/* Botão de Zoom Out: canto inferior direito */
-#zoomOut {
-  right: 10px;
-}

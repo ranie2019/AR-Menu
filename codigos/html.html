@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR"> <!-- Define o idioma da página como português do Brasil -->
+  <head>
+    <meta charset="utf-8" /> <!-- Define a codificação de caracteres como UTF-8 -->
+    <title>Visualizador 3D com Botões</title> <!-- Título da aba do navegador -->
+    
+    <!-- Link para o arquivo de estilos externo -->
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- Biblioteca A-Frame para criação de experiências WebVR/WebAR -->
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+
+    <!-- Biblioteca AR.js para integrar A-Frame com Realidade Aumentada baseada em marcadores -->
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
+
+    <style>
+      body {
+        margin: 0;          /* Remove margens padrão do body */
+        overflow: hidden;   /* Esconde barras de rolagem para visualização em tela cheia */
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Botão para modelo anterior -->
+    <button id="prevBtn" class="btn" onclick="changeModel(-1)">
+      <!-- Ícone SVG de seta para a esquerda -->
+      <svg viewBox="0 0 24 24">
+        <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+      </svg>
+    </button>
+
+    <!-- Botão para próximo modelo -->
+    <button id="nextBtn" class="btn" onclick="changeModel(1)">
+      <!-- Ícone SVG de seta para a direita -->
+      <svg viewBox="0 0 24 24">
+        <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z" />
+      </svg>
+    </button>
+
+    <!-- Indicador de carregamento (inicialmente oculto, controlado via JS) -->
+    <div id="loadingIndicator">Carregando...</div>
+
+    <!-- Cena A-Frame com suporte a AR usando marcador -->
+    <a-scene
+      embedded                                   <!-- Remove elementos de UI padrão (ex: tela cheia) -->
+      arjs="sourceType: webcam; debugUIEnabled: false; markerType: pattern; patternUrl: 'ar-menu/pattern.patt';"
+      <!-- Configura AR.js para usar webcam, sem interface de debug, com marcador personalizado -->
+      vr-mode-ui="enabled: false"               <!-- Desativa o botão VR no canto da tela -->
+    >
+      <!-- Contêiner onde o modelo 3D será carregado dinamicamente via JS -->
+      <a-entity
+        id="modelContainer"                     <!-- ID usado para manipulação no JS -->
+        position="0 0 -3"                        <!-- Coloca o modelo à frente da câmera -->
+        rotation="0 180 0"                       <!-- Gira o modelo para frente -->
+        scale="1 1 1"                            <!-- Escala padrão -->
+      ></a-entity>
+
+      <!-- Câmera da cena (ponto de vista do usuário) -->
+      <a-camera position="0 1.6 0"></a-camera>   <!-- Altura padrão de uma pessoa (~1.6m) -->
+    </a-scene>
+
+    <!-- Script JavaScript que gerencia a troca dos modelos e comportamento -->
+    <script src="main.js"></script>
+  </body>
+</html>

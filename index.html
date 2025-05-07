@@ -14,6 +14,7 @@
     <script src="https://unpkg.com/aframe-gesture-detector@3.3.0/dist/aframe-gesture-detector.min.js"></script>
     <script src="https://unpkg.com/aframe-event-set-component@5.0.0/dist/aframe-event-set-component.min.js"></script>
     <script src="https://unpkg.com/aframe-gesture-controls@4.0.5/dist/aframe-gesture-controls.min.js"></script>
+
   </head>
 
   <body>
@@ -27,6 +28,19 @@
       </div>
     </div>
 
+    <script>
+      AFRAME.registerComponent('auto-rotate', {
+        schema: {
+          speed: { type: 'number', default: 0.5 } // graus por frame
+        },
+        tick: function (time, deltaTime) {
+          const rotation = this.el.getAttribute('rotation');
+          rotation.y += this.data.speed * (deltaTime / 16.67); // normalizado para ~60fps
+          this.el.setAttribute('rotation', rotation);
+        }
+      });
+    </script>
+
     <!-- Botões de Navegação -->
     <button id="prevBtn" class="btn" onclick="changeModel(-1)">
       <svg viewBox="0 0 24 24">
@@ -39,10 +53,6 @@
         <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z" />
       </svg>
     </button>
-
-    <!-- Botões de Zoom (+ e -) -->
-    <button id="zoomIn" class="zoom-btn" onclick="zoom(1)">+</button>
-    <button id="zoomOut" class="zoom-btn" onclick="zoom(-1)">-</button>
 
     <!-- Indicador de Carregamento -->
     <div id="loadingIndicator">Carregando...</div>

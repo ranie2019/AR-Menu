@@ -24,7 +24,6 @@ const models = {
 
 let currentCategory = 'inicio';
 let currentIndex = 0;
-let scaleFactor = 1;
 
 const modelContainer = document.getElementById('modelContainer');
 const loadingIndicator = document.getElementById('loadingIndicator');
@@ -43,11 +42,19 @@ function loadModel() {
   const newModel = document.createElement('a-entity');
   newModel.setAttribute('gltf-model', url);
   newModel.setAttribute('position', '0 0 0');
-  newModel.setAttribute('scale', `${scaleFactor} ${scaleFactor} ${scaleFactor}`);
+  newModel.setAttribute('scale', '1 1 1');
   newModel.setAttribute('rotation', '0 180 0');
   
-  // Adiciona o controle de gesto (pinça) para zoom
-  newModel.setAttribute('gesture-controls', 'minScale: 0.5; maxScale: 2');
+  // Atualiza a escala enquanto o gesto de pinça acontece
+  window.addEventListener("touchmove", (e) => {
+    if (e.touches.length === 2 && initialDistance) {
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      const currentDistance = Math.sqrt(dx * dx + dy * dy); // Nova distância
+      const scaleFactor = currentDistance / initialDistance; // Fator de escala
+      updateScale(scaleFactor); // Atualiza a escala
+    }
+  });
 
   // Adiciona rotação automática
   newModel.setAttribute('auto-rotate', 'speed: 0.3'); // rotação devagar no eixo Y
@@ -78,12 +85,6 @@ function changeModel(step) {
 function toggleMenu() {
   const buttons = document.getElementById('categoryButtons');
   buttons.style.display = buttons.style.display === 'none' ? 'flex' : 'none';
-}
-
-// Zoom
-function zoom(step) {
-  scaleFactor = Math.max(0.5, Math.min(2, scaleFactor + step * 0.1)); // Limita entre 0.5 e 2
-  loadModel();
 }
 
 // Carrega modelo inicial
