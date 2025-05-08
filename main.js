@@ -19,7 +19,7 @@ function loadModel(name) {
 
   // Exibe o indicador de carregamento (sem alterar visual do botão)
   loadingIndicator.style.display = "block";
-  loadingIndicator.innerText = "0%";
+  loadingIndicator.innerText = "Carregando...";
 
   // Remove modelo atual antes de carregar o novo
   container.removeAttribute("gltf-model");
