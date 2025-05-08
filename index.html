@@ -4,126 +4,50 @@
     <meta charset="utf-8" />
     <title>Visualizador 3D com Botões</title>
     <link rel="stylesheet" href="style.css" />
-
-    <!-- A-Frame principal -->
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-
-    <!-- AR.js para AR marker-based -->
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
-
-    <!-- Suporte a gestos para zoom/pinça -->
-    <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@master/examples/showcase/tracked-ar/assets/gesture-detector.js"></script>
-    
-    <!-- Componente para rotação manual -->
-    <script>
-      // Componente para rotação manual
-      AFRAME.registerComponent('manual-rotation', {
-        schema: {
-          enabled: { type: 'boolean', default: true } // Habilita/desabilita a rotação manual
-        },
-
-        init: function() {
-          this.isDragging = false;
-          this.lastRotation = null;
-          this.el.addEventListener('mousedown', this.startDrag.bind(this));
-          this.el.addEventListener('touchstart', this.startDrag.bind(this));
-          this.el.addEventListener('mousemove', this.onDrag.bind(this));
-          this.el.addEventListener('touchmove', this.onDrag.bind(this));
-          this.el.addEventListener('mouseup', this.stopDrag.bind(this));
-          this.el.addEventListener('touchend', this.stopDrag.bind(this));
-        },
-
-        startDrag: function(event) {
-          this.isDragging = true;
-          this.lastRotation = this.el.getAttribute('rotation');
-        },
-
-        onDrag: function(event) {
-          if (!this.isDragging || !this.data.enabled) return;
-
-          const delta = event instanceof MouseEvent ? event.movementX : event.touches[0].clientX;
-          const rotation = this.el.getAttribute('rotation');
-          rotation.y += delta * 0.1;  // Ajuste de rotação no eixo Y
-
-          this.el.setAttribute('rotation', rotation);
-        },
-
-        stopDrag: function() {
-          this.isDragging = false;
-        }
-      });
-    </script>
-
-    <!-- Suporte a gestos de Zoom/Pinça -->
-    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@6.1.1/dist/aframe-extras.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@6.1.1/dist/aframe-extras.controls.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@master/examples/showcase/tracked-ar/assets/gesture-controls.js"></script>
-
-    <!-- Componente para rotação automática -->
-    <script>
-      AFRAME.registerComponent('auto-rotate', {
-        schema: {
-          speed: { type: 'number', default: 0.5 } // Graus por frame (~60fps)
-        },
-        tick: function (time, deltaTime) {
-          const rotation = this.el.getAttribute('rotation');
-          rotation.y += this.data.speed * (deltaTime / 16.67); // ajuste de velocidade
-          this.el.setAttribute('rotation', rotation);
-        }
-      });
-    </script>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+    </style>
   </head>
 
   <body>
-    <!-- Menu de Categorias -->
-    <div id="menuContainer">
-      <button id="menuBtn" class="btn" onclick="toggleMenu()">Menu</button>
-      <div id="categoryButtons">
-        <button class="category-btn" onclick="selectCategory('bebidas')">Bebidas</button>
-        <button class="category-btn" onclick="selectCategory('pizzas')">Pizzas</button>
-        <button class="category-btn" onclick="selectCategory('sobremesas')">Sobremesas</button>
-      </div>
-    </div>
-
-    <!-- Botões de navegação entre modelos -->
+    <!-- Botão Anterior -->
     <button id="prevBtn" class="btn" onclick="changeModel(-1)">
       <svg viewBox="0 0 24 24">
         <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
       </svg>
     </button>
 
+    <!-- Botão Próximo -->
     <button id="nextBtn" class="btn" onclick="changeModel(1)">
       <svg viewBox="0 0 24 24">
         <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z" />
       </svg>
     </button>
 
-    <!-- Indicador de carregamento do modelo -->
-    <div id="loadingIndicator">Carregando...</div>
+    <!-- Indicador de carregamento -->
+    <div id="loadingIndicator">0%</div>
 
-    <!-- Cena principal do AR.js com marcador -->
+    <!-- Cena AR com marcador -->
     <a-scene
       embedded
       arjs="sourceType: webcam; debugUIEnabled: false; markerType: pattern; patternUrl: 'ar-menu/pattern.patt';"
       vr-mode-ui="enabled: false"
     >
-      <!-- Container onde os modelos são adicionados dinamicamente -->
-      <!-- 'gesture-detector' permite detectar toques para zoom -->
       <a-entity
         id="modelContainer"
-        gesture-detector
         position="0 0 -3"
         rotation="0 180 0"
         scale="1 1 1"
-        auto-rotate="speed: 0.5" <!-- Ativa a rotação automática -->
-        manual-rotation="enabled: true" <!-- Ativa a rotação manual -->
       ></a-entity>
 
-      <!-- Câmera padrão AR.js -->
       <a-camera position="0 1.6 0"></a-camera>
     </a-scene>
 
-    <!-- Script principal com lógica de carregamento e navegação -->
     <script src="main.js"></script>
   </body>
 </html>
