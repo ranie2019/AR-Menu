@@ -1,13 +1,26 @@
-// Lista de modelos disponíveis
-const models = [
-  "champagne",
-  "heineken",
-  "redbull",
-  "fizzydrink",
-  "cubo",
-  "sundae",
-  "pizza",
-];
+// Caminhos dos modelos por categoria
+const models = {
+  inicio: ['objetos3d/inicio/cubo.glb'],
+  bebidas: [
+    'objetos3d/bebidas/absolut_vodka_1l.glb',
+    'objetos3d/bebidas/champagne_Lorem.glb',
+    'objetos3d/bebidas/champagne.glb',
+    'objetos3d/bebidas/fizzydrink.glb',
+    'objetos3d/bebidas/heineken.glb',
+    'objetos3d/bebidas/JACK_DANIELS.glb',
+    'objetos3d/bebidas/redbull.glb'
+  ],
+  pizzas: [
+    'objetos3d/pizzas/pizza.glb',
+    'objetos3d/pizzas/caneca.glb',
+    'objetos3d/pizzas/cubo.glb'
+  ],
+  sobremesas: [
+    'objetos3d/sobremesas/Chocolate_Quente.glb',
+    'objetos3d/sobremesas/sundae.glb',
+    'objetos3d/pizzas/cubo.glb'
+  ]
+};
 
 let currentIndex = 0; // Índice atual do modelo
 const modelCache = {}; // Cache para armazenar modelos já carregados
@@ -36,7 +49,7 @@ function loadModel(name) {
   } else {
     // Cria uma requisição para carregar o modelo .glb
     const xhr = new XMLHttpRequest();
-    xhr.open("GET", `./3d/${name}.glb`, true);
+    xhr.open("GET", name, true);
     xhr.responseType = "blob";
 
     // Atualiza a porcentagem de carregamento durante o download
@@ -150,3 +163,40 @@ window.addEventListener("touchmove", (e) => {
 window.addEventListener("touchend", () => {
   startY = null;
 });
+
+// -------------------- SISTEMA DE MENU --------------------
+
+// Referências dos elementos
+const menuBtn = document.getElementById("menuBtn");
+const categoryButtons = document.getElementById("categoryButtons");
+
+// Alterna a visibilidade dos botões de categoria
+menuBtn.addEventListener("click", () => {
+  const isVisible = categoryButtons.style.display === "flex";
+  categoryButtons.style.display = isVisible ? "none" : "flex";
+});
+
+// Variável que guarda a categoria atual selecionada
+let currentCategory = "inicio";
+
+// Atualiza os modelos visíveis com base na categoria selecionada
+function selectCategory(category) {
+  if (!models[category]) {
+    console.warn(`Categoria não encontrada: ${category}`);
+    return;
+  }
+
+  currentCategory = category;
+  currentIndex = 0; // Reinicia o índice ao primeiro da categoria
+  loadModel(models[currentCategory][currentIndex]);
+}
+
+// Substitui a função de troca de modelo para usar a categoria ativa
+function changeModel(direction) {
+  const modelList = models[currentCategory];
+  currentIndex = (currentIndex + direction + modelList.length) % modelList.length;
+  loadModel(modelList[currentIndex]);
+}
+
+// Garante que o primeiro modelo carregado (no carregamento da página) venha da categoria 'inicio'
+loadModel(models[currentCategory][currentIndex]);

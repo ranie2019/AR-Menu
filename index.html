@@ -14,6 +14,17 @@
     </style>
   </head>
 
+  <!-- Botão Menu -->
+<button id="menuBtn">Menu</button>
+
+<!-- Botões de Categoria (ocultos inicialmente) -->
+<div id="categoryButtons">
+  <button class="category-btn" onclick="selectCategory('bebidas')">Bebidas</button>
+  <button class="category-btn" onclick="selectCategory('pizzas')">Pizzas</button>
+  <button class="category-btn" onclick="selectCategory('sobremesas')">Sobremesas</button>
+</div>
+
+
   <body>
     <!-- Botão Anterior -->
     <button id="prevBtn" class="btn" onclick="changeModel(-1)">
