@@ -6,11 +6,19 @@
     <link rel="stylesheet" href="style.css" />
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+    </style>
   </head>
 
   <body>
+    <!-- Botão Menu -->
     <button id="menuBtn">Menu</button>
 
+    <!-- Botões de Categoria -->
     <div id="categoryButtons" style="display: none">
       <button class="category-btn" onclick="selectCategory('bebidas')">Bebidas</button>
       <button class="category-btn" onclick="selectCategory('pizzas')">Pizzas</button>
@@ -20,6 +28,7 @@
     <div id="loadingIndicator">carregando...</div>
     <div id="priceDisplay">R$ 0.00</div>
 
+    <!-- Botões Anterior e Próximo -->
     <button id="prevBtn" class="btn" onclick="changeModel(-1)">
       <svg viewBox="0 0 24 24">
         <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
@@ -41,13 +50,18 @@
       <!-- Modelo 3D carregado de models.js -->
       <a-entity
         id="modelContainer"
-        position="0 0 -9"
-        rotation="0 180 0"
-        scale="1 1 1"
+        position="0 0 -9"  <!-- Posição do modelo -->
+        rotation="0 180 0" <!-- Posição da rotação -->
+        scale="1 1 1" <!-- Escala do modelo -->
         gltf-model="url(#currentModel)"
+        touch-action="none"
+        grabbable
+        draggable
+        gesture-detector
       ></a-entity>
 
-      <a-camera position="0 0.3 1"></a-camera>
+      <!-- Camera virtual -->
+      <a-camera position="0 0.5 2"></a-camera>
     </a-scene>
 
     <script src="models.js"></script>
