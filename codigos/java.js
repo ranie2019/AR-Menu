@@ -1,151 +1,202 @@
-// Lista de modelos disponíveis
-const models = [
-    "champagne",
-    "heineken",
-    "redbull",
-    "fizzydrink",
-    "cubo",
-    "sundae",
-    "pizza",
-    "Chocolate_Quente",
-    "absolut_vodka_1l",
-    "JACK_DANIELS",
-    "champagne_Lorem",
-  ];
-  
-  let currentIndex = 0; // Índice atual do modelo exibido
-  const modelCache = {}; // Objeto para armazenar os modelos já carregados (cache)
-  
-  // Função para carregar e exibir o modelo 3D
-  function loadModel(name) {
-    const container = document.querySelector("#modelContainer"); // Elemento onde o modelo será exibido
-    const loadingIndicator = document.querySelector("#loadingIndicator"); // Indicador de carregamento
-  
-    // Mostra o indicador de carregamento
-    loadingIndicator.style.display = "block";
-    loadingIndicator.innerText = "Carregando...";
-  
-    // Remove o modelo atual (caso exista)
-    container.removeAttribute("gltf-model");
-  
-    // Define a posição, rotação e escala iniciais
-    container.setAttribute("position", "0 -0.5 -3");
-    container.setAttribute("rotation", "0 180 0");
-    container.setAttribute("scale", "1 1 1");
-  
-    // Verifica se o modelo já foi carregado anteriormente
-    if (modelCache[name]) {
-      // Usa o modelo do cache
-      container.setAttribute("gltf-model", modelCache[name]);
-      loadingIndicator.style.display = "none"; // Esconde indicador
-    } else {
-      // Carrega o modelo usando XMLHttpRequest
-      const xhr = new XMLHttpRequest();
-      xhr.open("GET", `./3d/${name}.glb`, true); // Caminho para o arquivo .glb
-      xhr.responseType = "blob"; // Resposta esperada em blob (arquivo binário)
-  
-      // Quando o carregamento for concluído
-      xhr.onload = () => {
-        const blob = xhr.response; // Pega o arquivo
-        const url = URL.createObjectURL(blob); // Cria uma URL temporária
-        modelCache[name] = url; // Salva no cache
-        container.setAttribute("gltf-model", url); // Atribui ao contêiner
-        loadingIndicator.style.display = "none"; // Esconde indicador
-      };
-  
-      // Tratamento de erro
-      xhr.onerror = () => {
-        console.error("Erro ao carregar o modelo.");
-        loadingIndicator.innerText = "Erro ao carregar o modelo";
-      };
-  
-      // Envia a requisição
-      xhr.send();
-    }
+// Caminhos dos modelos por categoria
+const models = {
+  inicio: ['objetos3d/inicio/cubo.glb'],
+  bebidas: [
+    'objetos3d/bebidas/absolut_vodka_1l.glb',
+    'objetos3d/bebidas/champagne_Lorem.glb',
+    'objetos3d/bebidas/champagne.glb',
+    'objetos3d/bebidas/fizzydrink.glb',
+    'objetos3d/bebidas/heineken.glb',
+    'objetos3d/bebidas/JACK_DANIELS.glb',
+    'objetos3d/bebidas/redbull.glb'
+  ],
+  pizzas: [
+    'objetos3d/pizzas/pizza.glb',
+    'objetos3d/pizzas/caneca.glb',
+    'objetos3d/pizzas/cubo.glb'
+  ],
+  sobremesas: [
+    'objetos3d/sobremesas/Chocolate_Quente.glb',
+    'objetos3d/sobremesas/sundae.glb',
+    'objetos3d/pizzas/cubo.glb'
+  ]
+};
+
+let currentIndex = 0; // Índice atual do modelo
+const modelCache = {}; // Cache para armazenar modelos já carregados
+
+// Carrega um modelo 3D e exibe na cena
+function loadModel(name) {
+  const container = document.querySelector("#modelContainer");
+  const loadingIndicator = document.querySelector("#loadingIndicator");
+
+  // Exibe o indicador de carregamento (sem alterar visual do botão)
+  loadingIndicator.style.display = "block";
+  loadingIndicator.innerText = "Carregando...";
+
+  // Remove modelo atual antes de carregar o novo
+  container.removeAttribute("gltf-model");
+
+  // Redefine posição, rotação e escala do modelo sempre que carregar um novo
+  container.setAttribute("position", "0 -0.5 -3"); // posição um pouco mais baixa
+  container.setAttribute("rotation", "0 180 0");
+  container.setAttribute("scale", "1 1 1");
+
+  // Se o modelo já estiver no cache, usa direto
+  if (modelCache[name]) {
+    container.setAttribute("gltf-model", modelCache[name]);
+    loadingIndicator.style.display = "none";
+  } else {
+    // Cria uma requisição para carregar o modelo .glb
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", name, true);
+    xhr.responseType = "blob";
+
+    // Atualiza a porcentagem de carregamento durante o download
+    xhr.onprogress = (event) => {
+      if (event.lengthComputable) {
+        const percent = Math.round((event.loaded / event.total) * 100);
+        loadingIndicator.innerText = `${percent}%`;
+      }
+    };
+
+    // Quando o download termina, exibe o modelo
+    xhr.onload = () => {
+      const blob = xhr.response;
+      const url = URL.createObjectURL(blob);
+      modelCache[name] = url;
+      container.setAttribute("gltf-model", url);
+      loadingIndicator.style.display = "none";
+    };
+
+    // Se der erro no carregamento
+    xhr.onerror = () => {
+      console.error("Erro ao carregar o modelo.");
+      loadingIndicator.innerText = "Erro ao carregar o modelo";
+    };
+
+    xhr.send(); // Envia a requisição
   }
-  
-  // Função para trocar o modelo atual (1 para próximo, -1 para anterior)
-  function changeModel(direction) {
-    currentIndex = (currentIndex + direction + models.length) % models.length; // Navegação circular
-    loadModel(models[currentIndex]); // Carrega novo modelo
-  }
-  
-  // Carrega o primeiro modelo automaticamente ao iniciar
+}
+
+// Muda o modelo com base na direção (-1 para anterior, +1 para próximo)
+function changeModel(direction) {
+  currentIndex = (currentIndex + direction + models.length) % models.length;
   loadModel(models[currentIndex]);
-  
-  // Rotação automática contínua no eixo Y (horizontal)
-  setInterval(() => {
-    const model = document.querySelector("#modelContainer");
-    if (!model) return;
-    const rotation = model.getAttribute("rotation");
-    rotation.y += 0.5; // Incrementa lentamente o ângulo Y
-    model.setAttribute("rotation", rotation);
-  }, 30); // A cada 30 milissegundos
-  
-  // Variáveis para gesto de pinça (zoom)
-  let initialDistance = null;
-  let initialScale = 1;
-  
-  // Atualiza a escala do modelo com base no fator de escala calculado
-  function updateScale(scaleFactor) {
-    const model = document.querySelector("#modelContainer");
-    const newScale = Math.min(Math.max(initialScale * scaleFactor, 0.1), 10); // Limita escala entre 0.1 e 10
-    model.setAttribute("scale", `${newScale} ${newScale} ${newScale}`);
+}
+
+// Carrega o primeiro modelo assim que a página abre
+loadModel(models[currentIndex]);
+
+// Rotaciona o modelo automaticamente no eixo Y
+setInterval(() => {
+  const model = document.querySelector("#modelContainer");
+  if (!model) return;
+  const rotation = model.getAttribute("rotation");
+  rotation.y += 0.5;
+  model.setAttribute("rotation", rotation);
+}, 30);
+
+// Escala com gesto de pinça
+let initialDistance = null;
+let initialScale = 1;
+
+// Atualiza escala do modelo com base no fator de escala
+function updateScale(scaleFactor) {
+  const model = document.querySelector("#modelContainer");
+  const newScale = Math.min(Math.max(initialScale * scaleFactor, 0.1), 10);
+  model.setAttribute("scale", `${newScale} ${newScale} ${newScale}`);
+}
+
+// Quando dois dedos tocam a tela, captura distância inicial
+window.addEventListener("touchstart", (e) => {
+  if (e.touches.length === 2) {
+    const dx = e.touches[0].clientX - e.touches[1].clientX;
+    const dy = e.touches[0].clientY - e.touches[1].clientY;
+    initialDistance = Math.sqrt(dx * dx + dy * dy);
+    const scale = document.querySelector("#modelContainer").getAttribute("scale");
+    initialScale = scale.x;
   }
-  
-  // Captura o início do gesto de pinça
-  window.addEventListener("touchstart", (e) => {
-    if (e.touches.length === 2) {
-      const dx = e.touches[0].clientX - e.touches[1].clientX;
-      const dy = e.touches[0].clientY - e.touches[1].clientY;
-      initialDistance = Math.sqrt(dx * dx + dy * dy); // Distância inicial entre dedos
-      const scale = document.querySelector("#modelContainer").getAttribute("scale");
-      initialScale = scale.x; // Escala atual
-    }
-  });
-  
-  // Atualiza a escala enquanto o gesto de pinça acontece
-  window.addEventListener("touchmove", (e) => {
-    if (e.touches.length === 2 && initialDistance) {
-      const dx = e.touches[0].clientX - e.touches[1].clientX;
-      const dy = e.touches[0].clientY - e.touches[1].clientY;
-      const currentDistance = Math.sqrt(dx * dx + dy * dy); // Nova distância
-      const scaleFactor = currentDistance / initialDistance; // Fator de escala
-      updateScale(scaleFactor); // Atualiza a escala
-    }
-  });
-  
-  // Quando o gesto termina, reseta a distância
-  window.addEventListener("touchend", () => {
-    initialDistance = null;
-  });
-  
-  // Variáveis para controle de rotação vertical com um dedo
-  let startY = null;
-  let initialRotationX = 0;
-  
-  // Captura a posição inicial do toque vertical
-  window.addEventListener("touchstart", (e) => {
-    if (e.touches.length === 1) {
-      startY = e.touches[0].clientY;
-      const model = document.querySelector("#modelContainer");
-      initialRotationX = model.getAttribute("rotation").x;
-    }
-  });
-  
-  // Atualiza rotação no eixo X com base no movimento do dedo
-  window.addEventListener("touchmove", (e) => {
-    if (e.touches.length === 1 && startY !== null) {
-      const deltaY = e.touches[0].clientY - startY;
-      const model = document.querySelector("#modelContainer");
-      const rotation = model.getAttribute("rotation");
-      const newX = Math.min(Math.max(initialRotationX - deltaY * 0.2, -90), 90); // Limita rotação vertical
-      model.setAttribute("rotation", `${newX} ${rotation.y} ${rotation.z}`);
-    }
-  });
-  
-  // Finaliza rotação vertical ao soltar o dedo
-  window.addEventListener("touchend", () => {
-    startY = null;
-  });
-  
+});
+
+// Move os dedos para aplicar zoom
+window.addEventListener("touchmove", (e) => {
+  if (e.touches.length === 2 && initialDistance) {
+    const dx = e.touches[0].clientX - e.touches[1].clientX;
+    const dy = e.touches[0].clientY - e.touches[1].clientY;
+    const currentDistance = Math.sqrt(dx * dx + dy * dy);
+    const scaleFactor = currentDistance / initialDistance;
+    updateScale(scaleFactor);
+  }
+});
+
+// Quando o toque termina, reseta a distância
+window.addEventListener("touchend", () => {
+  initialDistance = null;
+});
+
+// Rotação vertical (X) com movimento de um dedo
+let startY = null;
+let initialRotationX = 0;
+
+// Inicia rotação com um dedo
+window.addEventListener("touchstart", (e) => {
+  if (e.touches.length === 1) {
+    startY = e.touches[0].clientY;
+    const model = document.querySelector("#modelContainer");
+    initialRotationX = model.getAttribute("rotation").x;
+  }
+});
+
+// Move dedo para cima/baixo para rotacionar no eixo X
+window.addEventListener("touchmove", (e) => {
+  if (e.touches.length === 1 && startY !== null) {
+    const deltaY = e.touches[0].clientY - startY;
+    const model = document.querySelector("#modelContainer");
+    const rotation = model.getAttribute("rotation");
+    const newX = Math.min(Math.max(initialRotationX - deltaY * 0.2, -90), 90);
+    model.setAttribute("rotation", `${newX} ${rotation.y} ${rotation.z}`);
+  }
+});
+
+// Fim da rotação
+window.addEventListener("touchend", () => {
+  startY = null;
+});
+
+// -------------------- SISTEMA DE MENU --------------------
+
+// Referências dos elementos
+const menuBtn = document.getElementById("menuBtn");
+const categoryButtons = document.getElementById("categoryButtons");
+
+// Alterna a visibilidade dos botões de categoria
+menuBtn.addEventListener("click", () => {
+  const isVisible = categoryButtons.style.display === "flex";
+  categoryButtons.style.display = isVisible ? "none" : "flex";
+});
+
+// Variável que guarda a categoria atual selecionada
+let currentCategory = "inicio";
+
+// Atualiza os modelos visíveis com base na categoria selecionada
+function selectCategory(category) {
+  if (!models[category]) {
+    console.warn(`Categoria não encontrada: ${category}`);
+    return;
+  }
+
+  currentCategory = category;
+  currentIndex = 0; // Reinicia o índice ao primeiro da categoria
+  loadModel(models[currentCategory][currentIndex]);
+}
+
+// Substitui a função de troca de modelo para usar a categoria ativa
+function changeModel(direction) {
+  const modelList = models[currentCategory];
+  currentIndex = (currentIndex + direction + modelList.length) % modelList.length;
+  loadModel(modelList[currentIndex]);
+}
+
+// Garante que o primeiro modelo carregado (no carregamento da página) venha da categoria 'inicio'
+loadModel(models[currentCategory][currentIndex]);

@@ -1,57 +1,139 @@
-/* Estilo geral dos botões */
+/* Remove margens da página e esconde a barra de rolagem */
+body {
+  margin: 0;
+  overflow: hidden;
+}
+
+/* ---------------- BOTÕES DE TROCA (PRÓXIMO/ANTERIOR) ---------------- */
+
+/* Estilo base para ambos os botões (Próximo e Anterior) */
 .btn {
-    position: absolute;              /* Posicionamento absoluto na tela (em relação ao body) */
-    font-size: 30px;                 /* Tamanho da fonte (também afeta ícones dentro do botão) */
-    background-color: #ffa726;      /* Cor de fundo laranja clara */
-    color: white;                   /* Cor do texto ou ícones */
-    border: none;                   /* Remove a borda padrão */
-    border-radius: 12px;            /* Bordas arredondadas com 12px */
-    padding: 10px 10px;             /* Espaçamento interno horizontal e vertical */
-    cursor: pointer;                /* Mostra o cursor de "mão" ao passar o mouse */
-    z-index: 999;                   /* Garante que o botão fique acima da maioria dos elementos da página */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Sombra para dar profundidade ao botão */
-    transition: transform 0.1s ease, background-color 0.2s ease; /* Transições suaves para hover */
-  }
-  
-  /* Efeito de hover */
-  .btn:hover {
-    background-color: #fb8c00;  /* Cor de fundo mais escura ao passar o mouse */
-    transform: scale(1.05);     /* Aumenta ligeiramente o botão (5%) para efeito visual */
-  }
-  
-  /* Botão Anterior */
-  #prevBtn {
-    left: 10px;    /* Posiciona o botão a 10px da borda esquerda */
-    bottom: 10px;  /* Posiciona o botão a 10px da borda inferior */
-  }
-  
-  /* Botão Próximo */
-  #nextBtn {
-    right: 10px;   /* Posiciona o botão a 10px da borda direita */
-    bottom: 10px;  /* Posiciona o botão a 10px da borda inferior */
-  }
-  
-  /* Estilo das setas (ícones SVG dentro dos botões) */
-  .btn svg {
-    width: 24px;              /* Largura do ícone SVG */
-    height: 24px;             /* Altura do ícone SVG */
-    fill: white;              /* Cor do preenchimento do SVG (ícone branco) */
-    pointer-events: none;     /* Impede que o clique atinja o SVG diretamente */
-  }
-  
-  /* Indicador de carregamento centralizado na tela */
-  #loadingIndicator {
-    position: fixed;                    /* Fixa o indicador na tela, independente do scroll */
-    top: 50%;                           /* Centraliza verticalmente */
-    left: 50%;                          /* Centraliza horizontalmente */
-    transform: translate(-50%, -50%);   /* Ajusta o ponto de ancoragem para o centro exato */
-    background-color: rgba(0, 0, 0, 0.7); /* Fundo preto semi-transparente */
-    color: white;                       /* Cor do texto branca */
-    padding: 12px 24px;                 /* Espaço interno confortável */
-    border-radius: 10px;                /* Bordas arredondadas */
-    font-size: 20px;                    /* Tamanho da fonte grande e legível */
-    font-weight: bold;                  /* Deixa o texto em negrito */
-    z-index: 10000;                     /* Coloca o indicador acima de qualquer outro elemento */
-    display: none;                      /* Começa invisível (aparece via JavaScript quando necessário) */
-  }
-  
+  position: absolute;              /* Permite posicionamento livre na tela */
+  font-size: 30px;                 /* Tamanho da fonte (ou do ícone) */
+  background-color: #ffa726;       /* Cor laranja padrão do botão */
+  color: white;                    /* Cor do texto */
+  border: none;                    /* Remove borda padrão */
+  border-radius: 12px;             /* Cantos arredondados */
+  padding: 10px;                   /* Espaçamento interno */
+  cursor: pointer;                 /* Mostra ponteiro de clique */
+  z-index: 999;                    /* Sobrepõe elementos abaixo */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Sombra suave */
+  transition: transform 0.1s ease, background-color 0.2s ease; /* Animações suaves */
+}
+
+/* Efeito ao passar o mouse nos botões de troca */
+.btn:hover {
+  background-color: #fb8c00;       /* Tom de laranja mais escuro */
+  transform: scale(1.05);          /* Aumenta levemente o botão */
+}
+
+/* Posiciona o botão Anterior no canto inferior esquerdo */
+#prevBtn {
+  left: 10px;
+  bottom: 10px;
+}
+
+/* Posiciona o botão Próximo no canto inferior direito */
+#nextBtn {
+  right: 10px;
+  bottom: 10px;
+}
+
+/* Define o tamanho dos ícones SVG dentro dos botões */
+.btn svg {
+  width: 24px;
+  height: 24px;
+  fill: white;
+  pointer-events: none;  /* Impede que o clique vá no ícone ao invés do botão */
+}
+
+/* ---------------- INDICADOR DE CARREGAMENTO ---------------- */
+
+/* Estilo para o texto "Carregando..." centralizado */
+#loadingIndicator {
+  position: fixed;                   /* Fixa no centro da tela */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Centraliza usando o próprio tamanho */
+  background-color: rgba(0, 0, 0, 0.7); /* Fundo preto semi-transparente */
+  color: white;                      /* Texto branco */
+  padding: 12px 24px;                /* Espaçamento interno */
+  border-radius: 10px;               /* Cantos arredondados */
+  font-size: 20px;                   /* Tamanho do texto */
+  font-weight: bold;                /* Texto em negrito */
+  z-index: 10000;                    /* Sempre visível acima de tudo */
+  display: none;                     /* Começa escondido */
+}
+
+/* ---------------- BOTÃO MENU ---------------- */
+
+/* Botão que abre o menu de categorias */
+#menuBtn {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1000;                     /* Sobrepõe todos os elementos normais */
+  background-color: #ffa726;         /* Cor laranja padrão */
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 16px;
+  font-size: 18px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Sombra suave */
+  transition: background-color 0.2s ease;
+}
+
+/* Efeito hover para o botão Menu */
+#menuBtn:hover {
+  background-color: #fb8c00;         /* Tom mais escuro no hover */
+}
+
+/* ---------------- BOTÕES DE CATEGORIA ---------------- */
+
+/* Container dos botões de categoria */
+#categoryButtons {
+  position: absolute;
+  top: 65px;                         /* Logo abaixo do botão Menu */
+  left: 10px;
+  z-index: 999;
+  display: none;                     /* Inicia invisível (aparece ao clicar no menu) */
+  flex-direction: column;           /* Organiza os botões em coluna */
+  gap: 6px;                          /* Espaço entre os botões */
+}
+
+/* Estilo de cada botão de categoria */
+.category-btn {
+  background-color: rgba(200, 200, 200, 0.8); /* Cinza claro semi-transparente */
+  color: black;                       /* Texto preto */
+  border: none;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+/* Hover nos botões de categoria */
+.category-btn:hover {
+  background-color: rgba(180, 180, 180, 0.9);
+}
+
+/* ---------------- EXIBIÇÃO DE PREÇO ---------------- */
+
+/* Exibe o preço atual no topo central da tela, alinhado com o botão de menu */
+#priceDisplay {
+  position: absolute;
+  top: 10px;                          /* Mesma altura vertical do botão de menu */
+  left: 50%;                          /* Centraliza horizontalmente */
+  transform: translateX(-50%);       /* Ajusta para ficar bem centralizado */
+  background-color: rgba(255, 167, 38, 0.9); /* Laranja suave */
+  color: white;
+  padding: 8px 16px;
+  font-size: 20px;
+  border-radius: 12px;
+  z-index: 999;
+  font-weight: bold;
+  white-space: nowrap;               /* Evita quebra de linha no valor */
+}
+
