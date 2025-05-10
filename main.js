@@ -101,3 +101,72 @@ document.getElementById("menuBtn").addEventListener("click", () => {
 window.addEventListener("DOMContentLoaded", () => {
   loadModel(models[currentCategory][0].path);
 });
+
+// -------------------- CONTROLE DE PINÇA PARA ZOOM --------------------
+
+let initialDistance = null; // Distância inicial entre dois dedos
+let initialScale = 1; // Escala inicial do modelo
+
+// Atualiza a escala do modelo proporcional ao gesto de pinça
+function updateScale(scaleFactor) {
+  const model = document.querySelector("#modelContainer");
+  const newScale = Math.min(Math.max(initialScale * scaleFactor, 0.1), 10); // Limita zoom
+  model.setAttribute("scale", `${newScale} ${newScale} ${newScale}`);
+}
+
+// Detecta início do gesto de pinça
+window.addEventListener("touchstart", (e) => {
+  if (e.touches.length === 2) {
+    const dx = e.touches[0].clientX - e.touches[1].clientX;
+    const dy = e.touches[0].clientY - e.touches[1].clientY;
+    initialDistance = Math.sqrt(dx * dx + dy * dy);
+    const scale = document.querySelector("#modelContainer").getAttribute("scale");
+    initialScale = scale.x;
+  }
+});
+
+// Aplica zoom enquanto os dedos se movem
+window.addEventListener("touchmove", (e) => {
+  if (e.touches.length === 2 && initialDistance) {
+    const dx = e.touches[0].clientX - e.touches[1].clientX;
+    const dy = e.touches[0].clientY - e.touches[1].clientY;
+    const currentDistance = Math.sqrt(dx * dx + dy * dy);
+    const scaleFactor = currentDistance / initialDistance;
+    updateScale(scaleFactor);
+  }
+});
+
+// Finaliza o gesto de pinça
+window.addEventListener("touchend", () => {
+  initialDistance = null;
+});
+
+// -------------------- CONTROLE DE ROTAÇÃO VERTICAL COM UM DEDO --------------------
+
+let startY = null; // Posição inicial do toque vertical
+let initialRotationX = 0; // Rotação X inicial do modelo
+
+// Inicia controle de rotação com um dedo
+window.addEventListener("touchstart", (e) => {
+  if (e.touches.length === 1) {
+    startY = e.touches[0].clientY;
+    const model = document.querySelector("#modelContainer");
+    initialRotationX = model.getAttribute("rotation").x;
+  }
+});
+
+// Rotaciona o modelo para cima/baixo com movimento vertical
+window.addEventListener("touchmove", (e) => {
+  if (e.touches.length === 1 && startY !== null) {
+    const deltaY = e.touches[0].clientY - startY;
+    const model = document.querySelector("#modelContainer");
+    const rotation = model.getAttribute("rotation");
+    const newX = Math.min(Math.max(initialRotationX - deltaY * 0.2, -90), 90); // Limita rotação
+    model.setAttribute("rotation", `${newX} ${rotation.y} ${rotation.z}`);
+  }
+});
+
+// Encerra rotação com um dedo
+window.addEventListener("touchend", () => {
+  startY = null;
+});
