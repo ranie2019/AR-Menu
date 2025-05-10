@@ -22,7 +22,7 @@ const models = {
     { path: 'objetos3d/bebidas/redbull.glb', price: 9.90, info: 'informacoes/redbull.txt' }
   ],
   pizzas: [
-    { path: 'objetos3d/pizzas/pizza.glb', price: 45.00, info: 'informacoes/pizza.txt' },
+    { path: 'objetos3d/pizzas/presunto_de_Parma_e_rúcula.glb', price: 45.00, info: 'informacoes/presunto_de_Parma_e_rúcula.txt' },
     { path: 'objetos3d/pizzas/caneca.glb', price: 15.00, info: 'informacoes/caneca.txt' }
   ],
   sobremesas: [
