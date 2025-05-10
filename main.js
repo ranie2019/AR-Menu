@@ -25,9 +25,9 @@ function updateUI(model) {
   document.getElementById("priceDisplay").textContent = `R$ ${model.price.toFixed(2)}`;
   document.getElementById("productNameDisplay").textContent = formatProductName(model.path);
 
-  // Mostrar botão "Info" apenas para pizzas e sobremesas
+  // Mostrar botão "Info" apenas para as categorias
   const infoBtn = document.getElementById("infoBtn");
-  if (["pizzas", "sobremesas"].includes(currentCategory)) {
+  if (["pizzas", "sobremesas", "bebidas"].includes(currentCategory)) {
     infoBtn.style.display = "block";
   } else {
     infoBtn.style.display = "none";
@@ -241,4 +241,52 @@ function toggleInfo() {
       infoPanel.textContent = "Informações não disponíveis.";
       infoPanel.style.display = "block";
     });
+
+    // Lógica para o botão de informações nutricionais
+let infoVisible = false; // Variável de controle da visibilidade das informações
+let currentModel = null; // Armazena o modelo 3D atual exibido
+
+// Função que exibe ou esconde as informações nutricionais
+function toggleInfo() {
+  const infoDisplay = document.getElementById('infoDisplay');
+  const infoText = document.getElementById('infoText');
+
+  if (infoVisible) {
+    // Se já estiver visível, esconde
+    infoDisplay.style.display = 'none';
+  } else {
+    // Se não estiver visível, exibe
+    infoDisplay.style.display = 'block';
+
+    // Exibe as informações nutricionais do modelo atual
+    if (currentModel) {
+      const modelName = formatProductName(currentModel.path); // Nome do produto
+      const modelPrice = currentModel.price; // Preço do produto
+
+      // Acessa informações nutricionais do arquivo de texto correspondente
+      const infoFile = `informacoo/${modelName}.txt`; // Caminho do arquivo de informações nutricionais
+
+      fetch(infoFile)
+        .then(response => response.text())
+        .then(data => {
+          infoText.textContent = `Informações Nutricionais: \n${data}`;
+        })
+        .catch(err => {
+          infoText.textContent = "Erro ao carregar as informações nutricionais.";
+        });
+    }
+  }
+
+  // Alterna o estado da visibilidade
+  infoVisible = !infoVisible;
+}
+
+// Evento de clique no botão de informações
+document.getElementById('infoBtn').addEventListener('click', toggleInfo);
+
+// Atualiza o modelo atual (isso deve ser feito quando o modelo for trocado)
+function setCurrentModel(model) {
+  currentModel = model;
+}
+
 }
