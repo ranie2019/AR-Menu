@@ -1,61 +1,57 @@
-// ==================== CONFIGURAÇÃO INICIAL ====================
-
-// Define a categoria exibida ao iniciar o app
+// ==================== VARIÁVEIS GLOBAIS ====================
 let currentCategory = 'inicio';
-
-// Define o índice do modelo atual dentro da categoria selecionada
 let currentIndex = 0;
-
-// Cache dos modelos GLB já carregados (por blob URL), para evitar múltiplos downloads
 const modelCache = {};
 
 
-// ==================== ATUALIZAÇÃO DE PREÇO NA TELA ====================
+// ==================== ATUALIZAÇÕES DE INTERFACE ====================
 
 /**
- * Atualiza o valor do prato exibido no campo de preço.
- * @param {number} price - Preço do modelo atual.
+ * Formata o nome do produto a partir do path.
+ * @param {string} path
+ * @returns {string}
  */
-function updatePrice(price) {
-  document.getElementById("priceDisplay").innerText = `R$ ${price.toFixed(2)}`;
+function formatProductName(path) {
+  const file = path.split('/').pop().replace('.glb', '');
+  return file
+    .replace(/_/g, ' ')
+    .replace(/-/g, ' ')
+    .replace(/\b\w/g, l => l.toUpperCase());
+}
+
+/**
+ * Atualiza nome e preço do produto atual na tela.
+ * @param {object} model
+ */
+function updateUI(model) {
+  document.getElementById("priceDisplay").textContent = `R$ ${model.price.toFixed(2)}`;
+  document.getElementById("productNameDisplay").textContent = formatProductName(model.path);
 }
 
 
-// ==================== FUNÇÃO PRINCIPAL DE CARREGAMENTO DE MODELO ====================
+// ==================== CARREGAMENTO DE MODELO ====================
 
-/**
- * Carrega um modelo GLB dinamicamente e o aplica no container da cena.
- * Garante que o cache seja utilizado se possível, e mostra indicador de progresso.
- * @param {string} path - Caminho para o arquivo GLB do modelo.
- */
 function loadModel(path) {
-  const container = document.querySelector("#modelContainer"); // Elemento da cena AR onde o modelo será exibido
-  const loadingIndicator = document.getElementById("loadingIndicator"); // Elemento de texto que mostra progresso de carregamento
+  const container = document.querySelector("#modelContainer");
+  const loadingIndicator = document.getElementById("loadingIndicator");
 
-  // Exibe mensagem de carregamento
   loadingIndicator.style.display = "block";
   loadingIndicator.innerText = "Carregando...";
-
-  // Remove modelo anterior (evita bugs com troca de modelos)
   container.removeAttribute("gltf-model");
 
-  // Reseta transformação (posição, escala, rotação)
-  container.setAttribute("rotation", "0 180 0"); // Rotaciona modelo para ficar virado pra frente
+  container.setAttribute("rotation", "0 180 0");
   container.setAttribute("position", "0 -.6 0");
   container.setAttribute("scale", "1 1 1");
 
-  // Se o modelo já estiver no cache, usa direto
   if (modelCache[path]) {
     container.setAttribute("gltf-model", modelCache[path]);
     loadingIndicator.style.display = "none";
-    updatePrice(getModelPrice(path));
+    updateUI({ path, price: getModelPrice(path) });
   } else {
-    // Cria requisição para baixar o modelo GLB como blob (evita cache com Date.now)
     const xhr = new XMLHttpRequest();
-    xhr.open("GET", path + "?v=" + Date.now(), true); // Cache-busting
+    xhr.open("GET", path + "?v=" + Date.now(), true);
     xhr.responseType = "blob";
 
-    // Mostra progresso de download em porcentagem
     xhr.onprogress = (e) => {
       if (e.lengthComputable) {
         const percent = Math.round((e.loaded / e.total) * 100);
@@ -63,34 +59,23 @@ function loadModel(path) {
       }
     };
 
-    // Quando o modelo for carregado com sucesso
     xhr.onload = () => {
       const blobURL = URL.createObjectURL(xhr.response);
-      modelCache[path] = blobURL; // Salva no cache
+      modelCache[path] = blobURL;
       container.setAttribute("gltf-model", blobURL);
       loadingIndicator.style.display = "none";
-      updatePrice(getModelPrice(path)); // Atualiza preço na tela
+      updateUI({ path, price: getModelPrice(path) });
     };
 
-    // Se der erro no carregamento
     xhr.onerror = () => {
       console.error("Erro ao carregar o modelo:", path);
       loadingIndicator.innerText = "Erro ao carregar o modelo";
     };
 
-    xhr.send(); // Inicia o download
+    xhr.send();
   }
 }
 
-
-// ==================== CONSULTA DE PREÇO DO MODELO ====================
-
-/**
- * Retorna o preço do modelo com base no caminho (path).
- * Pesquisa em todas as categorias e seus modelos.
- * @param {string} path - Caminho do modelo GLB.
- * @returns {number} - Preço do modelo, ou 0 se não encontrado.
- */
 function getModelPrice(path) {
   for (let cat in models) {
     for (let model of models[cat]) {
@@ -101,71 +86,51 @@ function getModelPrice(path) {
 }
 
 
-// ==================== NAVEGAÇÃO ENTRE MODELOS DA MESMA CATEGORIA ====================
+// ==================== CONTROLE DE MODELOS ====================
 
-/**
- * Altera o modelo atual para o próximo ou anterior da mesma categoria.
- * @param {number} dir - Direção (1 para próximo, -1 para anterior).
- */
 function changeModel(dir) {
-  const lista = models[currentCategory]; // Lista de modelos da categoria atual
-  currentIndex = (currentIndex + dir + lista.length) % lista.length; // Rotação circular
+  const lista = models[currentCategory];
+  currentIndex = (currentIndex + dir + lista.length) % lista.length;
   loadModel(lista[currentIndex].path);
 }
 
-
-// ==================== SISTEMA DE MENU DE CATEGORIAS ====================
-
-/**
- * Troca a categoria de modelos e carrega o primeiro modelo da nova categoria.
- * @param {string} category - Nome da nova categoria.
- */
 function selectCategory(category) {
-  if (!models[category]) return; // Ignora se a categoria não existe
+  if (!models[category]) return;
   currentCategory = category;
   currentIndex = 0;
   loadModel(models[category][0].path);
 }
 
-// Alterna visibilidade do menu de categorias (mostra/esconde)
 document.getElementById("menuBtn").addEventListener("click", () => {
   const el = document.getElementById("categoryButtons");
   el.style.display = el.style.display === "flex" ? "none" : "flex";
 });
 
-
-// ==================== CARREGAMENTO INICIAL ====================
-
-// Quando o app carregar pela primeira vez, carrega o modelo inicial da categoria "inicio"
 window.addEventListener("DOMContentLoaded", () => {
   loadModel(models[currentCategory][0].path);
 });
 
-// Faz rotação automática do modelo no eixo Y
+
+// ==================== ROTAÇÃO AUTOMÁTICA ====================
 setInterval(() => {
   const model = document.querySelector("#modelContainer");
   if (!model) return;
   const rotation = model.getAttribute("rotation");
-  rotation.y += 0.5; // Incrementa rotação
+  rotation.y += 0.5;
   model.setAttribute("rotation", rotation);
-}, 30); // Roda a cada 30ms (~33 vezes por segundo)
+}, 30);
 
-// ==================== CONTROLE DE PINÇA PARA ZOOM ====================
 
-let initialDistance = null; // Distância entre dois dedos no início do gesto de pinça
-let initialScale = 1; // Escala do modelo antes do gesto
+// ==================== ZOOM COM PINÇA ====================
+let initialDistance = null;
+let initialScale = 1;
 
-/**
- * Aplica novo valor de escala ao modelo com base no gesto de pinça.
- * @param {number} scaleFactor - Fator de multiplicação da escala.
- */
 function updateScale(scaleFactor) {
   const model = document.querySelector("#modelContainer");
-  const newScale = Math.min(Math.max(initialScale * scaleFactor, 0.1), 10); // Limita entre 0.1x e 10x
+  const newScale = Math.min(Math.max(initialScale * scaleFactor, 0.1), 10);
   model.setAttribute("scale", `${newScale} ${newScale} ${newScale}`);
 }
 
-// Detecta início do gesto de pinça (2 dedos tocando)
 window.addEventListener("touchstart", (e) => {
   if (e.touches.length === 2) {
     const dx = e.touches[0].clientX - e.touches[1].clientX;
@@ -176,7 +141,6 @@ window.addEventListener("touchstart", (e) => {
   }
 });
 
-// Aplica escala conforme a distância entre os dedos muda
 window.addEventListener("touchmove", (e) => {
   if (e.touches.length === 2 && initialDistance) {
     const dx = e.touches[0].clientX - e.touches[1].clientX;
@@ -187,18 +151,15 @@ window.addEventListener("touchmove", (e) => {
   }
 });
 
-// Reseta variáveis ao finalizar o gesto
 window.addEventListener("touchend", () => {
   initialDistance = null;
 });
 
 
-// ==================== CONTROLE DE ROTAÇÃO VERTICAL COM UM DEDO ====================
+// ==================== ROTAÇÃO VERTICAL COM 1 DEDO ====================
+let startY = null;
+let initialRotationX = 0;
 
-let startY = null; // Posição vertical inicial do toque
-let initialRotationX = 0; // Rotação X do modelo no início do movimento
-
-// Armazena posição inicial ao começar toque com 1 dedo
 window.addEventListener("touchstart", (e) => {
   if (e.touches.length === 1) {
     startY = e.touches[0].clientY;
@@ -207,18 +168,16 @@ window.addEventListener("touchstart", (e) => {
   }
 });
 
-// Aplica rotação vertical proporcional ao movimento do dedo
 window.addEventListener("touchmove", (e) => {
   if (e.touches.length === 1 && startY !== null) {
     const deltaY = e.touches[0].clientY - startY;
     const model = document.querySelector("#modelContainer");
     const rotation = model.getAttribute("rotation");
-    const newX = Math.min(Math.max(initialRotationX - deltaY * 0.2, -90), 90); // Limita entre -90° e 90°
+    const newX = Math.min(Math.max(initialRotationX - deltaY * 0.2, -90), 90);
     model.setAttribute("rotation", `${newX} ${rotation.y} ${rotation.z}`);
   }
 });
 
-// Finaliza gesto ao soltar o dedo
 window.addEventListener("touchend", () => {
   startY = null;
 });

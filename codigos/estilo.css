@@ -137,3 +137,8 @@ body {
   white-space: nowrap;               /* Evita quebra de linha no valor */
 }
 
+.a-enter-vr-button {
+  display: none !important;
+}
+
+

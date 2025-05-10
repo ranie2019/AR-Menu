@@ -11,15 +11,13 @@
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
 
-    <!-- Estilo inline para limpar margens da página -->
+    <!-- Estilo inline básico -->
     <style>
       body {
         margin: 0;
         overflow: hidden;
         font-family: sans-serif;
       }
-
-      /* Proteção contra qualquer texto não desejado */
       .debug-text {
         display: none !important;
       }
@@ -27,45 +25,40 @@
   </head>
 
   <body>
-    <!-- Botão para abrir/fechar o menu de categorias -->
+    <!-- Botão para abrir o menu -->
     <button id="menuBtn">Menu</button>
 
-    <!-- Lista de categorias (inicialmente oculta) -->
+    <!-- Botões de categorias -->
     <div id="categoryButtons" style="display: none">
       <button class="category-btn" onclick="selectCategory('bebidas')">Bebidas</button>
       <button class="category-btn" onclick="selectCategory('pizzas')">Pizzas</button>
       <button class="category-btn" onclick="selectCategory('sobremesas')">Sobremesas</button>
     </div>
 
-    <!-- Indicador de carregamento de modelo -->
+    <!-- Indicador de carregamento -->
     <div id="loadingIndicator">Carregando...</div>
 
-    <!-- Exibição do preço do item atual -->
+    <!-- Preço do produto -->
     <div id="priceDisplay">R$ 0,00</div>
 
-    <!-- Botão para modelo anterior -->
+    <!-- Nome do produto atual -->
+    <div id="productNameDisplay" style="position: absolute; bottom: 60px; left: 50%; transform: translateX(-50%);
+      background-color: #e0e0e0; color: #000; padding: 6px 16px; border-radius: 12px; font-size: 1.1em; font-weight: 500;">
+    </div>
+
+    <!-- Botão modelo anterior -->
     <button id="prevBtn" class="btn" onclick="changeModel(-1)">
-      <svg viewBox="0 0 24 24">
-        <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
-      </svg>
+      <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
     </button>
 
-    <!-- Botão para próximo modelo -->
+    <!-- Botão próximo modelo -->
     <button id="nextBtn" class="btn" onclick="changeModel(1)">
-      <svg viewBox="0 0 24 24">
-        <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z" />
-      </svg>
+      <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
     </button>
 
-    <!-- Cena AR com webcam e sem marcador -->
-    <a-scene
-      embedded
-      vr-mode-ui="enabled: false"
-      arjs="sourceType: webcam; debugUIEnabled: false;"
-    >
-      <!-- Contêiner onde o modelo 3D será carregado dinamicamente -->
-      <a-entity
-        id="modelContainer"
+    <!-- Cena AR com A-Frame + AR.js -->
+    <a-scene embedded vr-mode-ui="enabled: false" arjs="sourceType: webcam; debugUIEnabled: false;">
+      <a-entity id="modelContainer"
         rotation="0 180 0"
         position="0 0 0"
         scale="1 1 1"
@@ -76,11 +69,10 @@
         touch-action="none"
       ></a-entity>
 
-      <!-- Câmera AR padrão -->
       <a-camera position="0 1.5 3"></a-camera>
     </a-scene>
 
-    <!-- Scripts do projeto (ordem importa!) -->
+    <!-- Scripts -->
     <script src="models.js"></script>
     <script src="main.js"></script>
   </body>

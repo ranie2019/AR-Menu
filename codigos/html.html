@@ -3,66 +3,85 @@
   <head>
     <meta charset="utf-8" />
     <title>Visualizador 3D com Botões</title>
-    <link rel="stylesheet" href="style.css" /> <!-- Link para o arquivo CSS externo -->
-    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script> <!-- Inclusão do A-Frame para criar experiências de realidade virtual e aumentada -->
-    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script> <!-- Inclusão da biblioteca AR.js para trabalhar com Realidade Aumentada -->
+
+    <!-- CSS externo -->
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- Bibliotecas A-Frame e AR.js -->
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
+
+    <!-- Estilo inline para limpar margens da página -->
     <style>
-      /* Estilo básic
-      o para remover margens e controlar o overflow da página */
       body {
         margin: 0;
         overflow: hidden;
+        font-family: sans-serif;
+      }
+
+      /* Proteção contra qualquer texto não desejado */
+      .debug-text {
+        display: none !important;
       }
     </style>
   </head>
 
-  <!-- Botão Menu -->
-  <button id="menuBtn">Menu</button>
-
-  <!-- Botões de Categoria -->
-  <div id="categoryButtons">
-    <button class="category-btn" onclick="selectCategory('bebidas')">Bebidas</button> <!-- Botão de categoria para Bebidas -->
-    <button class="category-btn" onclick="selectCategory('pizzas')">Pizzas</button> <!-- Botão de categoria para Pizzas -->
-    <button class="category-btn" onclick="selectCategory('sobremesas')">Sobremesas</button> <!-- Botão de categoria para Sobremesas -->
-  </div>
-
   <body>
-    <!-- Botão Anterior -->
+    <!-- Botão para abrir/fechar o menu de categorias -->
+    <button id="menuBtn">Menu</button>
+
+    <!-- Lista de categorias (inicialmente oculta) -->
+    <div id="categoryButtons" style="display: none">
+      <button class="category-btn" onclick="selectCategory('bebidas')">Bebidas</button>
+      <button class="category-btn" onclick="selectCategory('pizzas')">Pizzas</button>
+      <button class="category-btn" onclick="selectCategory('sobremesas')">Sobremesas</button>
+    </div>
+
+    <!-- Indicador de carregamento de modelo -->
+    <div id="loadingIndicator">Carregando...</div>
+
+    <!-- Exibição do preço do item atual -->
+    <div id="priceDisplay">R$ 0,00</div>
+
+    <!-- Botão para modelo anterior -->
     <button id="prevBtn" class="btn" onclick="changeModel(-1)">
       <svg viewBox="0 0 24 24">
         <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
       </svg>
     </button>
 
-    <!-- Botão Próximo -->
+    <!-- Botão para próximo modelo -->
     <button id="nextBtn" class="btn" onclick="changeModel(1)">
       <svg viewBox="0 0 24 24">
         <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z" />
       </svg>
     </button>
 
-    <!-- Indicador de carregamento -->
-    <div id="loadingIndicator">carregando...</div> <!-- Exibição de mensagem enquanto os modelos 3D estão sendo carregados -->
-
-    <!-- Cena AR com marcador -->
+    <!-- Cena AR com webcam e sem marcador -->
     <a-scene
       embedded
-      arjs="sourceType: webcam; debugUIEnabled: false; markerType: pattern; patternUrl: 'ar-menu/pattern.patt';" <!-- Configuração para usar AR.js com marcador -->
-      vr-mode-ui="enabled: false" <!-- Desativa a interface de VR (Realidade Virtual) -->
+      vr-mode-ui="enabled: false"
+      arjs="sourceType: webcam; debugUIEnabled: false;"
     >
-      <!-- Entidade para carregar e exibir o modelo 3D -->
+      <!-- Contêiner onde o modelo 3D será carregado dinamicamente -->
       <a-entity
-        id="modelContainer" <!-- Identificador único da entidade que contém o modelo 3D -->
-        position="0 0 -3" <!-- Posiciona o modelo 3D no espaço, afastado 3 unidades ao longo do eixo Z -->
-        rotation="0 180 0" <!-- Rotação do modelo 3D (180° em torno do eixo Y) -->
-        scale="1 1 1" <!-- Escala do modelo 3D (escala padrão 1:1) -->
+        id="modelContainer"
+        rotation="0 180 0"
+        position="0 0 0"
+        scale="1 1 1"
+        gltf-model=""
+        gesture-detector
+        grabbable
+        draggable
+        touch-action="none"
       ></a-entity>
 
-      <!-- Definição da câmera que visualiza a cena -->
-      <a-camera position="0 1.6 0"></a-camera> <!-- A câmera está posicionada 1.6 metros acima do chão, para representar a altura média de uma pessoa -->
+      <!-- Câmera AR padrão -->
+      <a-camera position="0 1.5 3"></a-camera>
     </a-scene>
 
-    <!-- Script JavaScript externo (main.js) que controlará as interações e funcionalidades -->
+    <!-- Scripts do projeto (ordem importa!) -->
+    <script src="models.js"></script>
     <script src="main.js"></script>
   </body>
 </html>

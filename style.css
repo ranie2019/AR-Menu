@@ -141,4 +141,21 @@ body {
   display: none !important;
 }
 
+/* ---------------- EXIBIÇÃO DE NOME DO PRODUTO ---------------- */
+
+/* Exibe o nome do produto no centro da parte inferior da tela */
+#productNameDisplay {
+  position: absolute;
+  bottom: 10px;                        /* Posição na parte inferior da tela */
+  left: 50%;                           /* Centraliza horizontalmente */
+  transform: translateX(-50%);         /* Ajusta para ficar bem centralizado */
+  background-color: rgba(200, 200, 200, 0.9); /* Fundo cinza claro */
+  color: black;                        /* Texto preto */
+  padding: 8px 16px;                   /* Espaçamento interno */
+  font-size: 20px;                     /* Tamanho do texto */
+  border-radius: 12px;                 /* Cantos arredondados */
+  z-index: 999;                        /* Garantir que fique sobre outros elementos */
+  font-weight: bold;                   /* Texto em negrito */
+  white-space: nowrap;                 /* Evita quebra de linha no nome */
+}
 
