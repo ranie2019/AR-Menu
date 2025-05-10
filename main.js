@@ -41,7 +41,7 @@ function loadModel(path) {
 
   // Reseta transformação (posição, escala, rotação)
   container.setAttribute("rotation", "0 180 0"); // Rotaciona modelo para ficar virado pra frente
-  container.setAttribute("position", "0 0 0");
+  container.setAttribute("position", "0 -.6 0");
   container.setAttribute("scale", "1 1 1");
 
   // Se o modelo já estiver no cache, usa direto
