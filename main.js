@@ -8,8 +8,7 @@ const modelCache = {};
 
 /**
  * Formata o nome do produto a partir do path.
- * @param {string} path
- * @returns {string}
+ * Exemplo: "models/pizzas/pizza_calabresa.glb" -> "Pizza Calabresa"
  */
 function formatProductName(path) {
   const file = path.split('/').pop().replace('.glb', '');
@@ -21,16 +20,27 @@ function formatProductName(path) {
 
 /**
  * Atualiza nome e preço do produto atual na tela.
- * @param {object} model
  */
 function updateUI(model) {
   document.getElementById("priceDisplay").textContent = `R$ ${model.price.toFixed(2)}`;
   document.getElementById("productNameDisplay").textContent = formatProductName(model.path);
+
+  // Mostrar botão "Info" apenas para pizzas e sobremesas
+  const infoBtn = document.getElementById("infoBtn");
+  if (["pizzas", "sobremesas"].includes(currentCategory)) {
+    infoBtn.style.display = "block";
+  } else {
+    infoBtn.style.display = "none";
+    document.getElementById("infoPanel").style.display = "none"; // fecha o painel se mudar a categoria
+  }
 }
 
 
 // ==================== CARREGAMENTO DE MODELO ====================
 
+/**
+ * Carrega o modelo 3D dinamicamente e atualiza a interface.
+ */
 function loadModel(path) {
   const container = document.querySelector("#modelContainer");
   const loadingIndicator = document.getElementById("loadingIndicator");
@@ -76,6 +86,9 @@ function loadModel(path) {
   }
 }
 
+/**
+ * Retorna o preço do modelo atual com base na lista de modelos.
+ */
 function getModelPrice(path) {
   for (let cat in models) {
     for (let model of models[cat]) {
@@ -88,12 +101,18 @@ function getModelPrice(path) {
 
 // ==================== CONTROLE DE MODELOS ====================
 
+/**
+ * Altera o modelo atual para o próximo ou anterior na lista.
+ */
 function changeModel(dir) {
   const lista = models[currentCategory];
   currentIndex = (currentIndex + dir + lista.length) % lista.length;
   loadModel(lista[currentIndex].path);
 }
 
+/**
+ * Seleciona uma nova categoria e carrega o primeiro modelo dela.
+ */
 function selectCategory(category) {
   if (!models[category]) return;
   currentCategory = category;
@@ -101,11 +120,13 @@ function selectCategory(category) {
   loadModel(models[category][0].path);
 }
 
+// Alternar visibilidade do menu de categorias
 document.getElementById("menuBtn").addEventListener("click", () => {
   const el = document.getElementById("categoryButtons");
   el.style.display = el.style.display === "flex" ? "none" : "flex";
 });
 
+// Carrega modelo inicial ao abrir a página
 window.addEventListener("DOMContentLoaded", () => {
   loadModel(models[currentCategory][0].path);
 });
@@ -125,6 +146,9 @@ setInterval(() => {
 let initialDistance = null;
 let initialScale = 1;
 
+/**
+ * Atualiza a escala do modelo com base no gesto de zoom.
+ */
 function updateScale(scaleFactor) {
   const model = document.querySelector("#modelContainer");
   const newScale = Math.min(Math.max(initialScale * scaleFactor, 0.1), 10);
@@ -181,3 +205,40 @@ window.addEventListener("touchmove", (e) => {
 window.addEventListener("touchend", () => {
   startY = null;
 });
+
+
+// ==================== INFO NUTRICIONAL ====================
+
+/**
+ * Alterna a exibição do painel de informações nutricionais.
+ */
+function toggleInfo() {
+  const infoPanel = document.getElementById("infoPanel");
+  const lista = models[currentCategory];
+  const model = lista[currentIndex];
+  const fileName = model.path.split('/').pop().replace('.glb', '');
+
+  // Caminho do arquivo de informações nutricionais
+  const infoFilePath = `informacoo/${fileName}.txt?v=${Date.now()}`;
+
+  // Se já visível, ocultar
+  if (infoPanel.style.display === "block") {
+    infoPanel.style.display = "none";
+    return;
+  }
+
+  // Carrega o conteúdo do .txt e exibe
+  fetch(infoFilePath)
+    .then(response => {
+      if (!response.ok) throw new Error("Arquivo não encontrado");
+      return response.text();
+    })
+    .then(text => {
+      infoPanel.textContent = text;
+      infoPanel.style.display = "block";
+    })
+    .catch(() => {
+      infoPanel.textContent = "Informações não disponíveis.";
+      infoPanel.style.display = "block";
+    });
+}

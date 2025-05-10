@@ -1,4 +1,12 @@
-// Define todos os modelos disponíveis por categoria
+// ==================== CATÁLOGO DE MODELOS 3D ====================
+
+/**
+ * Objeto que organiza todos os modelos disponíveis por categoria.
+ * Cada categoria (ex: 'bebidas', 'pizzas') contém um array de objetos,
+ * onde cada objeto representa um modelo 3D com:
+ * - path: caminho do arquivo .glb
+ * - price: preço do produto
+ */
 const models = {
   inicio: [
     { path: 'objetos3d/inicio/cubo.glb', price: 0.00 }
@@ -22,20 +30,24 @@ const models = {
   ]
 };
 
+
+// ==================== FORMATAÇÃO DE NOMES ====================
+
 /**
  * Formata dinamicamente o nome do produto com base no caminho do arquivo.
  * Exemplo: 'objetos3d/bebidas/absolut_vodka_1l.glb' => 'Absolut Vodka 1L'
- * @param {string} filePath Caminho completo do arquivo .glb
- * @returns {string} Nome formatado do produto
+ *
+ * @param {string} filePath - Caminho completo do arquivo .glb
+ * @returns {string} - Nome formatado do produto para exibição
  */
 function formatProductName(filePath) {
   // Extrai apenas o nome do arquivo (sem caminho e sem extensão)
   let name = filePath.split('/').pop().replace('.glb', '');
 
-  // Substitui underlines por espaços
-  name = name.replace(/_/g, ' ');
+  // Substitui underlines e hífens por espaços
+  name = name.replace(/[_-]/g, ' ');
 
-  // Coloca a primeira letra de cada palavra em maiúsculo
+  // Capitaliza a primeira letra de cada palavra
   name = name.replace(/\b\w/g, char => char.toUpperCase());
 
   return name;

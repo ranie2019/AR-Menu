@@ -7,11 +7,11 @@
     <!-- CSS externo -->
     <link rel="stylesheet" href="style.css" />
 
-    <!-- Bibliotecas A-Frame e AR.js -->
+    <!-- Bibliotecas A-Frame e AR.js para realidade aumentada -->
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
 
-    <!-- Estilo inline básico -->
+    <!-- Estilo inline básico (evita overflow e oculta textos de debug) -->
     <style>
       body {
         margin: 0;
@@ -25,40 +25,87 @@
   </head>
 
   <body>
-    <!-- Botão para abrir o menu -->
+    <!-- Botão que abre o menu de categorias -->
     <button id="menuBtn">Menu</button>
 
-    <!-- Botões de categorias -->
+    <!-- Botões de categorias (só aparecem após clicar em "Menu") -->
     <div id="categoryButtons" style="display: none">
       <button class="category-btn" onclick="selectCategory('bebidas')">Bebidas</button>
       <button class="category-btn" onclick="selectCategory('pizzas')">Pizzas</button>
       <button class="category-btn" onclick="selectCategory('sobremesas')">Sobremesas</button>
     </div>
 
-    <!-- Indicador de carregamento -->
+    <!-- Indicador visual de carregamento do modelo -->
     <div id="loadingIndicator">Carregando...</div>
 
-    <!-- Preço do produto -->
+    <!-- Exibe o preço do item atual -->
     <div id="priceDisplay">R$ 0,00</div>
 
-    <!-- Nome do produto atual -->
-    <div id="productNameDisplay" style="position: absolute; bottom: 60px; left: 50%; transform: translateX(-50%);
-      background-color: #e0e0e0; color: #000; padding: 6px 16px; border-radius: 12px; font-size: 1.1em; font-weight: 500;">
+    <!-- Exibe o nome do item atual -->
+    <div id="productNameDisplay" style="
+      position: absolute;
+      bottom: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #e0e0e0;
+      color: #000;
+      padding: 6px 16px;
+      border-radius: 12px;
+      font-size: 1.1em;
+      font-weight: 500;
+    ">
     </div>
 
-    <!-- Botão modelo anterior -->
+    <button id="infoBtn">ℹ️ Info</button>
+
+    <!-- Botão para ir ao modelo anterior -->
     <button id="prevBtn" class="btn" onclick="changeModel(-1)">
-      <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+      <svg viewBox="0 0 24 24">
+        <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+      </svg>
     </button>
 
-    <!-- Botão próximo modelo -->
+    <!-- Botão para ir ao próximo modelo -->
     <button id="nextBtn" class="btn" onclick="changeModel(1)">
-      <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+      <svg viewBox="0 0 24 24">
+        <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/>
+      </svg>
     </button>
 
-    <!-- Cena AR com A-Frame + AR.js -->
-    <a-scene embedded vr-mode-ui="enabled: false" arjs="sourceType: webcam; debugUIEnabled: false;">
-      <a-entity id="modelContainer"
+    <!-- Botão "Info" que só aparece em certas categorias (pizzas/sobremesas) -->
+    <button id="infoBtn" class="btn" onclick="toggleInfo()" style="display: none;">
+      Info
+    </button>
+
+    <!-- Painel de informações nutricionais carregadas via .txt -->
+    <div id="infoPanel" style="
+      display: none;
+      position: absolute;
+      bottom: 120px;
+      left: 50%;
+      transform: translateX(-50%);
+      max-width: 90%;
+      max-height: 40%;
+      overflow-y: auto;
+      background-color: rgba(255, 255, 255, 0.95);
+      color: #000;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-size: 1em;
+      z-index: 1000;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    ">
+    </div>
+
+    <!-- Cena 3D com AR.js e A-Frame -->
+    <a-scene
+      embedded
+      vr-mode-ui="enabled: false"
+      arjs="sourceType: webcam; debugUIEnabled: false;"
+    >
+      <!-- Entidade principal onde o modelo 3D será carregado dinamicamente -->
+      <a-entity
+        id="modelContainer"
         rotation="0 180 0"
         position="0 0 0"
         scale="1 1 1"
@@ -69,10 +116,11 @@
         touch-action="none"
       ></a-entity>
 
+      <!-- Câmera posicionada para visualização AR -->
       <a-camera position="0 1.5 3"></a-camera>
     </a-scene>
 
-    <!-- Scripts -->
+    <!-- Scripts do projeto -->
     <script src="models.js"></script>
     <script src="main.js"></script>
   </body>
