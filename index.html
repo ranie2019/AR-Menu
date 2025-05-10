@@ -32,19 +32,20 @@
       </svg>
     </button>
 
+    <!-- Cena AR sem marcador -->
     <a-scene
       embedded
       vr-mode-ui="enabled: false"
       arjs="sourceType: webcam; debugUIEnabled: false;"
     >
-      <a-marker preset="hiro">
-        <a-entity
-          id="modelContainer"
-          position="0 -0.5 -3"
-          rotation="0 180 0"
-          scale="1 1 1"
-        ></a-entity>
-      </a-marker>
+      <!-- Modelo 3D carregado de models.js -->
+      <a-entity
+        id="modelContainer"
+        position="0 0 -3"
+        rotation="0 180 0"
+        scale="1 1 1"
+        gltf-model="url(#currentModel)"
+      ></a-entity>
 
       <a-camera position="0 1.6 0"></a-camera>
     </a-scene>
