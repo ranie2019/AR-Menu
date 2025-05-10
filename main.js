@@ -1,13 +1,15 @@
 // ==================== VARIÁVEIS GLOBAIS ====================
-let currentCategory = 'inicio';
-let currentIndex = 0;
-const modelCache = {};
+let currentCategory = 'inicio'; // Categoria inicial
+let currentIndex = 0; // Índice do modelo dentro da categoria
+const modelCache = {}; // Cache para armazenar modelos GLB carregados
+let currentModelPath = ''; // Armazena o caminho do modelo atual
+let infoVisible = false; // Estado do painel de informações
 
 
 // ==================== ATUALIZAÇÕES DE INTERFACE ====================
 
 /**
- * Formata o nome do produto a partir do path.
+ * Formata o nome do produto a partir do path do modelo GLB.
  * Exemplo: "models/pizzas/pizza_calabresa.glb" -> "Pizza Calabresa"
  */
 function formatProductName(path) {
@@ -19,19 +21,19 @@ function formatProductName(path) {
 }
 
 /**
- * Atualiza nome e preço do produto atual na tela.
+ * Atualiza o nome e preço do produto atual na interface.
  */
 function updateUI(model) {
   document.getElementById("priceDisplay").textContent = `R$ ${model.price.toFixed(2)}`;
   document.getElementById("productNameDisplay").textContent = formatProductName(model.path);
 
-  // Mostrar botão "Info" apenas para as categorias
   const infoBtn = document.getElementById("infoBtn");
   if (["pizzas", "sobremesas", "bebidas"].includes(currentCategory)) {
     infoBtn.style.display = "block";
   } else {
     infoBtn.style.display = "none";
-    document.getElementById("infoPanel").style.display = "none"; // fecha o painel se mudar a categoria
+    document.getElementById("infoPanel").style.display = "none";
+    infoVisible = false;
   }
 }
 
@@ -39,7 +41,7 @@ function updateUI(model) {
 // ==================== CARREGAMENTO DE MODELO ====================
 
 /**
- * Carrega o modelo 3D dinamicamente e atualiza a interface.
+ * Carrega o modelo 3D e atualiza a interface.
  */
 function loadModel(path) {
   const container = document.querySelector("#modelContainer");
@@ -52,6 +54,8 @@ function loadModel(path) {
   container.setAttribute("rotation", "0 180 0");
   container.setAttribute("position", "0 -.6 0");
   container.setAttribute("scale", "1 1 1");
+
+  currentModelPath = path; // Atualiza o modelo atual
 
   if (modelCache[path]) {
     container.setAttribute("gltf-model", modelCache[path]);
@@ -87,7 +91,7 @@ function loadModel(path) {
 }
 
 /**
- * Retorna o preço do modelo atual com base na lista de modelos.
+ * Retorna o preço do modelo atual.
  */
 function getModelPrice(path) {
   for (let cat in models) {
@@ -101,18 +105,12 @@ function getModelPrice(path) {
 
 // ==================== CONTROLE DE MODELOS ====================
 
-/**
- * Altera o modelo atual para o próximo ou anterior na lista.
- */
 function changeModel(dir) {
   const lista = models[currentCategory];
   currentIndex = (currentIndex + dir + lista.length) % lista.length;
   loadModel(lista[currentIndex].path);
 }
 
-/**
- * Seleciona uma nova categoria e carrega o primeiro modelo dela.
- */
 function selectCategory(category) {
   if (!models[category]) return;
   currentCategory = category;
@@ -120,13 +118,11 @@ function selectCategory(category) {
   loadModel(models[category][0].path);
 }
 
-// Alternar visibilidade do menu de categorias
 document.getElementById("menuBtn").addEventListener("click", () => {
   const el = document.getElementById("categoryButtons");
   el.style.display = el.style.display === "flex" ? "none" : "flex";
 });
 
-// Carrega modelo inicial ao abrir a página
 window.addEventListener("DOMContentLoaded", () => {
   loadModel(models[currentCategory][0].path);
 });
@@ -146,9 +142,6 @@ setInterval(() => {
 let initialDistance = null;
 let initialScale = 1;
 
-/**
- * Atualiza a escala do modelo com base no gesto de zoom.
- */
 function updateScale(scaleFactor) {
   const model = document.querySelector("#modelContainer");
   const newScale = Math.min(Math.max(initialScale * scaleFactor, 0.1), 10);
@@ -180,7 +173,7 @@ window.addEventListener("touchend", () => {
 });
 
 
-// ==================== ROTAÇÃO VERTICAL COM 1 DEDO ====================
+// ==================== ROTAÇÃO VERTICAL ====================
 let startY = null;
 let initialRotationX = 0;
 
@@ -207,86 +200,36 @@ window.addEventListener("touchend", () => {
 });
 
 
-// ==================== INFO NUTRICIONAL ====================
+// ==================== BOTÃO DE INFORMAÇÕES (POPUP LIGA/DESLIGA) ====================
 
-/**
- * Alterna a exibição do painel de informações nutricionais.
- */
-function toggleInfo() {
-  const infoPanel = document.getElementById("infoPanel");
-  const lista = models[currentCategory];
-  const model = lista[currentIndex];
-  const fileName = model.path.split('/').pop().replace('.glb', '');
+document.getElementById("infoBtn").addEventListener("click", () => {
+  const panel = document.getElementById("infoPanel");
 
-  // Caminho do arquivo de informações nutricionais
-  const infoFilePath = `informacoo/${fileName}.txt?v=${Date.now()}`;
-
-  // Se já visível, ocultar
-  if (infoPanel.style.display === "block") {
-    infoPanel.style.display = "none";
+  if (infoVisible) {
+    panel.style.display = "none";
+    infoVisible = false;
     return;
   }
 
-  // Carrega o conteúdo do .txt e exibe
-  fetch(infoFilePath)
+  if (!currentModelPath) return;
+
+  const filename = currentModelPath.split('/').pop().replace('.glb', '');
+  const infoPath = `informacao/${filename}.txt`; // <- Corrigido o nome da pasta
+
+  fetch(infoPath)
     .then(response => {
-      if (!response.ok) throw new Error("Arquivo não encontrado");
+      if (!response.ok) throw new Error('Arquivo não encontrado');
       return response.text();
     })
-    .then(text => {
-      infoPanel.textContent = text;
-      infoPanel.style.display = "block";
+    .then(data => {
+      panel.innerText = data;
+      panel.style.display = "block";
+      infoVisible = true;
     })
-    .catch(() => {
-      infoPanel.textContent = "Informações não disponíveis.";
-      infoPanel.style.display = "block";
+    .catch(err => {
+      console.error("Erro ao carregar info:", err);
+      panel.innerText = "Informações não disponíveis.";
+      panel.style.display = "block";
+      infoVisible = true;
     });
-
-    // Lógica para o botão de informações nutricionais
-let infoVisible = false; // Variável de controle da visibilidade das informações
-let currentModel = null; // Armazena o modelo 3D atual exibido
-
-// Função que exibe ou esconde as informações nutricionais
-function toggleInfo() {
-  const infoDisplay = document.getElementById('infoDisplay');
-  const infoText = document.getElementById('infoText');
-
-  if (infoVisible) {
-    // Se já estiver visível, esconde
-    infoDisplay.style.display = 'none';
-  } else {
-    // Se não estiver visível, exibe
-    infoDisplay.style.display = 'block';
-
-    // Exibe as informações nutricionais do modelo atual
-    if (currentModel) {
-      const modelName = formatProductName(currentModel.path); // Nome do produto
-      const modelPrice = currentModel.price; // Preço do produto
-
-      // Acessa informações nutricionais do arquivo de texto correspondente
-      const infoFile = `informacoo/${modelName}.txt`; // Caminho do arquivo de informações nutricionais
-
-      fetch(infoFile)
-        .then(response => response.text())
-        .then(data => {
-          infoText.textContent = `Informações Nutricionais: \n${data}`;
-        })
-        .catch(err => {
-          infoText.textContent = "Erro ao carregar as informações nutricionais.";
-        });
-    }
-  }
-
-  // Alterna o estado da visibilidade
-  infoVisible = !infoVisible;
-}
-
-// Evento de clique no botão de informações
-document.getElementById('infoBtn').addEventListener('click', toggleInfo);
-
-// Atualiza o modelo atual (isso deve ser feito quando o modelo for trocado)
-function setCurrentModel(model) {
-  currentModel = model;
-}
-
-}
+});
