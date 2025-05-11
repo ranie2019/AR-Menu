@@ -80,25 +80,42 @@
       Info
     </button>
 
-    <!-- Painel de informações nutricionais carregadas via .txt -->
-    <div id="infoPanel" style="
-      display: none;
-      position: absolute;
-      bottom: 120px;
-      left: 50%;
-      transform: translateX(-50%);
-      max-width: 90%;
-      max-height: 40%;
-      overflow-y: auto;
-      background-color: rgba(255, 255, 255, 0.95);
-      color: #000;
-      padding: 10px 16px;
-      border-radius: 10px;
-      font-size: 1em;
-      z-index: 1000;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    ">
-    </div>
+   <!-- Painel de informações nutricionais fixo no topo central -->
+   <div id="infoPanel" style="
+   display: none;                            /* Oculto por padrão – só aparece ao clicar no botão Info */
+   position: absolute;                       /* Posicionamento absoluto na tela */
+   top: 80px;                                /* Distância do topo da tela – pode ajustar conforme necessário */
+   left: 50%;                                /* Alinha o centro do painel com o centro da tela */
+   transform: translateX(-50%);              /* Corrige o alinhamento central exato */
+   width: 80vw;                              /* Ocupa 80% da largura da tela – responsivo */
+   max-height: 60vh;                         /* Altura máxima para não ocupar a tela toda */
+   overflow-y: auto;                         /* Adiciona rolagem vertical se o conteúdo for muito grande */
+   background-color: rgba(255, 255, 255, 0.95); /* Fundo branco com leve transparência */
+   color: #000;                              /* Texto preto */
+   padding: 16px 20px;                       /* Espaçamento interno confortável */
+   border-radius: 16px;                      /* Cantos arredondados */
+   font-size: 1em;                           /* Tamanho padrão de texto */
+   z-index: 1000;                            /* Garantir que fique acima dos modelos e botões */
+   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);/* Sombra para destacar visualmente */
+   text-align: left;                         /* Texto alinhado à esquerda para facilitar leitura */
+   ">
+
+  <!-- Botão para fechar o painel -->
+  <button onclick="document.getElementById('infoPanel').style.display='none'" style="
+    position: absolute;                     /* Fixa o botão dentro do painel */
+    top: 8px;                               /* Espaço do topo interno do painel */
+    right: 12px;                            /* Espaço da direita interna do painel */
+    background: transparent;               /* Fundo transparente para parecer limpo */
+    border: none;                           /* Remove bordas do botão */
+    font-size: 1.2em;                       /* Tamanho de fonte maior para o ícone */
+    cursor: pointer;                        /* Mostra cursor de clique */
+  ">✖</button>
+
+  <!-- Conteúdo da informação será injetado via JavaScript -->
+</div>
+
+
+
 
     <!-- Cena 3D com AR.js e A-Frame -->
     <a-scene

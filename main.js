@@ -24,18 +24,23 @@ function formatProductName(path) {
  * Atualiza o nome e preço do produto atual na interface.
  */
 function updateUI(model) {
-  document.getElementById("priceDisplay").textContent = `R$ ${model.price.toFixed(2)}`;
   document.getElementById("productNameDisplay").textContent = formatProductName(model.path);
+  document.getElementById("priceDisplay").textContent = `R$ ${model.price.toFixed(2)}`;
 
   const infoBtn = document.getElementById("infoBtn");
+  const priceDisplay = document.getElementById("priceDisplay");
+
   if (["pizzas", "sobremesas", "bebidas"].includes(currentCategory)) {
     infoBtn.style.display = "block";
+    priceDisplay.style.display = "block";  // Mostra o preço
   } else {
     infoBtn.style.display = "none";
+    priceDisplay.style.display = "none";   // Oculta o preço
     document.getElementById("infoPanel").style.display = "none";
     infoVisible = false;
   }
 }
+
 
 
 // ==================== CARREGAMENTO DE MODELO ====================
@@ -109,7 +114,15 @@ function changeModel(dir) {
   const lista = models[currentCategory];
   currentIndex = (currentIndex + dir + lista.length) % lista.length;
   loadModel(lista[currentIndex].path);
+
+  // Fecha o painel de informações se estiver visível
+  const infoPanel = document.getElementById('infoPanel');
+  if (infoPanel.style.display === 'block') {
+    infoPanel.style.display = 'none';
+    infoVisible = false; // <-- ESSA LINHA RESOLVE O PROBLEMA
+  }
 }
+
 
 function selectCategory(category) {
   if (!models[category]) return;
@@ -233,3 +246,4 @@ document.getElementById("infoBtn").addEventListener("click", () => {
       infoVisible = true;
     });
 });
+
