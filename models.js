@@ -23,10 +23,13 @@ const models = {
   ],
   pizzas: [
     { path: 'objetos3d/pizzas/presunto_de_Parma_e_rúcula.glb', price: 45.00, info: 'informacoes/presunto_de_Parma_e_rúcula.txt' },
+    { path: 'objetos3d/pizzas/pizza_mussarela.glb', price: 45.00, info: 'informacoes/pizza_mussarela.txt' },
+    { path: 'objetos3d/pizzas/pizza_salami.glb', price: 45.00, info: 'informacoes/pizza_salami.txt' },
     { path: 'objetos3d/pizzas/caneca.glb', price: 15.00, info: 'informacoes/caneca.txt' }
   ],
   sobremesas: [
     { path: 'objetos3d/sobremesas/Chocolate_Quente.glb', price: 12.00, info: 'informacoes/Chocolate_Quente.txt' },
+    { path: 'objetos3d/sobremesas/rosquinha_de_chocolate.glb', price: 10.50, info: 'informacoes/rosquinha_de_chocolate.txt' },
     { path: 'objetos3d/sobremesas/sundae.glb', price: 10.50, info: 'informacoes/sundae.txt' }
   ]
 };
