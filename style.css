@@ -182,3 +182,25 @@ body {
 #infoBtn:hover {
   background-color: #fb8c00;          /* Tom mais escuro no hover */
 }
+
+/* Botão verde "Check" fixado na parte inferior central da tela */
+.check-btn {
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #28a745;
+  color: white;
+  font-size: 24px;
+  padding: 10px 58px;
+  border: none;
+  border-radius: 50px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  z-index: 999;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.check-btn:hover {
+  background-color: #218838;
+}
