@@ -14,21 +14,20 @@ const models = {
   ],
   bebidas: [
     { path: 'objetos3d/bebidas/absolut_vodka_1l.glb', price: 79.90, info: 'informacoes/absolut_vodka_1l.txt' },
-    { path: 'objetos3d/bebidas/champagne_Lorem.glb', price: 120.00, info: 'informacoes/champagne_Lorem.txt' },
+    { path: 'objetos3d/bebidas/champagne_Lorem.glb', price: 120.00, info: 'informacoes/champagne_lorem.txt' },
     { path: 'objetos3d/bebidas/champagne.glb', price: 98.50, info: 'informacoes/champagne.txt' },
-    { path: 'objetos3d/bebidas/fizzy_drink.glb', price: 8.00, info: 'informacoes/fizzy_drink.txt' },
     { path: 'objetos3d/bebidas/heineken.glb', price: 12.90, info: 'informacoes/heineken.txt' },
-    { path: 'objetos3d/bebidas/JACK_DANIELS.glb', price: 130.00, info: 'informacoes/JACK_DANIELS.txt' },
+    { path: 'objetos3d/bebidas/JACK_DANIELS.glb', price: 130.00, info: 'informacoes/jack_daniels.txt' },
     { path: 'objetos3d/bebidas/redbull.glb', price: 9.90, info: 'informacoes/redbull.txt' }
   ],
   pizzas: [
     { path: 'objetos3d/pizzas/presunto_de_Parma_e_rúcula.glb', price: 45.00, info: 'informacoes/presunto_de_Parma_e_rúcula.txt' },
-    { path: 'objetos3d/pizzas/pizza_mussarela.glb', price: 45.00, info: 'informacoes/pizza_mussarela.txt' },
-    { path: 'objetos3d/pizzas/pizza_salami.glb', price: 45.00, info: 'informacoes/pizza_salami.txt' },
+    { path: 'objetos3d/pizzas/pizza_mussarela.glb', price: 45.00, info: 'informacoes/mussarela.txt' },
+    { path: 'objetos3d/pizzas/pizza_salami.glb', price: 45.00, info: 'informacoes/salami.txt' },
     { path: 'objetos3d/pizzas/caneca.glb', price: 15.00, info: 'informacoes/caneca.txt' }
   ],
   sobremesas: [
-    { path: 'objetos3d/sobremesas/Chocolate_Quente.glb', price: 12.00, info: 'informacoes/Chocolate_Quente.txt' },
+    { path: 'objetos3d/sobremesas/Chocolate_Quente.glb', price: 12.00, info: 'informacoes/cupcake_chocolate.txt' },
     { path: 'objetos3d/sobremesas/rosquinha_de_chocolate.glb', price: 10.50, info: 'informacoes/rosquinha_de_chocolate.txt' },
     { path: 'objetos3d/sobremesas/sundae.glb', price: 10.50, info: 'informacoes/sundae.txt' }
   ]
