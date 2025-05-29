@@ -30,6 +30,11 @@ const models = {
     { path: 'objetos3d/sobremesas/Chocolate_Quente.glb', price: 12.00, info: 'informacoes/cupcake_chocolate.txt' },
     { path: 'objetos3d/sobremesas/rosquinha_de_chocolate.glb', price: 10.50, info: 'informacoes/rosquinha_de_chocolate.txt' },
     { path: 'objetos3d/sobremesas/sundae.glb', price: 10.50, info: 'informacoes/sundae.txt' }
+  ],
+  carnes: [
+    { path: 'objetos3d/carnes/bisteca_suina_grelhada.glb', price: 12.00, info: 'informacoes/bisteca_suina_grelhada.txt' },
+    { path: 'objetos3d/carnes/costela_bovina_cozida.glb', price: 10.50, info: 'informacoes/costela_bovina_cozida.txt' },
+    { path: 'objetos3d/carnes/paleta_cordeiro.glb', price: 10.50, info: 'informacoes/paleta_cordeiro.txt' }
   ]
 };
 
