@@ -10,7 +10,7 @@
  */
 const models = {
   inicio: [
-    { path: 'objetos3d/inicio/cubo.glb', price: 0.00, info: null }
+    { path: 'objetos3d/inicio/tabua_de_carne.glb', price: 0.00, info: null }
   ],
   bebidas: [
     { path: 'objetos3d/bebidas/absolut_vodka_1l.glb', price: 79.90, info: 'informacoes/absolut_vodka_1l.txt' },
