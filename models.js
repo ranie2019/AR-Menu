@@ -17,7 +17,7 @@ const models = {
     { path: 'objetos3d/bebidas/champagne_Lorem.glb', price: 120.00, info: 'informacoes/champagne_lorem.txt' },
     { path: 'objetos3d/bebidas/champagne.glb', price: 98.50, info: 'informacoes/champagne.txt' },
     { path: 'objetos3d/bebidas/heineken.glb', price: 12.90, info: 'informacoes/heineken.txt' },
-    { path: 'objetos3d/bebidas/JACK_DANIELS.glb', price: 130.00, info: 'informacoes/jack_daniels.txt' },
+    { path: 'objetos3d/bebidas/jack_daniels.glb', price: 130.00, info: 'informacoes/jack_daniels.txt' },
     { path: 'objetos3d/bebidas/redbull.glb', price: 9.90, info: 'informacoes/redbull.txt' }
   ],
   pizzas: [
