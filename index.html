@@ -7,11 +7,11 @@
     <!-- CSS externo -->
     <link rel="stylesheet" href="style.css" />
 
-    <!-- Bibliotecas A-Frame e AR.js para realidade aumentada -->
+    <!-- Bibliotecas A-Frame e AR.js -->
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
 
-    <!-- Estilo inline básico (evita overflow e oculta textos de debug) -->
+    <!-- Estilo inline básico -->
     <style>
       body {
         margin: 0;
@@ -25,13 +25,13 @@
   </head>
 
   <body>
-    <!-- Botão CHECK com apenas o símbolo, estilo minimalista -->
+    <!-- Botão minimalista de confirmação (✔) -->
     <button id="checkBtn" class="check-btn">✔</button>
 
-    <!-- Botão que abre o menu de categorias -->
+    <!-- Botão de abertura do menu -->
     <button id="menuBtn">Menu</button>
 
-    <!-- Botões de categorias (só aparecem após clicar em "Menu") -->
+    <!-- Botões de categorias (ocultos até clicar em "Menu") -->
     <div id="categoryButtons" style="display: none">
       <button class="category-btn" onclick="selectCategory('bebidas')">Bebidas</button>
       <button class="category-btn" onclick="selectCategory('pizzas')">Pizzas</button>
@@ -39,13 +39,13 @@
       <button class="category-btn" onclick="selectCategory('carnes')">Carnes</button>
     </div>
 
-    <!-- Indicador visual de carregamento do modelo -->
+    <!-- Indicador de carregamento -->
     <div id="loadingIndicator">Carregando...</div>
 
-    <!-- Exibe o preço do item atual -->
+    <!-- Exibe o preço -->
     <div id="priceDisplay">R$ 0,00</div>
 
-    <!-- Exibe o nome do item atual -->
+    <!-- Nome do produto atual -->
     <div id="productNameDisplay" style="
       position: absolute;
       bottom: 80px;
@@ -57,10 +57,8 @@
       border-radius: 12px;
       font-size: 1.1em;
       font-weight: 500;
-    ">
-    </div>
-
-    <button id="infoBtn">ℹ️ Info</button>
+      z-index: 1000;
+    "></div>
 
     <!-- Botão para ir ao modelo anterior -->
     <button id="prevBtn" class="btn" onclick="changeModel(-1)">
@@ -76,55 +74,50 @@
       </svg>
     </button>
 
-    <!-- Botão "Info" que só aparece em certas categorias (pizzas/sobremesas) -->
+    <!-- Botão "Info" (só visível em algumas categorias) -->
     <button id="infoBtn" class="btn" onclick="toggleInfo()" style="display: none;">
-      Info
+      ℹ️ Info
     </button>
 
-   <!-- Painel de informações nutricionais fixo no topo central -->
-   <div id="infoPanel" style="
-   display: none;                            /* Oculto por padrão – só aparece ao clicar no botão Info */
-   position: absolute;                       /* Posicionamento absoluto na tela */
-   top: 80px;                                /* Distância do topo da tela – pode ajustar conforme necessário */
-   left: 50%;                                /* Alinha o centro do painel com o centro da tela */
-   transform: translateX(-50%);              /* Corrige o alinhamento central exato */
-   width: 80vw;                              /* Ocupa 80% da largura da tela – responsivo */
-   max-height: 60vh;                         /* Altura máxima para não ocupar a tela toda */
-   overflow-y: auto;                         /* Adiciona rolagem vertical se o conteúdo for muito grande */
-   background-color: rgba(255, 255, 255, 0.95); /* Fundo branco com leve transparência */
-   color: #000;                              /* Texto preto */
-   padding: 16px 20px;                       /* Espaçamento interno confortável */
-   border-radius: 16px;                      /* Cantos arredondados */
-   font-size: 1em;                           /* Tamanho padrão de texto */
-   z-index: 1000;                            /* Garantir que fique acima dos modelos e botões */
-   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);/* Sombra para destacar visualmente */
-   text-align: left;                         /* Texto alinhado à esquerda para facilitar leitura */
-   ">
+    <!-- Painel de informações nutricionais -->
+    <div id="infoPanel" style="
+      display: none;
+      position: absolute;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80vw;
+      max-height: 60vh;
+      overflow-y: auto;
+      background-color: rgba(255, 255, 255, 0.95);
+      color: #000;
+      padding: 16px 20px;
+      border-radius: 16px;
+      font-size: 1em;
+      z-index: 1000;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      text-align: left;
+    ">
+      <!-- Botão para fechar o painel -->
+      <button onclick="document.getElementById('infoPanel').style.display='none'" style="
+        position: absolute;
+        top: 8px;
+        right: 12px;
+        background: transparent;
+        border: none;
+        font-size: 1.2em;
+        cursor: pointer;
+      ">✖</button>
+      <!-- Conteúdo será carregado via JS -->
+    </div>
 
-  <!-- Botão para fechar o painel -->
-  <button onclick="document.getElementById('infoPanel').style.display='none'" style="
-    position: absolute;                     /* Fixa o botão dentro do painel */
-    top: 8px;                               /* Espaço do topo interno do painel */
-    right: 12px;                            /* Espaço da direita interna do painel */
-    background: transparent;               /* Fundo transparente para parecer limpo */
-    border: none;                           /* Remove bordas do botão */
-    font-size: 1.2em;                       /* Tamanho de fonte maior para o ícone */
-    cursor: pointer;                        /* Mostra cursor de clique */
-  ">✖</button>
-
-  <!-- Conteúdo da informação será injetado via JavaScript -->
-</div>
-
-
-
-
-    <!-- Cena 3D com AR.js e A-Frame -->
+    <!-- Cena A-Frame com AR.js -->
     <a-scene
       embedded
       vr-mode-ui="enabled: false"
       arjs="sourceType: webcam; debugUIEnabled: false;"
     >
-      <!-- Entidade principal onde o modelo 3D será carregado dinamicamente -->
+      <!-- Contêiner do modelo 3D dinâmico -->
       <a-entity
         id="modelContainer"
         rotation="0 180 0"
@@ -135,13 +128,14 @@
         grabbable
         draggable
         touch-action="none"
+        crossorigin="anonymous"
       ></a-entity>
 
-      <!-- Câmera posicionada para visualização AR -->
+      <!-- Câmera AR -->
       <a-camera position="0 1.5 3"></a-camera>
     </a-scene>
 
-    <!-- Scripts do projeto -->
+    <!-- Scripts JS -->
     <script src="models.js"></script>
     <script src="main.js"></script>
   </body>

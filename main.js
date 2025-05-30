@@ -30,7 +30,7 @@ function updateUI(model) {
   const infoBtn = document.getElementById("infoBtn");
   const priceDisplay = document.getElementById("priceDisplay");
 
-  if (["pizzas", "sobremesas", "bebidas"].includes(currentCategory)) {
+  if (["pizzas", "sobremesas", "bebidas", "carnes"].includes(currentCategory)) {
     infoBtn.style.display = "block";
     priceDisplay.style.display = "block";  // Mostra o preço
   } else {

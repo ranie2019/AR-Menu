@@ -22,19 +22,19 @@ const models = {
   ],
   pizzas: [
     { path: 'objetos3d/pizzas/presunto_de_Parma_e_rúcula.glb', price: 45.00, info: 'informacoes/presunto_de_Parma_e_rúcula.txt' },
-    { path: 'objetos3d/pizzas/pizza_mussarela.glb', price: 45.00, info: 'informacoes/mussarela.txt' },
-    { path: 'objetos3d/pizzas/pizza_salami.glb', price: 45.00, info: 'informacoes/salami.txt' },
-    { path: 'objetos3d/pizzas/caneca.glb', price: 15.00, info: 'informacoes/caneca.txt' }
+    { path: 'objetos3d/pizzas/mussarela.glb', price: 45.00, info: 'informacoes/mussarela.txt' },
+    { path: 'objetos3d/pizzas/salami.glb', price: 45.00, info: 'informacoes/salami.txt' },
   ],
   sobremesas: [
-    { path: 'objetos3d/sobremesas/Chocolate_Quente.glb', price: 12.00, info: 'informacoes/cupcake_chocolate.txt' },
+    { path: 'objetos3d/sobremesas/cupcake_chocolate.glb', price: 12.00, info: 'informacoes/cupcake_chocolate.txt' },
     { path: 'objetos3d/sobremesas/rosquinha_de_chocolate.glb', price: 10.50, info: 'informacoes/rosquinha_de_chocolate.txt' },
     { path: 'objetos3d/sobremesas/sundae.glb', price: 10.50, info: 'informacoes/sundae.txt' }
   ],
   carnes: [
-    { path: 'objetos3d/carnes/bisteca_suina_grelhada.glb', price: 12.00, info: 'informacoes/bisteca_suina_grelhada.txt' },
-    { path: 'objetos3d/carnes/costela_bovina_cozida.glb', price: 10.50, info: 'informacoes/costela_bovina_cozida.txt' },
-    { path: 'objetos3d/carnes/paleta_cordeiro.glb', price: 10.50, info: 'informacoes/paleta_cordeiro.txt' }
+    { path: 'objetos3d/carnes/bisteca_suina_grelhada.glb', price: 20.89, info: 'informacoes/bisteca_suina_grelhada.txt' },
+    { path: 'objetos3d/carnes/costela_bovina_cozida.glb', price: 39.90, info: 'informacoes/costela_bovina_cozida.txt' },
+    { path: 'objetos3d/carnes/paleta_cordeiro.glb', price: 37.90, info: 'informacoes/paleta_cordeiro.txt' },
+    { path: 'objetos3d/carnes/lombo_porco.glb', price: 35.99, info: 'informacoes/lombo_porco.txt' }
   ]
 };
 
