@@ -13,12 +13,12 @@ const models = {
     { path: 'objetos3d/inicio/tabua_de_carne.glb', price: 0.00, info: null }
   ],
   bebidas: [
-    { path: 'objetos3d/bebidas/absolut_vodka_1l.glb', price: 79.90, info: 'informacoes/absolut_vodka_1l.txt' },
-    { path: 'objetos3d/bebidas/champagne_Lorem.glb', price: 120.00, info: 'informacoes/champagne_lorem.txt' },
-    { path: 'objetos3d/bebidas/champagne.glb', price: 98.50, info: 'informacoes/champagne.txt' },
-    { path: 'objetos3d/bebidas/heineken.glb', price: 12.90, info: 'informacoes/heineken.txt' },
-    { path: 'objetos3d/bebidas/jack_daniels.glb', price: 130.00, info: 'informacoes/jack_daniels.txt' },
-    { path: 'objetos3d/bebidas/redbull.glb', price: 9.90, info: 'informacoes/redbull.txt' }
+    { path: 'objetos3d/bebidas/absolut_vodka_1l.glb', price: 79.90, info: 'informacao/absolut_vodka_1l.txt' },
+    { path: 'objetos3d/bebidas/champagne_Lorem.glb', price: 120.00, info: 'informacao/champagne_lorem.txt' },
+    { path: 'objetos3d/bebidas/champagne.glb', price: 98.50, info: 'informacao/champagne.txt' },
+    { path: 'objetos3d/bebidas/heineken.glb', price: 12.90, info: 'informacao/heineken.txt' },
+    { path: 'objetos3d/bebidas/jack_daniels.glb', price: 130.00, info: 'informacao/jack_daniels.txt' },
+    { path: 'objetos3d/bebidas/redbull.glb', price: 9.90, info: 'informacao/redbull.txt' }
   ],
   pizzas: [
     { path: 'objetos3d/pizzas/presunto_de_Parma_e_rúcula.glb', price: 45.00, info: 'informacoes/presunto_de_Parma_e_rúcula.txt' },
